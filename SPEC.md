@@ -764,16 +764,6 @@ export const forms: FormsConfig = {
 
 **`api`** — POST to `actionUrl`. The most flexible escape hatch: point at a Cloudflare Worker, Vercel Function, Resend endpoint, or any other HTTP handler. An example Cloudflare Worker forwarding to Resend is in `src/demo/`.
 
-### Adapter Comparison
-
-| Backend | Free tier | Any host | Maintained | Per-component override |
-|---|---|---|---|---|
-| **Web3Forms** | ✅ Unlimited | ✅ | Core | ✅ Different key per form |
-| **Netlify Forms** | ✅ 100/mo | ❌ Netlify only | Core | ✅ Different form name |
-| Formspree | ✅ 50/mo | ✅ | Community | ✅ Different form ID |
-| Formspark | ✅ 250/mo | ✅ | Community | ✅ Different form ID |
-| Custom API | — | ✅ | Fork-owned | ✅ Different endpoint URL |
-
 ### Modularity Contract
 
 Each adapter lives in `src/utils/forms/adapters/`. The contract:
