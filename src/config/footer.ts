@@ -13,4 +13,17 @@ export const footerConfig: FooterConfig = {
     { label: 'Home', href: '/' },
     { label: 'Design Tokens', href: '/demo/tokens' },
   ],
+  columns: [
+    {
+      title: 'Tech Stack',
+      links: [
+        { label: 'Astro', href: 'https://astro.build' },
+        { label: 'Tailwind CSS', href: 'https://tailwindcss.com' },
+        { label: 'TypeScript', href: 'https://www.typescriptlang.org' },
+        { label: 'Prettier', href: 'https://prettier.io' },
+        { label: 'ESLint', href: 'https://eslint.org' },
+        { label: 'Iconify', href: 'https://iconify.design' },
+      ],
+    },
+  ],
 };

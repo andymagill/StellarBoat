@@ -5,7 +5,7 @@ import { footerConfig } from '../../config/footer';
 <footer class="bg-surface-2 border-t border-border mt-12">
   <div class="max-w-6xl mx-auto px-6 py-12">
     <!-- Footer content grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
       <!-- Brand / Description -->
       <div>
         <h3 class="text-lg font-bold text-primary-400 mb-2">StellarBoat</h3>
@@ -35,8 +35,31 @@ import { footerConfig } from '../../config/footer';
         )
       }
 
+      <!-- Additional Columns -->
+      {
+        footerConfig.columns &&
+          footerConfig.columns.length > 0 &&
+          footerConfig.columns.map((column) => (
+            <div>
+              <h4 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+                {column.title}
+              </h4>
+              <nav class="flex flex-col gap-2">
+                {column.links.map((item) => (
+                  <a
+                    href={item.href}
+                    class="text-sm text-text-muted hover:text-text transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+            </div>
+          ))
+      }
+
       <!-- Copyright -->
-      <div class="text-right">
+      <div>
         <p class="text-sm text-text-muted">
           © {footerConfig.copyrightYear} StellarBoat
         </p>

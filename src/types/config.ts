@@ -76,6 +76,17 @@ export interface NavItem {
 }
 
 /**
+ * Footer column configuration
+ */
+export interface FooterColumn {
+  /** Column title/heading */
+  title: string;
+
+  /** Array of links in this column */
+  links: NavItem[];
+}
+
+/**
  * Footer configuration
  */
 export interface FooterConfig {
@@ -87,6 +98,9 @@ export interface FooterConfig {
 
   /** Footer description (optional tagline or blurb) */
   description?: string;
+
+  /** Additional footer columns (optional) */
+  columns?: FooterColumn[];
 }
 
 /**
