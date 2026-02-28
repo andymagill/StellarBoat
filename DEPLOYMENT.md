@@ -138,14 +138,14 @@ npm run check
 
 All environment variables are documented in `.env.example`. Here's a quick reference:
 
-| Variable | Purpose | Required |
-|---|---|---|
-| `PUBLIC_SITE_URL` | Full site URL (meta tags, sitemap) | ✅ |
-| `PUBLIC_GTM_ID` | Google Tag Manager container ID | ❌ |
-| `PUBLIC_CONSENT_MODE` | Enable GTM consent mode v2 | ❌ |
-| `PUBLIC_NOINDEX` | Set robots: noindex for staging | ❌ |
-| `PUBLIC_DEMO_ENABLED` | Show /demo/* routes | ❌ |
-| `WEB3FORMS_ACCESS_KEY` | Web3Forms contact form key | ❌ |
+| Variable               | Purpose                            | Required |
+| ---------------------- | ---------------------------------- | -------- |
+| `PUBLIC_SITE_URL`      | Full site URL (meta tags, sitemap) | ✅       |
+| `PUBLIC_GTM_ID`        | Google Tag Manager container ID    | ❌       |
+| `PUBLIC_CONSENT_MODE`  | Enable GTM consent mode v2         | ❌       |
+| `PUBLIC_NOINDEX`       | Set robots: noindex for staging    | ❌       |
+| `PUBLIC_DEMO_ENABLED`  | Show /demo/\* routes               | ❌       |
+| `WEB3FORMS_ACCESS_KEY` | Web3Forms contact form key         | ❌       |
 
 **Note:** Variables prefixed `PUBLIC_` are visible in browser code; others are private (build-time only).
 
@@ -168,6 +168,7 @@ No additional configuration needed — push a PR and the platform's GitHub App a
 ### Build Fails on Deploy
 
 Check:
+
 1. Local `npm run build` succeeds
 2. All required environment variables are set in platform dashboard
 3. Node version is 20+ (check platform's Node version setting)
@@ -176,6 +177,7 @@ Check:
 ### Preview Deployment Missing
 
 Ensure:
+
 1. GitHub App is authorized to access your repo
 2. Branch protection rules don't block CI status checks
 3. Check platform logs (Cloudflare → Pages → Deployments, Netlify → Deploys, Vercel → Deployments)

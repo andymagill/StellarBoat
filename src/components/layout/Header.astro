@@ -1,0 +1,74 @@
+---
+import { navConfig } from '../../config/nav';
+
+const items = navConfig.items;
+---
+
+<header class="sticky top-0 z-50 bg-surface-1 border-b border-border">
+  <div class="flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
+    <!-- Brand/Logo -->
+    <a href="/" class="text-xl font-bold text-primary-400">StellarBoat</a>
+
+    <!-- Skip to content link (accessibility) -->
+    <a href="#main-content" class="sr-only focus:not-sr-only">Skip to content</a
+    >
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden md:flex gap-6">
+      {
+        items.map((item) => (
+          <a
+            href={item.href}
+            class={`text-sm font-medium transition-colors ${
+              item.active
+                ? 'text-primary-400'
+                : 'text-text-muted hover:text-text'
+            }`}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <!-- Mobile hamburger -->
+    <input
+      type="checkbox"
+      id="nav-toggle"
+      class="hidden peer"
+      aria-label="Toggle navigation"
+    />
+    <label
+      for="nav-toggle"
+      class="md:hidden cursor-pointer flex flex-col gap-1"
+    >
+      <span
+        class="w-6 h-0.5 bg-text block transition-all peer-checked:rotate-45 peer-checked:translate-y-2"
+      ></span>
+      <span
+        class="w-6 h-0.5 bg-text block transition-all peer-checked:opacity-0"
+      ></span>
+      <span
+        class="w-6 h-0.5 bg-text block transition-all peer-checked:-rotate-45 peer-checked:-translate-y-2"
+      ></span>
+    </label>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  <nav
+    class="peer-checked:[&>::flex] hidden md:hidden flex-col bg-surface-2 border-t border-border px-6 py-4 gap-3"
+  >
+    {
+      items.map((item) => (
+        <a
+          href={item.href}
+          class={`block py-2 font-medium transition-colors ${
+            item.active ? 'text-primary-400' : 'text-text-muted hover:text-text'
+          }`}
+        >
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+</header>

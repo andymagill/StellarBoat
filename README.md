@@ -13,6 +13,7 @@
 StellarBoat is an open-source Astro.js template for marketing mini-sites — product landing pages, campaign microsites, agency client sites, and side-project showcases. It's built around a clear separation between **core framework code** and **your project's content, config, and styles**, so you can pull upstream improvements without merge conflicts in your customized fork.
 
 **Built for:**
+
 - Developers and agencies shipping client mini-sites
 - AI coding agents that need a predictable, well-documented architecture
 - Open source contributors who want a real-world Astro reference project
@@ -84,13 +85,13 @@ stellarboat/
 
 ## Documentation
 
-| Document | Description |
-|---|---|
-| [SPEC.md](SPEC.md) | Full architecture specification and design decisions |
-| [TASKS.md](TASKS.md) | Ordered implementation task list (milestones 0–12) |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute to StellarBoat core |
-| [DEPLOYMENT.md](DEPLOYMENT.md) | Cloudflare Pages setup + Netlify/Vercel fork instructions |
-| [src/demo/README.md](src/demo/README.md) | Guide to the included demo site |
+| Document                                 | Description                                               |
+| ---------------------------------------- | --------------------------------------------------------- |
+| [SPEC.md](SPEC.md)                       | Full architecture specification and design decisions      |
+| [TASKS.md](TASKS.md)                     | Ordered implementation task list (milestones 0–12)        |
+| [CONTRIBUTING.md](CONTRIBUTING.md)       | How to contribute to StellarBoat core                     |
+| [DEPLOYMENT.md](DEPLOYMENT.md)           | Cloudflare Pages setup + Netlify/Vercel fork instructions |
+| [src/demo/README.md](src/demo/README.md) | Guide to the included demo site                           |
 
 ---
 

@@ -7,6 +7,7 @@ Thanks for your interest in contributing! StellarBoat is a community project and
 ## What to Contribute
 
 **Welcome contributions:**
+
 - Bug fixes in core components, layouts, and utilities
 - New form backend adapters (`src/utils/forms/adapters/` + documentation)
 - New marketing section component variants
@@ -16,6 +17,7 @@ Thanks for your interest in contributing! StellarBoat is a community project and
 - Demo site improvements
 
 **Out of scope for core:**
+
 - Project-specific content, branding, or config — those belong in forks
 - Adding large new dependencies without prior discussion
 - Opinionated design changes that would conflict with fork customizations

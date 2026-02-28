@@ -2,9 +2,9 @@
 /* Design Tokens — Tailwind v4 Entry Point + Fork Customization Zone            */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
-@import "tailwindcss";
-@import "@fontsource/inter";
-@import "@fontsource/jetbrains-mono";
+@import 'tailwindcss';
+@import '@fontsource/inter';
+@import '@fontsource/jetbrains-mono';
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 /* @theme: Primitive scale — generates all scale utilities (bg-*, text-, etc.) */
@@ -13,19 +13,19 @@
 
 @theme {
   /* ─── Primary Scale: Neon Cyan (Deep Space accent) ───────────────────────── */
-  --color-primary-50:   #e0f7ff;
-  --color-primary-100:  #b3f0ff;
-  --color-primary-200:  #80eaff;
-  --color-primary-300:  #4de3ff;
-  --color-primary-400:  #1add00ff;
-  --color-primary-500:  #00d9ff;
-  --color-primary-600:  #00a8cc;
-  --color-primary-700:  #007799;
-  --color-primary-800:  #004d66;
-  --color-primary-900:  #002233;
+  --color-primary-50: #e0f7ff;
+  --color-primary-100: #b3f0ff;
+  --color-primary-200: #80eaff;
+  --color-primary-300: #4de3ff;
+  --color-primary-400: #1add00ff;
+  --color-primary-500: #00d9ff;
+  --color-primary-600: #00a8cc;
+  --color-primary-700: #007799;
+  --color-primary-800: #004d66;
+  --color-primary-900: #002233;
 
   /* ─── Secondary Scale: Neon Purple (Deep Space accent) ──────────────────── */
-  --color-secondary-50:  #f5e0ff;
+  --color-secondary-50: #f5e0ff;
   --color-secondary-100: #e6b3ff;
   --color-secondary-200: #d680ff;
   --color-secondary-300: #c74dff;
@@ -37,44 +37,44 @@
   --color-secondary-900: #260033;
 
   /* ─── Neutral Scale: Deep Space Blues & Grays ────────────────────────────── */
-  --color-neutral-50:   #f9f5ff;
-  --color-neutral-100:  #f1ebff;
-  --color-neutral-200:  #e5deff;
-  --color-neutral-300:  #d4c8ff;
-  --color-neutral-400:  #b0b8c8;
-  --color-neutral-500:  #94a3b8;
-  --color-neutral-600:  #64748b;
-  --color-neutral-700:  #475569;
-  --color-neutral-800:  #334155;
-  --color-neutral-900:  #1e293b;
-  --color-neutral-950:  #0f1729;
+  --color-neutral-50: #f9f5ff;
+  --color-neutral-100: #f1ebff;
+  --color-neutral-200: #e5deff;
+  --color-neutral-300: #d4c8ff;
+  --color-neutral-400: #b0b8c8;
+  --color-neutral-500: #94a3b8;
+  --color-neutral-600: #64748b;
+  --color-neutral-700: #475569;
+  --color-neutral-800: #334155;
+  --color-neutral-900: #1e293b;
+  --color-neutral-950: #0f1729;
 
   /* ─── Deep Space Background & Surface ────────────────────────────────────── */
-  --color-midnight:     #0a0e27;
-  --color-starfield:    #000000;
+  --color-midnight: #0a0e27;
+  --color-starfield: #000000;
 
   /* ─── Typography ─────────────────────────────────────────────────────────── */
-  --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono:    'JetBrains Mono', monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
   /* ─── Radius ─────────────────────────────────────────────────────────────── */
-  --radius-xs:    0.125rem;
-  --radius-sm:    0.25rem;
-  --radius-md:    0.5rem;
-  --radius-lg:    1rem;
-  --radius-xl:    1.5rem;
-  --radius-full:  9999px;
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
 
   /* ─── Shadows ────────────────────────────────────────────────────────────── */
-  --shadow-xs:    0 1px 2px rgb(0 0 0 / 0.05);
-  --shadow-sm:    0 1px 2px rgb(0 0 0 / 0.1);
-  --shadow-md:    0 4px 6px rgb(0 0 0 / 0.1);
-  --shadow-lg:    0 10px 15px rgb(0 0 0 / 0.2);
-  --shadow-xl:    0 20px 25px rgb(0 0 0 / 0.3);
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px rgb(0 0 0 / 0.2);
+  --shadow-xl: 0 20px 25px rgb(0 0 0 / 0.3);
 
   /* ─── Glow Effects (Neon Shadows for Deep Space Theme) ───────────────────── */
-  --shadow-glow-cyan:    0 0 20px rgb(0 217 255 / 0.3);
-  --shadow-glow-purple:  0 0 20px rgb(192 0 255 / 0.3);
+  --shadow-glow-cyan: 0 0 20px rgb(0 217 255 / 0.3);
+  --shadow-glow-purple: 0 0 20px rgb(192 0 255 / 0.3);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────── */
@@ -85,33 +85,33 @@
 @layer base {
   :root {
     /* ─── Brand Colors (Deep Space Theme) ───────────────────────────────────── */
-    --color-bg:              #0a0e27;     /* midnight, primary background */
-    --color-surface:         #1a1f3a;     /* space-blue, elevated surfaces/cards */
-    --color-text:            #ffffff;     /* bright white for high contrast */
-    --color-text-muted:      #b0b8c8;     /* soft gray-white for secondary text */
-    --color-border:          #2d3a5a;     /* subtle dividers and input borders */
+    --color-bg: #0a0e27; /* midnight, primary background */
+    --color-surface: #1a1f3a; /* space-blue, elevated surfaces/cards */
+    --color-text: #ffffff; /* bright white for high contrast */
+    --color-text-muted: #b0b8c8; /* soft gray-white for secondary text */
+    --color-border: #2d3a5a; /* subtle dividers and input borders */
 
     /* ─── Interactive Colors ────────────────────────────────────────────────── */
-    --color-accent:          #00d9ff;     /* neon cyan for CTAs and interactive UI */
-    --color-accent-dark:     #007799;     /* darker cyan for hover/active states */
-    --color-accent-secondary: #c000ff;    /* neon purple for accent highlights */
+    --color-accent: #00d9ff; /* neon cyan for CTAs and interactive UI */
+    --color-accent-dark: #007799; /* darker cyan for hover/active states */
+    --color-accent-secondary: #c000ff; /* neon purple for accent highlights */
 
     /* ─── Semantic States ───────────────────────────────────────────────────── */
-    --color-success:         #22c55e;     /* green for success messages */
-    --color-warning:         #f59e0b;     /* amber for warnings */
-    --color-error:           #ef4444;     /* red for errors */
-    --color-info:            #3b82f6;     /* blue for informational */
+    --color-success: #22c55e; /* green for success messages */
+    --color-warning: #f59e0b; /* amber for warnings */
+    --color-error: #ef4444; /* red for errors */
+    --color-info: #3b82f6; /* blue for informational */
 
     /* ─── Spacing & Layout ──────────────────────────────────────────────────── */
-    --spacing-xs:            0.5rem;      /* 8px */
-    --spacing-sm:            1rem;        /* 16px */
-    --spacing-md:            1.5rem;      /* 24px */
-    --spacing-lg:            2rem;        /* 32px */
-    --spacing-xl:            3rem;        /* 48px */
-    --spacing-section:       6rem;        /* 96px — large whitespace between sections */
+    --spacing-xs: 0.5rem; /* 8px */
+    --spacing-sm: 1rem; /* 16px */
+    --spacing-md: 1.5rem; /* 24px */
+    --spacing-lg: 2rem; /* 32px */
+    --spacing-xl: 3rem; /* 48px */
+    --spacing-section: 6rem; /* 96px — large whitespace between sections */
 
     /* ─── Container & Layout Dimensions ─────────────────────────────────────── */
-    --width-container:       72rem;       /* 1152px — max-width content */
-    --spacing-container:     2rem;        /* 32px — horizontal gutters/padding */
+    --width-container: 72rem; /* 1152px — max-width content */
+    --spacing-container: 2rem; /* 32px — horizontal gutters/padding */
   }
 }

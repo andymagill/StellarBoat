@@ -1,0 +1,307 @@
+---
+import Page from '../../layouts/Page.astro';
+
+// Token definitions based on the Deep Space theme from tokens.css
+const colors = {
+  'primitive-midnight': '#0a0e27',
+  'primitive-space-blue': '#1a1f3a',
+  'primitive-starfield': '#000000',
+  'primitive-neon-cyan': '#00d9ff',
+  'primitive-neon-purple': '#c000ff',
+  'primitive-text-white': '#ffffff',
+  'primitive-text-gray': '#b0b8c8',
+  'primitive-border': '#2d3a5a',
+  primary: {
+    '50': '#e0f7ff',
+    '100': '#b3ebff',
+    '200': '#80e0ff',
+    '300': '#4dd5ff',
+    '400': '#00d9ff',
+    '500': '#00b8d4',
+    '600': '#0099bb',
+    '700': '#006b8a',
+    '800': '#003d59',
+  },
+  secondary: {
+    '50': '#f5e0ff',
+    '100': '#e6b3ff',
+    '200': '#d680ff',
+    '300': '#c74dff',
+    '400': '#c000ff',
+    '500': '#9900cc',
+    '600': '#720099',
+    '700': '#4d0066',
+    '800': '#330044',
+  },
+};
+
+const typography = [
+  {
+    level: 'XL',
+    size: '2.5rem (40px)',
+    weight: '700 (bold)',
+    lineHeight: '1.1',
+    usage: 'Page titles',
+  },
+  {
+    level: 'LG',
+    size: '1.75rem (28px)',
+    weight: '600 (semibold)',
+    lineHeight: '1.2',
+    usage: 'Section headings',
+  },
+  {
+    level: 'Base',
+    size: '1rem (16px)',
+    weight: '400 (regular)',
+    lineHeight: '1.6',
+    usage: 'Body text',
+  },
+  {
+    level: 'SM',
+    size: '0.875rem (14px)',
+    weight: '500 (medium)',
+    lineHeight: '1.6',
+    usage: 'Small labels, captions',
+  },
+  {
+    level: 'XS',
+    size: '0.75rem (12px)',
+    weight: '500 (medium)',
+    lineHeight: '1.4',
+    usage: 'Badges, tags, UI labels',
+  },
+];
+
+const spacing = [
+  { name: 'XS', value: '8px', class: 'gap-2' },
+  { name: 'SM', value: '12px', class: 'gap-3' },
+  { name: 'MD', value: '24px', class: 'gap-6' },
+  { name: 'LG', value: '32px', class: 'gap-8' },
+  { name: 'Section', value: '96px', class: 'gap-24' },
+];
+
+const radii = [
+  { name: 'MD', value: '8px', class: 'rounded' },
+  { name: 'LG', value: '16px', class: 'rounded-lg' },
+  { name: 'Full', value: '9999px', class: 'rounded-full' },
+];
+
+const shadows = [
+  { name: 'None', desc: 'Default state', css: 'none' },
+  { name: 'Soft', desc: 'Hover on cards', css: '0 2px 8px rgba(0,0,0,0.3)' },
+  {
+    name: 'Glow Cyan',
+    desc: 'Interactive focus',
+    css: '0 0 16px rgba(0,217,255,0.5)',
+  },
+  {
+    name: 'Glow Purple',
+    desc: 'Decorative accents',
+    css: '0 0 24px rgba(192,0,255,0.4)',
+  },
+];
+---
+
+<Page title="Design Tokens">
+  <div class="max-w-6xl mx-auto px-6 py-12">
+    <h1 class="text-4xl md:text-5xl font-bold text-text mb-2">Design Tokens</h1>
+    <p class="text-lg text-text-muted mb-12">
+      Complete visual system for the StellarBoat demo site. All colors,
+      typography, spacing, and effects.
+    </p>
+
+    <!-- Color System -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-primary-400 mb-8">Color Palette</h2>
+
+      <!-- Primitive Colors -->
+      <h3 class="text-lg font-semibold text-text mb-4">Primitive Scale</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        {
+          Object.entries(colors).map(([name, value]) =>
+            typeof value === 'string' ? (
+              <div>
+                <div
+                  class="rounded-lg h-24 border border-border mb-2"
+                  style={{ backgroundColor: value }}
+                />
+                <p class="text-xs font-semibold text-text">{name}</p>
+                <p class="text-xs text-text-muted font-mono">{value}</p>
+              </div>
+            ) : null
+          )
+        }
+      </div>
+
+      <!-- Primary Color Scale -->
+      <h3 class="text-lg font-semibold text-text mb-4">
+        Primary Accent (Neon Cyan)
+      </h3>
+      <div class="grid grid-cols-3 md:grid-cols-5 gap-3 mb-8">
+        {
+          Object.entries(colors.primary).map(([shade, hex]) => (
+            <div>
+              <div
+                class="rounded-lg h-16 border border-border mb-2"
+                style={{ backgroundColor: hex }}
+              />
+              <p class="text-xs font-semibold text-text">primary-{shade}</p>
+              <p class="text-xs text-text-muted font-mono">{hex}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <!-- Secondary Color Scale -->
+      <h3 class="text-lg font-semibold text-text mb-4">
+        Secondary Accent (Neon Purple)
+      </h3>
+      <div class="grid grid-cols-3 md:grid-cols-5 gap-3 mb-8">
+        {
+          Object.entries(colors.secondary).map(([shade, hex]) => (
+            <div>
+              <div
+                class="rounded-lg h-16 border border-border mb-2"
+                style={{ backgroundColor: hex }}
+              />
+              <p class="text-xs font-semibold text-text">secondary-{shade}</p>
+              <p class="text-xs text-text-muted font-mono">{hex}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Typography -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-primary-400 mb-8">Typography Scale</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="border-b border-border">
+              <th
+                class="px-4 py-2 text-xs font-semibold text-text-muted uppercase"
+              >
+                Level
+              </th>
+              <th
+                class="px-4 py-2 text-xs font-semibold text-text-muted uppercase"
+              >
+                Size
+              </th>
+              <th
+                class="px-4 py-2 text-xs font-semibold text-text-muted uppercase"
+              >
+                Weight
+              </th>
+              <th
+                class="px-4 py-2 text-xs font-semibold text-text-muted uppercase"
+              >
+                Line Height
+              </th>
+              <th
+                class="px-4 py-2 text-xs font-semibold text-text-muted uppercase"
+              >
+                Usage
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              typography.map((row) => (
+                <tr class="border-b border-border hover:bg-surface-2">
+                  <td class="px-4 py-3 font-semibold text-text">{row.level}</td>
+                  <td class="px-4 py-3 text-text-muted">{row.size}</td>
+                  <td class="px-4 py-3 text-text-muted">{row.weight}</td>
+                  <td class="px-4 py-3 text-text-muted">{row.lineHeight}</td>
+                  <td class="px-4 py-3 text-text-muted">{row.usage}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Spacing -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-primary-400 mb-8">Spacing Scale</h2>
+      <div class="space-y-4">
+        {
+          spacing.map((s) => (
+            <div>
+              <p class="text-sm font-semibold text-text mb-2">
+                {s.name} — {s.value}
+              </p>
+              <div
+                class="bg-surface-2 rounded-lg px-4 py-2 text-xs text-text-muted font-mono"
+                style={{ height: s.value }}
+              >
+                {s.value}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Border Radius -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-primary-400 mb-8">Border Radius</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {
+          radii.map((r) => (
+            <div>
+              <p class="text-sm font-semibold text-text mb-2">
+                {r.name} — {r.value}
+              </p>
+              <div class={`bg-primary-400 h-32 w-32 ${r.class}`} />
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Shadows & Glows -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-primary-400 mb-8">Shadows & Glows</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {
+          shadows.map((shadow) => (
+            <div>
+              <p class="text-sm font-semibold text-text mb-1">{shadow.name}</p>
+              <p class="text-xs text-text-muted mb-3">{shadow.desc}</p>
+              <div
+                class="bg-surface-2 h-24 rounded-lg"
+                style={{ boxShadow: shadow.css }}
+              />
+              <p class="text-xs text-text-muted font-mono mt-2">{shadow.css}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Info -->
+    <section class="bg-surface-2 rounded-lg p-6 border border-border">
+      <h3 class="text-lg font-bold text-text mb-2">About This Demo</h3>
+      <p class="text-text-muted mb-3">
+        These tokens are defined in <code
+          class="bg-surface-1 px-2 py-1 rounded text-xs font-mono"
+          >src/styles/tokens.css</code
+        > using Tailwind&apos;s <code
+          class="bg-surface-1 px-2 py-1 rounded text-xs font-mono">@theme</code
+        > directive.
+      </p>
+      <p class="text-text-muted">
+        Change token values in <code
+          class="bg-surface-1 px-2 py-1 rounded text-xs font-mono">@theme</code
+        > to customize the entire site in one place. Utilities like <code
+          class="bg-surface-1 px-2 py-1 rounded text-xs font-mono"
+          >bg-primary-500</code
+        > will automatically update.
+      </p>
+    </section>
+  </div>
+</Page>

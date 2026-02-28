@@ -1,0 +1,19 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
+}
+
+const baseProps = Astro.props;
+---
+
+<Base {...baseProps}>
+  <main id="main-content" class="min-h-screen">
+    <slot />
+  </main>
+</Base>

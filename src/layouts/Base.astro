@@ -1,0 +1,55 @@
+---
+import { siteConfig } from '../config/site.example';
+import SEO from '../components/seo/SEO.astro';
+import OpenGraph from '../components/seo/OpenGraph.astro';
+import JsonLd from '../components/seo/JsonLd.astro';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description = siteConfig.tagline,
+  image,
+  canonicalUrl = siteConfig.url,
+  noIndex = false,
+} = Astro.props;
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteConfig.name,
+  url: siteConfig.url,
+  description: siteConfig.tagline,
+  author: {
+    '@type': 'Organization',
+    name: siteConfig.author,
+    email: siteConfig.contactEmail,
+  },
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <SEO {title} {description} {canonicalUrl} {noIndex} />
+    <OpenGraph {title} {description} {image} />
+    <JsonLd schema={websiteSchema} />
+
+    <!-- Favicon placeholder -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

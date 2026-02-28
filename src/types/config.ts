@@ -1,6 +1,6 @@
 /**
  * Core configuration types for StellarBoat.
- * 
+ *
  * These types define the shape of all fork-editable configuration.
  * Create a `src/config/site.ts` by copying `src/config/site.example.ts`
  * and filling in your project values.

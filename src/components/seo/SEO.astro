@@ -1,0 +1,32 @@
+---
+import { siteConfig } from '../../config/site.example';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description = siteConfig.tagline,
+  canonicalUrl,
+  noIndex = false,
+} = Astro.props;
+
+// Format title: "Page Title — Site Name" or "Site Name — Tagline" if title equals site name
+const formattedTitle =
+  title && title !== siteConfig.name
+    ? `${title} — ${siteConfig.name}`
+    : `${siteConfig.name} — ${siteConfig.tagline}`;
+---
+
+<title>{formattedTitle}</title>
+<meta name="description" content={description} />
+
+{canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+{noIndex && <meta name="robots" content="noindex, nofollow" />}
+
+{!noIndex && <meta name="robots" content="index, follow" />}
