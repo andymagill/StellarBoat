@@ -25,9 +25,12 @@ This sets up Git hooks from the `.husky/` directory.
 ### On `git commit`
 
 1. The pre-commit hook in `.husky/pre-commit` runs:
+
    ```bash
-   npx lint-staged
+   npx lint-staged --no-stash
    ```
+
+   (The `--no-stash` flag disables backup stashing for compatibility with various Git configurations)
 
 2. lint-staged applies configured tools to staged files:
    - **ESLint with auto-fix** on TypeScript files (`*.{js,mjs,cjs,ts}`)
@@ -111,6 +114,7 @@ This automatically runs the `prepare` script, which initializes Husky hooks. You
 ### Prettier/ESLint formatting conflicts
 
 If you're getting conflicting changes between ESLint and Prettier, check that both are configured similarly. The project uses:
+
 - ESLint configuration in `eslint.config.mjs`
 - Prettier configuration in `.prettierrc`
 
