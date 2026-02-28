@@ -9,8 +9,9 @@ import type { NavConfig } from '../types/config.ts';
 export const navConfig: NavConfig = {
   items: [
     { label: 'Home', href: '/' },
-    { label: 'Design Tokens', href: '/demo/tokens' },
-    { label: 'Forms', href: '/demo/forms' },
+    { label: 'Design Tokens', href: '/tokens' },
+    { label: 'UI Primitives', href: '/ui' },
+    { label: 'Forms', href: '/forms' },
   ],
   includeDemo: true,
 };

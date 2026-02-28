@@ -21,9 +21,15 @@ const variantStyles = {
   raised: 'bg-surface-raised',
 };
 
-const classes = `${variantStyles[variant]} border border-border rounded-lg shadow-md p-6 my-6 ${classProp}`;
+const classes = `${variantStyles[variant]} border border-border rounded-lg shadow-md p-6 my-6 card-container ${classProp}`;
 ---
 
 <div class={classes}>
   <slot />
 </div>
+
+<style>
+  .card-container > :global(div > *:first-child) {
+    margin-top: 0 !important;
+  }
+</style>

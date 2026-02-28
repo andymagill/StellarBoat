@@ -12,8 +12,9 @@ export const footerConfig: FooterConfig = {
   tagline: 'Built with care · Deep Space theme',
   nav: [
     { label: 'Home', href: '/' },
-    { label: 'Design Tokens', href: '/demo/tokens' },
-    { label: 'Forms', href: '/demo/forms' },
+    { label: 'Design Tokens', href: '/tokens' },
+    { label: 'UI Primitives', href: '/ui' },
+    { label: 'Forms', href: '/forms' },
   ],
   columns: [
     {
