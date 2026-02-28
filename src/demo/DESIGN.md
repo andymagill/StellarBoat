@@ -55,6 +55,7 @@ Defined in `@layer base` of `tokens.css` — Deep Space theme only (dark mode is
 | -------------------------- | ------------------------- | ------------------------------------------ |
 | `--color-bg`               | `#0a0e27` (Midnight)      | Page background                            |
 | `--color-surface`          | `#1a1f3a` (Space Blue)    | Card and elevated surfaces                 |
+| `--color-surface-raised`   | `#252a45` (Raised Blue)   | Elevated feature cards, alternate surfaces |
 | `--color-text`             | `#ffffff` (Text White)    | Primary text, high contrast                |
 | `--color-text-muted`       | `#b0b8c8` (Text Gray)     | Secondary text, meta, captions             |
 | `--color-border`           | `#2d3a5a` (Subtle Border) | Dividers, input borders                    |
@@ -222,7 +223,7 @@ The demo site includes live examples of all core components. Each is displayed w
 
 #### Card
 
-- Dark Space Blue `#1a1f3a` background
+- Dark Space Blue `#1a1f3a` background (default) or `#252a45` (raised variant for elevated/featured cards)
 - `rounded-lg` (16px) corners; subtle `#2d3a5a` border (1px)
 - Internal padding: `p-6` (24px) default
 - Optional header/footer sections
@@ -494,6 +495,60 @@ The demo site is optimized for Core Web Vitals (target: Lighthouse 95+):
   </a>
   ```
 - Internal navigation links use Text Gray with neon cyan underline on hover
+
+---
+
+## Home Page Layout
+
+The home page (`src/pages/index.astro`) demonstrates the primary marketing composition with a hero section and features grid.
+
+### Hero Section
+
+- **Layout:** Full-width, split composition
+  - Left side: Large headline, description, CTA button
+  - Right side: Spacecraft visual (`hero-spacecraft.png`)
+- **Background:** Full-width background image (`hero-background.png`) with dark overlay (20–30% opacity) for text readability
+- **Headline:** Large bold text (`text-5xl md:text-6xl`), primary color accent, tight line height
+- **Description:** Secondary size, muted text color, max-width constraint for readability
+- **CTA Button:** Neon cyan background with hover glow effect
+- **Responsive behavior:**
+  - Desktop (md): Side-by-side layout with background image and spaceship visual
+  - Mobile: Single-column stacked layout; spaceship hidden on smaller viewports
+
+### Features Section
+
+- **Layout:** 3-column horizontal card grid (mobile: 1 column, tablet: responsive stack, desktop: 3 columns)
+- **Section Header:** Centered heading + subheading with muted text
+- **Cards:** Dark Space Blue (`bg-surface-raised`) with subtle border
+  - Icon centered at top (40–48px size)
+  - Feature title (bold, readable text)
+  - Description (muted text, multi-line)
+- **Hover state:** Neon cyan border highlight + glow effect (transform and shadow)
+- **Spacing:** 32px gap between cards (responsive adjustment on mobile)
+
+#### Feature Cards (Three Types)
+
+1. **Solid Architecture** — Island architecture icon — Enterprise-grade structure description
+2. **Lightweight & Fast** — SEO lightweight icon — SSG performance description
+3. **Tailwind Ready** — Tailwind Ready icon — Design token integration description
+
+### Asset Locations
+
+All marketing images are stored in `public/images/` for direct public URL access:
+
+| Asset                | Filename                | Purpose                       | Dimensions (estimated)  |
+| -------------------- | ----------------------- | ----------------------------- | ----------------------- |
+| Hero Background      | `hero-background.png`   | Full-width hero section bg    | ~1920px wide, lg height |
+| Hero Spacecraft      | `hero-spacecraft.png`   | Spaceship visual (right side) | ~400–600px              |
+| Architecture Icon    | `icon-architecture.png` | Feature card icon             | ~80–100px square        |
+| Lightweight SEO Icon | `icon-seo.png`          | Feature card icon             | ~80–100px square        |
+| Tailwind Ready Icon  | `icon-tailwind.png`     | Feature card icon             | ~80–100px square        |
+
+**Usage in components:**
+
+- Images referenced via `src="/images/filename.png"` (public URL paths)
+- Background image set via CSS `style="background-image: url('/images/hero-background.png')"`
+- Feature icons displayed via `<img>` tags with appropriate alt text
 
 ---
 

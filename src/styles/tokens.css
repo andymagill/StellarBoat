@@ -52,6 +52,8 @@
   /* ─── Deep Space Background & Surface ────────────────────────────────────── */
   --color-midnight: #0a0e27;
   --color-starfield: #000000;
+  --color-surface: #1a1f3a;
+  --color-surface-raised: #252a45;
 
   /* ─── Typography ─────────────────────────────────────────────────────────── */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;

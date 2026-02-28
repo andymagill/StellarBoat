@@ -3,24 +3,123 @@ import Page from '../layouts/Page.astro';
 ---
 
 <Page title="Home">
-  <div class="max-w-6xl mx-auto px-6 py-12">
-    <div class="py-12 space-y-6">
-      <h1 class="text-4xl md:text-5xl font-bold text-text">
-        Welcome to <span class="text-primary-400">StellarBoat</span>
-      </h1>
-      <p class="text-lg text-text-muted max-w-2xl">
-        A production-ready Astro.js starter for marketing mini-sites and landing
-        pages. Built with deep space aesthetics, design tokens, and modern web
-        standards.
-      </p>
-      <div class="flex gap-4 pt-4">
-        <a
-          href="/demo/tokens"
-          class="px-6 py-3 bg-primary-400 text-surface-1 font-semibold rounded-lg hover:opacity-90 transition-opacity"
+  <!-- Hero Section: Full-width with background image left, spaceship visual right -->
+  <section
+    class="relative w-full bg-cover bg-center min-h-[600px] md:min-h-[700px] overflow-hidden"
+    style="background-image: url('/images/hero-background.png')"
+  >
+    <!-- Dark overlay for text readability -->
+    <div class="absolute inset-0 bg-black/30"></div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-6 h-full flex items-center">
+      <!-- Left: Hero Content -->
+      <div class="w-full md:w-1/2 py-12 md:py-0">
+        <h1 class="text-5xl md:text-6xl font-bold text-text mb-6 leading-tight">
+          Welcome to <span class="text-secondary-400">StellarBoat</span>
+        </h1>
+        <p
+          class="text-lg md:text-xl text-text-muted mb-8 max-w-lg leading-relaxed"
         >
-          View Design Tokens
-        </a>
+          A production-ready Astro.js starter for marketing mini-sites and
+          landing pages. Built with deep space aesthetics, design tokens, and
+          modern web standards.
+        </p>
+        <div class="flex gap-4 pt-4">
+          <a
+            href="/demo/tokens"
+            class="px-8 py-4 bg-primary-400 text-white font-semibold rounded-lg hover:shadow-glow-cyan transition-all duration-300"
+          >
+            View Design Tokens
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Spaceship Visual -->
+      <div class="hidden md:flex md:w-1/2 h-full items-center justify-center">
+        <img
+          src="/images/hero-spacecraft.png"
+          alt="StellarBoat spacecraft"
+          class="max-h-[500px] w-auto object-contain drop-shadow-2xl"
+        />
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Features Section: 3-column card grid -->
+  <section class="w-full bg-surface py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-bold text-text mb-4">
+          Why StellarBoat?
+        </h2>
+        <p class="text-lg text-text-muted max-w-2xl mx-auto">
+          Built for modern web development with everything you need out of the
+          box.
+        </p>
+      </div>
+
+      <!-- Feature Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Architecture Card -->
+        <div
+          class="group relative p-8 rounded-lg border border-border bg-surface-raised hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
+        >
+          <div class="flex justify-center mb-6">
+            <img
+              src="/images/icon-architecture.png"
+              alt="Island architecture icon"
+              class="h-16 w-16 md:h-20 md:w-20 object-contain"
+            />
+          </div>
+          <h3 class="text-xl font-bold text-text text-center mb-3">
+            Solid Architecture
+          </h3>
+          <p class="text-text-muted text-center">
+            Enterprise-grade structure designed for AI-agent-friendly forking
+            and easy customization.
+          </p>
+        </div>
+
+        <!-- SEO Card -->
+        <div
+          class="group relative p-8 rounded-lg border border-border bg-surface-raised hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
+        >
+          <div class="flex justify-center mb-6">
+            <img
+              src="/images/icon-seo.png"
+              alt="Lightweight SEO icon"
+              class="h-16 w-16 md:h-20 md:w-20 object-contain"
+            />
+          </div>
+          <h3 class="text-xl font-bold text-text text-center mb-3">
+            Lightweight & Fast
+          </h3>
+          <p class="text-text-muted text-center">
+            Zero runtime overhead. Static site generation for blazing-fast
+            performance and SEO optimization.
+          </p>
+        </div>
+
+        <!-- Tailwind Card -->
+        <div
+          class="group relative p-8 rounded-lg border border-border bg-surface-raised hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
+        >
+          <div class="flex justify-center mb-6">
+            <img
+              src="/images/icon-tailwind.png"
+              alt="Tailwind Ready icon"
+              class="h-16 w-16 md:h-20 md:w-20 object-contain"
+            />
+          </div>
+          <h3 class="text-xl font-bold text-text text-center mb-3">
+            Tailwind Ready
+          </h3>
+          <p class="text-text-muted text-center">
+            Modern design tokens with Tailwind CSS v4 @theme integration for
+            rapid customization.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 </Page>
