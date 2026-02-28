@@ -28,6 +28,7 @@
     "@tailwindcss/vite": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
+    "@iconify-json/heroicons": "latest",
     "astro": "latest",
     "astro-icon": "latest",
     "eslint": "latest",

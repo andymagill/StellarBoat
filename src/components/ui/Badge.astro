@@ -1,0 +1,37 @@
+---
+/**
+ * Badge Component
+ *
+ * A small, inline label presented as a pill shape.
+ * Supports multiple color variants for semantic meaning.
+ */
+
+interface Props {
+  /** Badge color variant */
+  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info';
+  /** Additional CSS classes to apply to the root element */
+  class?: string;
+}
+
+const { variant = 'primary', class: classProp = '' } = Astro.props;
+
+// Base styles
+const baseStyles =
+  'inline-flex items-center rounded-full text-xs font-semibold whitespace-nowrap';
+
+// Variant styles
+const variantStyles = {
+  primary: 'bg-primary-400/10 text-primary-400',
+  secondary: 'bg-secondary-400/10 text-secondary-400',
+  success: 'bg-success/10 text-success',
+  warning: 'bg-warning/10 text-warning',
+  error: 'bg-error/10 text-error',
+  info: 'bg-info/10 text-info',
+};
+
+const classes = `${baseStyles} px-3 py-1 ${variantStyles[variant]} ${classProp}`;
+---
+
+<span class={classes}>
+  <slot />
+</span>

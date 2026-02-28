@@ -17,8 +17,8 @@
   --color-primary-100: #b3f0ff;
   --color-primary-200: #80eaff;
   --color-primary-300: #4de3ff;
-  --color-primary-400: #1add00ff;
-  --color-primary-500: #00d9ff;
+  --color-primary-400: #23daff;
+  --color-primary-500: #02c5e8;
   --color-primary-600: #00a8cc;
   --color-primary-700: #007799;
   --color-primary-800: #004d66;
@@ -75,6 +75,17 @@
   /* ─── Glow Effects (Neon Shadows for Deep Space Theme) ───────────────────── */
   --shadow-glow-cyan: 0 0 20px rgb(0 217 255 / 0.3);
   --shadow-glow-purple: 0 0 20px rgb(192 0 255 / 0.3);
+
+  /* ─── Semantic Aliases (for component utilities) ──────────────────────────── */
+  --color-text: #ffffff;
+  --color-text-muted: #b0b8c8;
+  --color-border: #2d3a5a;
+  --color-surface-1: #1a1f3a;
+  --color-surface-2: #141824;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────── */

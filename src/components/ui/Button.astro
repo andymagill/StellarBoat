@@ -1,0 +1,67 @@
+---
+/**
+ * Button Component
+ *
+ * A flexible button/link component that renders as <button> or <a> based on context.
+ * Supports three variants (primary, secondary, ghost) and three sizes (sm, md, lg).
+ */
+
+interface Props {
+  /** Button style variant */
+  variant?: 'primary' | 'secondary' | 'ghost';
+  /** Button size */
+  size?: 'sm' | 'md' | 'lg';
+  /** If provided, renders as <a> instead of <button> */
+  href?: string;
+  /** Button type attribute (only used when href is not set) */
+  type?: 'submit' | 'reset' | 'button';
+  /** Additional CSS classes to apply to the root element */
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  type = 'button',
+  class: classProp = '',
+} = Astro.props;
+
+// Base styles: flex, items, justify, rounded, font weight, transition
+const baseStyles =
+  'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400 disabled:opacity-50 disabled:cursor-not-allowed';
+
+// Size styles
+const sizeStyles = {
+  sm: 'px-3 py-1.5 text-sm',
+  md: 'px-4 py-2 text-base',
+  lg: 'px-6 py-3 text-lg',
+};
+
+// Variant styles
+const variantStyles = {
+  primary:
+    'bg-primary-400 text-midnight hover:bg-primary-300 active:bg-primary-500',
+  secondary:
+    'border-2 border-primary-400 text-primary-400 hover:bg-primary-400 hover:text-midnight active:bg-primary-500 active:border-primary-500',
+  ghost: 'text-text-muted hover:text-text active:text-primary-400',
+};
+
+const classes = `${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${classProp}`;
+
+const commonAttrs = {
+  class: classes,
+};
+---
+
+{
+  href ? (
+    <a href={href} {...commonAttrs}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} {...commonAttrs}>
+      <slot />
+    </button>
+  )
+}

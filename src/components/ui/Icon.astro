@@ -1,0 +1,32 @@
+---
+/**
+ * Icon Component
+ *
+ * A thin wrapper around astro-icon that enforces proper ARIA attributes.
+ * When label is provided, sets aria-label and omits aria-hidden (meaningful icon).
+ * When label is absent, sets aria-hidden="true" (decorative icon).
+ */
+
+import { Icon as AstroIcon } from 'astro-icon/components';
+
+interface Props {
+  /** Iconify icon name (e.g., "heroicons:star") */
+  name: string;
+  /** Icon size in pixels */
+  size?: number;
+  /** Accessibility label for meaningful icons */
+  label?: string;
+  /** Additional CSS classes to apply to the root element */
+  class?: string;
+}
+
+const { name, size = 24, label, class: classProp = '' } = Astro.props;
+---
+
+<AstroIcon
+  name={name}
+  size={size}
+  aria-label={label}
+  aria-hidden={!label}
+  class={classProp}
+/>

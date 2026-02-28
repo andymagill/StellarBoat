@@ -1,0 +1,18 @@
+---
+/**
+ * Divider Component
+ *
+ * A horizontal visual separator using a styled <hr> element.
+ */
+
+interface Props {
+  /** Additional CSS classes to apply to the root element */
+  class?: string;
+}
+
+const { class: classProp = '' } = Astro.props;
+
+const classes = `border-t border-border my-4 ${classProp}`;
+---
+
+<hr class={classes} />

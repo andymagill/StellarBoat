@@ -1,0 +1,218 @@
+---
+import Page from '../../layouts/Page.astro';
+import Button from '../../components/ui/Button.astro';
+import Card from '../../components/ui/Card.astro';
+import Badge from '../../components/ui/Badge.astro';
+import Alert from '../../components/ui/Alert.astro';
+import Divider from '../../components/ui/Divider.astro';
+import Icon from '../../components/ui/Icon.astro';
+---
+
+<Page title="UI Primitives" description="All atomic UI components and variants">
+  <main id="main-content" class="max-w-4xl mx-auto px-6 py-12">
+    <h1 class="text-4xl font-bold mb-2">UI Primitives</h1>
+    <p class="text-text-muted mb-8">
+      Atomic UI components for building marketing sections.
+    </p>
+
+    <!-- Button Variants -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-6">Button</h2>
+
+      <div class="space-y-8">
+        <!-- Button / Primary -->
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">Primary</h3>
+          <div class="flex flex-wrap gap-3">
+            <Button variant="primary" size="sm">Small</Button>
+            <Button variant="primary" size="md">Medium</Button>
+            <Button variant="primary" size="lg">Large</Button>
+            <Button variant="primary" size="md" href="#demo">Link</Button>
+            <Button variant="primary" size="md" type="submit">Submit</Button>
+          </div>
+        </div>
+
+        <!-- Button / Secondary -->
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">Secondary</h3>
+          <div class="flex flex-wrap gap-3">
+            <Button variant="secondary" size="sm">Small</Button>
+            <Button variant="secondary" size="md">Medium</Button>
+            <Button variant="secondary" size="lg">Large</Button>
+          </div>
+        </div>
+
+        <!-- Button / Ghost -->
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">Ghost</h3>
+          <div class="flex flex-wrap gap-3">
+            <Button variant="ghost" size="sm">Small</Button>
+            <Button variant="ghost" size="md">Medium</Button>
+            <Button variant="ghost" size="lg">Large</Button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <Divider />
+
+    <!-- Card -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-6">Card</h2>
+      <Card>
+        <h3 class="text-lg font-semibold mb-2">Card Title</h3>
+        <p class="text-text-muted">
+          Cards provide a consistent elevated surface for content. They include
+          border, radius, shadow, and padding using semantic design tokens.
+        </p>
+      </Card>
+    </section>
+
+    <Divider />
+
+    <!-- Badge Variants -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-6">Badge</h2>
+
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">Primary</h3>
+          <Badge variant="primary">Primary</Badge>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">Secondary</h3>
+          <Badge variant="secondary">Secondary</Badge>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">Success</h3>
+          <Badge variant="success">Success</Badge>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">Warning</h3>
+          <Badge variant="warning">Warning</Badge>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">Error</h3>
+          <Badge variant="error">Error</Badge>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">Info</h3>
+          <Badge variant="info">Info</Badge>
+        </div>
+      </div>
+    </section>
+
+    <Divider />
+
+    <!-- Alert Variants -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-6">Alert</h2>
+
+      <div class="space-y-4">
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-2">Info</h3>
+          <Alert variant="info">
+            <Icon name="heroicons:information-circle" size={20} />
+            <span>This is an informational message for user guidance.</span>
+          </Alert>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-2">Success</h3>
+          <Alert variant="success">
+            <Icon name="heroicons:check-circle" size={20} />
+            <span>Your action completed successfully!</span>
+          </Alert>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-2">
+            Warning (role=alert)
+          </h3>
+          <Alert variant="warning">
+            <Icon name="heroicons:exclamation-triangle" size={20} />
+            <span>Be careful with this action—it may have consequences.</span>
+          </Alert>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-2">
+            Error (role=alert)
+          </h3>
+          <Alert variant="error">
+            <Icon name="heroicons:x-circle" size={20} />
+            <span>Something went wrong. Please try again.</span>
+          </Alert>
+        </div>
+      </div>
+    </section>
+
+    <Divider />
+
+    <!-- Divider -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-6">Divider</h2>
+      <p class="text-text-muted mb-4">Horizontal separator between sections:</p>
+      <div>Content above</div>
+      <Divider />
+      <div>Content below</div>
+    </section>
+
+    <Divider />
+
+    <!-- Icon -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-6">Icon</h2>
+
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">
+            Decorative (aria-hidden)
+          </h3>
+          <div class="flex gap-3">
+            <Icon name="heroicons:star" size={24} />
+            <Icon name="heroicons:heart" size={24} />
+            <Icon name="heroicons:rocket-launch" size={24} />
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">
+            Meaningful (aria-label)
+          </h3>
+          <div class="flex gap-3">
+            <Icon name="heroicons:home" size={24} label="Home" />
+            <Icon name="heroicons:envelope" size={24} label="Contact" />
+            <Icon name="heroicons:cog-6-tooth" size={24} label="Settings" />
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">
+            Different Sizes
+          </h3>
+          <div class="flex items-center gap-3">
+            <Icon name="heroicons:star" size={16} />
+            <Icon name="heroicons:star" size={20} />
+            <Icon name="heroicons:star" size={24} />
+            <Icon name="heroicons:star" size={32} />
+            <Icon name="heroicons:star" size={40} />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Page>
+
+<style>
+  h1,
+  h2,
+  h3 {
+    color: var(--color-text);
+  }
+</style>

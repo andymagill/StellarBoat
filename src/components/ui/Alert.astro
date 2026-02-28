@@ -1,0 +1,37 @@
+---
+/**
+ * Alert Component
+ *
+ * A message container with semantic variant styling (info, success, warning, error).
+ * Automatically sets role="alert" for error/warning variants for accessibility.
+ */
+
+interface Props {
+  /** Alert severity variant */
+  variant?: 'info' | 'success' | 'warning' | 'error';
+  /** Additional CSS classes to apply to the root element */
+  class?: string;
+}
+
+const { variant = 'info', class: classProp = '' } = Astro.props;
+
+// Base styles
+const baseStyles = 'flex gap-3 rounded-lg border-l-4 p-4';
+
+// Variant styles (background tint, border color, text color)
+const variantStyles = {
+  info: 'bg-info/10 border-info text-info',
+  success: 'bg-success/10 border-success text-success',
+  warning: 'bg-warning/10 border-warning text-warning',
+  error: 'bg-error/10 border-error text-error',
+};
+
+const classes = `${baseStyles} ${variantStyles[variant]} ${classProp}`;
+
+// Set role="alert" only for error/warning variants (live region semantics)
+const shouldBeAlert = variant === 'error' || variant === 'warning';
+---
+
+<div class={classes} role={shouldBeAlert ? 'alert' : undefined}>
+  <slot />
+</div>
