@@ -3,17 +3,25 @@
  * Card Component
  *
  * A surface container with border, rounded corners, and shadow.
- * Provides a consistent elevated surface for content.
+ * Provides a consistent elevated surface for content with optional variants.
  */
 
 interface Props {
+  /** Card style variant */
+  variant?: 'default' | 'raised';
   /** Additional CSS classes to apply to the root element */
   class?: string;
 }
 
-const { class: classProp = '' } = Astro.props;
+const { variant = 'default', class: classProp = '' } = Astro.props;
 
-const classes = `bg-surface-1 border border-border rounded-lg shadow-md p-6 ${classProp}`;
+// Variant background colors
+const variantStyles = {
+  default: 'bg-surface-1',
+  raised: 'bg-surface-raised',
+};
+
+const classes = `${variantStyles[variant]} border border-border rounded-lg shadow-md p-6 ${classProp}`;
 ---
 
 <div class={classes}>

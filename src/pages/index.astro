@@ -1,5 +1,7 @@
 ---
 import Page from '../layouts/Page.astro';
+import Button from '../components/ui/Button.astro';
+import Card from '../components/ui/Card.astro';
 ---
 
 <Page title="Home">
@@ -25,12 +27,9 @@ import Page from '../layouts/Page.astro';
           modern web standards.
         </p>
         <div class="flex gap-4 pt-4">
-          <a
-            href="/demo/tokens"
-            class="px-8 py-4 bg-primary-400 text-white font-semibold rounded-lg hover:shadow-glow-cyan transition-all duration-300"
-          >
+          <Button href="/demo/tokens" variant="ghost" size="lg">
             View Design Tokens
-          </a>
+          </Button>
         </div>
       </div>
 
@@ -61,8 +60,9 @@ import Page from '../layouts/Page.astro';
       <!-- Feature Cards Grid -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Architecture Card -->
-        <div
-          class="group relative p-8 rounded-lg border border-border bg-surface-raised hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
+        <Card
+          variant="raised"
+          class="group hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
         >
           <div class="flex justify-center mb-6">
             <img
@@ -78,11 +78,12 @@ import Page from '../layouts/Page.astro';
             Enterprise-grade structure designed for AI-agent-friendly forking
             and easy customization.
           </p>
-        </div>
+        </Card>
 
         <!-- SEO Card -->
-        <div
-          class="group relative p-8 rounded-lg border border-border bg-surface-raised hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
+        <Card
+          variant="raised"
+          class="group hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
         >
           <div class="flex justify-center mb-6">
             <img
@@ -98,11 +99,12 @@ import Page from '../layouts/Page.astro';
             Zero runtime overhead. Static site generation for blazing-fast
             performance and SEO optimization.
           </p>
-        </div>
+        </Card>
 
         <!-- Tailwind Card -->
-        <div
-          class="group relative p-8 rounded-lg border border-border bg-surface-raised hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
+        <Card
+          variant="raised"
+          class="group hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
         >
           <div class="flex justify-center mb-6">
             <img
@@ -118,7 +120,7 @@ import Page from '../layouts/Page.astro';
             Modern design tokens with Tailwind CSS v4 @theme integration for
             rapid customization.
           </p>
-        </div>
+        </Card>
       </div>
     </div>
   </section>

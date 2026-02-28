@@ -59,13 +59,32 @@ import Icon from '../../components/ui/Icon.astro';
     <!-- Card -->
     <section class="mb-12">
       <h2 class="text-2xl font-semibold mb-6">Card</h2>
-      <Card>
-        <h3 class="text-lg font-semibold mb-2">Card Title</h3>
-        <p class="text-text-muted">
-          Cards provide a consistent elevated surface for content. They include
-          border, radius, shadow, and padding using semantic design tokens.
-        </p>
-      </Card>
+
+      <div class="space-y-8">
+        <!-- Card / Default -->
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">Default</h3>
+          <Card variant="default">
+            <h4 class="text-lg font-semibold mb-2">Default Card</h4>
+            <p class="text-text-muted">
+              Standard card with default surface background. Use for primary
+              content containers.
+            </p>
+          </Card>
+        </div>
+
+        <!-- Card / Raised -->
+        <div>
+          <h3 class="text-sm font-medium text-text-muted mb-3">Raised</h3>
+          <Card variant="raised">
+            <h4 class="text-lg font-semibold mb-2">Raised Card</h4>
+            <p class="text-text-muted">
+              Elevated card with raised surface background. Use for featured or
+              highlighted content.
+            </p>
+          </Card>
+        </div>
+      </div>
     </section>
 
     <Divider />
