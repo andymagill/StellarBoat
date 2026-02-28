@@ -1,10 +1,13 @@
 ---
-import { siteConfig } from '../../config/site.example';
+import { siteConfig } from '../../config/site';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   url?: string;
   type?: 'website' | 'article';
 }
@@ -13,7 +16,10 @@ const {
   title = siteConfig.name,
   description = siteConfig.tagline,
   image,
-  url = siteConfig.url,
+  imageAlt,
+  imageWidth,
+  imageHeight,
+  url = Astro.url.href,
   type = 'website',
 } = Astro.props;
 ---
@@ -25,9 +31,14 @@ const {
 <meta property="og:url" content={url} />
 <meta property="og:type" content={type} />
 {image && <meta property="og:image" content={image} />}
+{image && imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+{image && imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
+{image && imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
+{siteConfig.social?.twitter && <meta name="twitter:site" content={siteConfig.social.twitter} />}
 {image && <meta name="twitter:image" content={image} />}
+{image && imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}

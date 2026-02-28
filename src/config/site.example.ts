@@ -20,10 +20,22 @@ export const siteConfig: SiteConfig = {
   /**
    * Display name used in:
    * - <title> tags ("Page Title — Site Name")
-   * - header logo/text
-   * - footer copyright
+   * - JSON-LD schema
+   * - meta tags
    */
   name: 'StellarBoat Demo',
+
+  /**
+   * Brand name displayed in the header logo and footer.
+   * Often the same as `name` but can be shorter.
+   */
+  brandName: 'StellarBoat',
+
+  /**
+   * BCP-47 language tag for the HTML lang attribute.
+   * Examples: 'en', 'en-US', 'fr', 'de'
+   */
+  locale: 'en',
 
   /**
    * Short tagline (1-2 lines).
@@ -64,53 +76,6 @@ export const siteConfig: SiteConfig = {
     github: 'https://github.com/yourname',
     linkedin: 'https://linkedin.com/company/yourcompany',
     // Add more: instagram, youtube, etc.
-  },
-
-  // ============================================================================
-  // NAVIGATION
-  // ============================================================================
-
-  /**
-   * Main site navigation.
-   * Header component renders these items in order.
-   */
-  nav: {
-    items: [
-      { label: 'Home', href: '/' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Contact', href: '/contact' },
-      // Add more nav items here
-    ],
-    // Show demo navigation links (for demo site only) [OPTIONAL]
-    includeDemo: false,
-  },
-
-  // ============================================================================
-  // FOOTER
-  // ============================================================================
-
-  /**
-   * Footer configuration
-   */
-  footer: {
-    /**
-     * Copyright year or range.
-     * Examples: "2024", "2024-2025", "2024–present"
-     */
-    copyrightYear: '2024',
-
-    /**
-     * [OPTIONAL] Footer navigation links (same format as header nav items)
-     */
-    nav: [
-      { label: 'Privacy Policy', href: '/privacy' },
-      { label: 'Terms of Service', href: '/terms' },
-    ],
-
-    /**
-     * [OPTIONAL] Footer description or additional blurb
-     */
-    description: 'Built with StellarBoat',
   },
 
   // ============================================================================

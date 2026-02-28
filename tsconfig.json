@@ -2,7 +2,7 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "jsxImportSource": "astro",
-    "lib": ["ES2020"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "target": "ES2020",
     "module": "ESNext",
     "moduleResolution": "bundler",

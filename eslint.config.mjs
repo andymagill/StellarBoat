@@ -36,6 +36,7 @@ export default [
       parserOptions: {
         ecmaVersion: 2021,
         sourceType: 'module',
+        project: true,
       },
     },
     plugins: {
@@ -43,7 +44,7 @@ export default [
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {

@@ -3,8 +3,12 @@
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 @import 'tailwindcss';
-@import '@fontsource/inter';
-@import '@fontsource/jetbrains-mono';
+/* Inter: load the specific weights used in the design system */
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';
+/* JetBrains Mono: load only the weight used (400) */
+@import '@fontsource/jetbrains-mono/latin-400.css';
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 /* @theme: Primitive scale — generates all scale utilities (bg-*, text-, etc.) */
@@ -92,8 +96,12 @@
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 /* Semantic Aliases: CSS variables (not utilities) — Fork Customization Zone   */
-/* Components reference these via var() in inline styles and @apply blocks      */
-/* ─────────────────────────────────────────────────────────────────────────── */
+/* Components reference these via var() in inline styles and @apply blocks      *//*                                                                               */
+/* ⚠️  SYNC NOTE: Some tokens below (text, border, surface, success, warning,    */
+/*    error, info) are ALSO defined in the @theme block above so Tailwind        */
+/*    generates utility classes (bg-success, text-error, etc.).                  */
+/*    If you change a value here, update the matching @theme entry too —        */
+/*    and vice versa. There is no automatic cross-reference.                     *//* ─────────────────────────────────────────────────────────────────────────── */
 
 @layer base {
   :root {

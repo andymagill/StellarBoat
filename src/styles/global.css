@@ -3,16 +3,8 @@
 /* Imported by Base.astro; provides foundation for all pages                   */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
-/* ─── CSS Reset & Box Sizing ────────────────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
+/* ─── Base & Layout ────────────────────────────────────────────────────────── */
 body {
-  margin: 0;
-  padding: 0;
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
@@ -49,7 +41,7 @@ a {
 }
 
 a:hover {
-  color: var(--color-accent-dark);
+  color: var(--color-text);
   text-decoration: underline;
 }
 
@@ -108,14 +100,6 @@ textarea,
 select {
   font-family: inherit;
   color: inherit;
-}
-
-/* ─── Lists ──────────────────────────────────────────────────────────────────── */
-ul,
-ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
 /* ─── Horizontal Rule ────────────────────────────────────────────────────────── */

@@ -1,5 +1,5 @@
 ---
-import { siteConfig } from '../config/site.example';
+import { siteConfig } from '../config/site';
 import SEO from '../components/seo/SEO.astro';
 import OpenGraph from '../components/seo/OpenGraph.astro';
 import JsonLd from '../components/seo/JsonLd.astro';
@@ -18,7 +18,7 @@ const {
   title,
   description = siteConfig.tagline,
   image,
-  canonicalUrl = siteConfig.url,
+  canonicalUrl = Astro.url.href,
   noIndex = false,
 } = Astro.props;
 
@@ -37,7 +37,7 @@ const websiteSchema = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={siteConfig.locale ?? 'en'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -45,6 +45,9 @@ const websiteSchema = {
     <SEO {title} {description} {canonicalUrl} {noIndex} />
     <OpenGraph {title} {description} {image} />
     <JsonLd schema={websiteSchema} />
+
+    <!-- Preload hero background image for LCP optimization -->
+    <link rel="preload" as="image" href="/images/hero-background.png" />
 
     <!-- Favicon placeholder -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

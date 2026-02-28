@@ -14,11 +14,17 @@ export interface SiteConfig {
   /** Display name of the site (used in meta tags, header, footer) */
   name: string;
 
+  /** Brand name displayed in header and footer (may differ from name) */
+  brandName: string;
+
   /** Short tagline or description (used in meta og:description, footer) */
   tagline: string;
 
   /** Full site URL including protocol (e.g., https://example.com) */
   url: string;
+
+  /** BCP-47 language tag for the HTML lang attribute (e.g., "en", "en-US") */
+  locale?: string;
 
   /** Site author/owner name */
   author: string;
@@ -33,12 +39,6 @@ export interface SiteConfig {
     linkedin?: string;
     [key: string]: string | undefined;
   };
-
-  /** Navigation configuration */
-  nav: NavConfig;
-
-  /** Footer configuration */
-  footer: FooterConfig;
 
   /** Analytics configuration (GTM, consent mode, etc.) */
   analytics: AnalyticsConfig;
@@ -101,6 +101,9 @@ export interface FooterConfig {
 
   /** Additional footer columns (optional) */
   columns?: FooterColumn[];
+
+  /** Optional bottom tagline shown in the footer bar (e.g., "Built with Astro") */
+  tagline?: string;
 }
 
 /**
@@ -122,10 +125,10 @@ export interface AnalyticsConfig {
  */
 export interface FormsConfig {
   /**
-   * Default form backend: 'web3forms', 'netlify', 'api', or custom name
-   * Individual form components can override this with a `backend` prop
+   * Default form backend.
+   * Individual form components can override this with a `backend` prop.
    */
-  defaultBackend: 'web3forms' | 'netlify' | 'api' | string;
+  defaultBackend: 'web3forms' | 'netlify' | 'api';
 
   /** Web3Forms access key (required if defaultBackend is 'web3forms') */
   web3formsKey?: string;

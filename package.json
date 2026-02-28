@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "lint": "eslint .",
     "check": "astro check",
+    "test": "echo '⚠️  No tests configured yet. Add tests in tests/ directory and update this script.'",
     "format": "prettier --write .",
     "prepare": "husky"
   },

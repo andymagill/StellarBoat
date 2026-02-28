@@ -1,5 +1,6 @@
 ---
 import { footerConfig } from '../../config/footer';
+import { siteConfig } from '../../config/site';
 ---
 
 <footer class="bg-surface-2 border-t border-border mt-12">
@@ -8,7 +9,7 @@ import { footerConfig } from '../../config/footer';
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
       <!-- Brand / Description -->
       <div>
-        <h3 class="text-lg font-bold text-primary-400 mb-2">StellarBoat</h3>
+        <h3 class="text-lg font-bold text-primary-400 mb-2">{siteConfig.brandName}</h3>
         {
           footerConfig.description && (
             <p class="text-sm text-text-muted">{footerConfig.description}</p>
@@ -19,7 +20,7 @@ import { footerConfig } from '../../config/footer';
       <!-- Footer Navigation -->
       {
         footerConfig.nav && footerConfig.nav.length > 0 && (
-          <nav class="flex flex-col gap-2">
+          <nav aria-label="Site map" class="flex flex-col gap-2">
             <h4 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
               Links
             </h4>
@@ -44,7 +45,7 @@ import { footerConfig } from '../../config/footer';
               <h4 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
                 {column.title}
               </h4>
-              <nav class="flex flex-col gap-2">
+              <nav aria-label={column.title} class="flex flex-col gap-2">
                 {column.links.map((item) => (
                   <a
                     href={item.href}
@@ -61,16 +62,16 @@ import { footerConfig } from '../../config/footer';
       <!-- Copyright -->
       <div>
         <p class="text-sm text-text-muted">
-          © {footerConfig.copyrightYear} StellarBoat
+          © {footerConfig.copyrightYear} {siteConfig.brandName}
         </p>
       </div>
     </div>
 
     <!-- Bottom divider -->
     <div class="border-t border-border pt-6">
-      <p class="text-xs text-text-muted text-center">
-        Built with care · Deep Space theme
-      </p>
+      {footerConfig.tagline && (
+        <p class="text-xs text-text-muted text-center">{footerConfig.tagline}</p>
+      )}
     </div>
   </div>
 </footer>

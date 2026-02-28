@@ -13,6 +13,7 @@ import tailwindPlugin from '@tailwindcss/vite';
 export default defineConfig({
   site: process.env.PUBLIC_SITE_URL || 'https://stellarboat.example.com',
   output: 'static',
+  trailingSlash: 'never',
   adapter: cloudflare(),
   // To use Netlify, change the adapter to:
   // adapter: netlify(),
@@ -21,9 +22,8 @@ export default defineConfig({
   // adapter: vercel(),
   integrations: [
     sitemap({
-      // Filter to exclude demo routes and no-index pages
-      // Finalized in Milestone 8
-      filter: () => true,
+      // Exclude demo routes from sitemap
+      filter: (page) => !page.includes('/demo/'),
     }),
     icon(),
   ],

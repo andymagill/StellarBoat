@@ -7,8 +7,9 @@ import type { FooterConfig } from '../types/config.ts';
  * Update this object to customize footer content and links.
  */
 export const footerConfig: FooterConfig = {
-  copyrightYear: '2024',
+  copyrightYear: new Date().getFullYear().toString(),
   description: 'Built with StellarBoat',
+  tagline: 'Built with care · Deep Space theme',
   nav: [
     { label: 'Home', href: '/' },
     { label: 'Design Tokens', href: '/demo/tokens' },
