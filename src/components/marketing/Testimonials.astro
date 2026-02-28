@@ -1,0 +1,161 @@
+---
+/**
+ * Testimonials Component
+ *
+ * A section displaying customer or user testimonials with quotes, author info, and avatars.
+ * Supports two layout variants:
+ * - `cards`: Grid of testimonial cards
+ * - `carousel`: Horizontal scrollable carousel (on mobile, stacks vertically)
+ *
+ * @example
+ * ```astro
+ * <Testimonials
+ *   variant="cards"
+ *   items={[
+ *     {
+ *       quote: "This product is amazing!",
+ *       author: "Jane Doe",
+ *       role: "CEO at Company",
+ *       avatar: "/jane.jpg"
+ *     }
+ *   ]}
+ * />
+ * ```
+ */
+
+interface Testimonial {
+  /** The testimonial quote text */
+  quote: string;
+  /** Author name */
+  author: string;
+  /** Author job title or role */
+  role: string;
+  /** Optional avatar image URL */
+  avatar?: string;
+}
+
+interface Props {
+  /** Layout variant */
+  variant?: 'cards' | 'carousel';
+  /** Array of testimonials to display */
+  items: Testimonial[];
+  /** Additional CSS classes to apply to the root element */
+  class?: string;
+}
+
+const {
+  variant = 'cards',
+  items,
+  class: classProp = '',
+} = Astro.props as Props;
+---
+
+<section class={`py-16 px-4 sm:px-6 lg:px-8 ${classProp}`}>
+  <div class="mx-auto max-w-6xl">
+    {
+      variant === 'cards' && (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {items.map((testimonial) => (
+            <div class="bg-surface-1 border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+              <p class="text-text mb-4 italic">"{testimonial.quote}"</p>
+              <div class="flex items-center gap-3">
+                {testimonial.avatar && (
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.author}
+                    class="h-10 w-10 rounded-full object-cover"
+                  />
+                )}
+                <div>
+                  <p class="font-semibold text-text">{testimonial.author}</p>
+                  <p class="text-sm text-text-muted">{testimonial.role}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      variant === 'carousel' && (
+        <div class="relative w-full px-8 sm:px-16">
+          <div
+            class="overflow-x-auto carousel-scroll snap-x snap-mandatory"
+            id="testimonials-carousel"
+          >
+            <div class="flex gap-6 pb-4">
+              {items.map((testimonial, index) => (
+                <div
+                  key={index}
+                  class="flex-shrink-0 w-full sm:w-96 snap-start bg-surface-1 border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <p class="text-text mb-4 italic">"{testimonial.quote}"</p>
+                  <div class="flex items-center gap-3">
+                    {testimonial.avatar && (
+                      <img
+                        src={testimonial.avatar}
+                        alt={testimonial.author}
+                        class="h-10 w-10 rounded-full object-cover"
+                      />
+                    )}
+                    <div>
+                      <p class="font-semibold text-text">
+                        {testimonial.author}
+                      </p>
+                      <p class="text-sm text-text-muted">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Navigation buttons for carousel */}
+          {items.length > 1 && (
+            <>
+              <button
+                class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-primary-500 text-white rounded-full p-2 hover:bg-primary-600 transition-colors hidden sm:flex items-center justify-center w-10 h-10"
+                onclick="document.getElementById('testimonials-carousel').scrollBy({ left: -400, behavior: 'smooth' })"
+                aria-label="Scroll testimonials left"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+              <button
+                class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-primary-500 text-white rounded-full p-2 hover:bg-primary-600 transition-colors hidden sm:flex items-center justify-center w-10 h-10"
+                onclick="document.getElementById('testimonials-carousel').scrollBy({ left: 400, behavior: 'smooth' })"
+                aria-label="Scroll testimonials right"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </>
+          )}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  /* Hide scrollbar while maintaining scroll functionality */
+  .carousel-scroll {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .carousel-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+</style>

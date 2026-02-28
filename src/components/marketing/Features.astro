@@ -1,0 +1,86 @@
+---
+/**
+ * Features Component
+ *
+ * A section displaying a list of features with icons, titles, and descriptions.
+ * Supports three layout variants:
+ * - `grid-3`: Three-column grid (default)
+ * - `grid-2`: Two-column grid
+ * - `list`: Vertical list layout
+ *
+ * @example
+ * ```astro
+ * <Features
+ *   variant="grid-3"
+ *   items={[
+ *     {
+ *       icon: "rocket",
+ *       title: "Super Fast",
+ *       description: "Optimized for speed"
+ *     },
+ *     {
+ *       icon: "zap",
+ *       title: "Edge Ready",
+ *       description: "Deploy anywhere"
+ *     }
+ *   ]}
+ * />
+ * ```
+ */
+
+import Icon from '../ui/Icon.astro';
+
+interface Feature {
+  /** Icon name (Iconify format, e.g., "heroicons:rocket-launch") */
+  icon: string;
+  /** Feature title */
+  title: string;
+  /** Feature description */
+  description: string;
+}
+
+interface Props {
+  /** Layout variant */
+  variant?: 'grid-3' | 'grid-2' | 'list';
+  /** Array of features to display */
+  items: Feature[];
+  /** Additional CSS classes to apply to the root element */
+  class?: string;
+}
+
+const {
+  variant = 'grid-3',
+  items,
+  class: classProp = '',
+} = Astro.props as Props;
+
+const gridClasses = {
+  'grid-3': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8',
+  'grid-2': 'grid grid-cols-1 md:grid-cols-2 gap-8',
+  list: 'space-y-6',
+};
+---
+
+<section class={`py-16 px-4 sm:px-6 lg:px-8 ${classProp}`}>
+  <div class="mx-auto max-w-6xl">
+    <div class={gridClasses[variant]}>
+      {
+        items.map((feature) => (
+          <div class={variant === 'list' ? 'flex gap-4' : ''}>
+            <div class={variant === 'list' ? 'flex-shrink-0' : ''}>
+              <div class="flex items-center justify-center h-12 w-12 rounded-md bg-primary-500 text-white">
+                <Icon name={feature.icon} class="h-6 w-6" />
+              </div>
+            </div>
+            <div class={variant === 'list' ? 'flex-1' : ''}>
+              <h3 class="text-lg font-semibold text-text mb-2">
+                {feature.title}
+              </h3>
+              <p class="text-text-muted">{feature.description}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

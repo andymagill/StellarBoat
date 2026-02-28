@@ -1,0 +1,66 @@
+---
+/**
+ * LogoBar Component
+ *
+ * A horizontal strip of logos, typically used to show partner companies,
+ * client logos, or integrations. Logos can optionally be links.
+ *
+ * @example
+ * ```astro
+ * <LogoBar
+ *   logos={[
+ *     { src: "/logos/company1.svg", alt: "Company 1" },
+ *     { src: "/logos/company2.svg", alt: "Company 2", href: "https://company2.com" }
+ *   ]}
+ * />
+ * ```
+ */
+
+interface Logo {
+  /** Logo image source URL */
+  src: string;
+  /** Logo alt text */
+  alt: string;
+  /** Optional link URL for the logo */
+  href?: string;
+}
+
+interface Props {
+  /** Array of logos to display */
+  logos: Logo[];
+  /** Additional CSS classes to apply to the root element */
+  class?: string;
+}
+
+const { logos, class: classProp = '' } = Astro.props as Props;
+---
+
+<section class={`py-12 px-4 sm:px-6 lg:px-8 ${classProp}`}>
+  <div class="mx-auto max-w-6xl">
+    <p
+      class="text-center text-text-muted text-sm mb-8 uppercase tracking-wide font-semibold"
+    >
+      Trusted by industry leaders
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
+      {
+        logos.map((logo) => (
+          <div class="flex items-center justify-center h-12 opacity-60 hover:opacity-100 transition-opacity">
+            {logo.href ? (
+              <a
+                href={logo.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={logo.alt}
+              >
+                <img src={logo.src} alt={logo.alt} class="max-h-12 w-auto" />
+              </a>
+            ) : (
+              <img src={logo.src} alt={logo.alt} class="max-h-12 w-auto" />
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,81 @@
+---
+/**
+ * FAQ Component
+ *
+ * A frequently asked questions section with expandable/collapsible accordion items.
+ * Questions and answers are displayed in a vertical stack with interactive toggles.
+ *
+ * @example
+ * ```astro
+ * <FAQ
+ *   items={[
+ *     {
+ *       question: "How does it work?",
+ *       answer: "Our system works by..."
+ *     },
+ *     {
+ *       question: "What's the pricing?",
+ *       answer: "We offer flexible pricing..."
+ *     }
+ *   ]}
+ * />
+ * ```
+ */
+
+interface FAQItem {
+  /** Question text */
+  question: string;
+  /** Answer text (can contain MDX-renderable content) */
+  answer: string;
+}
+
+interface Props {
+  /** Array of FAQ items */
+  items: FAQItem[];
+  /** Additional CSS classes to apply to the root element */
+  class?: string;
+}
+
+const { items, class: classProp = '' } = Astro.props as Props;
+---
+
+<section class={`py-16 px-4 sm:px-6 lg:px-8 ${classProp}`}>
+  <div class="mx-auto max-w-3xl">
+    <div class="space-y-4">
+      {
+        items.map((item, index) => (
+          <details
+            class="bg-surface-1 border border-border rounded-lg p-6 cursor-pointer hover:border-primary-400 transition-colors group"
+            id={`faq-${index}`}
+          >
+            <summary class="flex items-center justify-between font-semibold text-text cursor-pointer select-none">
+              <span>{item.question}</span>
+              <svg
+                class="h-5 w-5 text-text-muted group-open:rotate-180 transition-transform flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                />
+              </svg>
+            </summary>
+            <div class="mt-4 text-text-muted leading-relaxed">
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

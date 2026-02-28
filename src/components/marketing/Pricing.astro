@@ -1,0 +1,126 @@
+---
+/**
+ * Pricing Component
+ *
+ * A pricing table with multiple plans, features, and call-to-action buttons.
+ * Supports highlighting one plan as the recommended option.
+ * Gated by the `features.pricing` flag in site config.
+ *
+ * @example
+ * ```astro
+ * <Pricing
+ *   plans={[
+ *     {
+ *       name: "Starter",
+ *       price: "29",
+ *       period: "month",
+ *       features: ["Feature 1", "Feature 2"],
+ *       cta: { label: "Get Started", href: "/signup" },
+ *       highlighted: false
+ *     },
+ *     {
+ *       name: "Pro",
+ *       price: "79",
+ *       period: "month",
+ *       features: ["All Starter features", "Feature 3"],
+ *       cta: { label: "Start Free Trial", href: "/signup" },
+ *       highlighted: true
+ *     }
+ *   ]}
+ * />
+ * ```
+ */
+
+import Button from '../ui/Button.astro';
+
+interface CTAButton {
+  /** Button text */
+  label: string;
+  /** Button link href */
+  href: string;
+}
+
+interface PricingPlan {
+  /** Plan name */
+  name: string;
+  /** Price value (without currency symbol) */
+  price: string;
+  /** Billing period (e.g., "month", "year") */
+  period: string;
+  /** Array of feature names included in this plan */
+  features: string[];
+  /** Call-to-action button */
+  cta: CTAButton;
+  /** Whether this plan is highlighted as recommended */
+  highlighted?: boolean;
+}
+
+interface Props {
+  /** Array of pricing plans */
+  plans: PricingPlan[];
+  /** Additional CSS classes to apply to the root element */
+  class?: string;
+}
+
+const { plans, class: classProp = '' } = Astro.props as Props;
+---
+
+<section class={`py-16 px-4 sm:px-6 lg:px-8 ${classProp}`}>
+  <div class="mx-auto max-w-6xl">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center"
+    >
+      {
+        plans.map((plan) => (
+          <div
+            class={`rounded-lg transition-all ${
+              plan.highlighted
+                ? 'lg:scale-105 ring-2 ring-primary-500 bg-surface-raised shadow-lg'
+                : 'bg-surface-1 border border-border shadow-sm hover:shadow-md'
+            } p-8`}
+          >
+            {plan.highlighted && (
+              <div class="mb-4 inline-block bg-primary-500 text-white text-sm font-semibold px-3 py-1 rounded">
+                Recommended
+              </div>
+            )}
+
+            <h3 class="text-2xl font-bold text-text mb-2">{plan.name}</h3>
+
+            <div class="mb-6">
+              <span class="text-5xl font-bold text-text">${plan.price}</span>
+              <span class="text-text-muted ml-2">per {plan.period}</span>
+            </div>
+
+            <Button
+              href={plan.cta.href}
+              variant={plan.highlighted ? 'primary' : 'secondary'}
+              class="w-full mb-8"
+            >
+              {plan.cta.label}
+            </Button>
+
+            <div class="space-y-3">
+              {plan.features.map((feature) => (
+                <div class="flex items-start gap-3">
+                  <svg
+                    class="h-5 w-5 text-primary-500 flex-shrink-0 mt-0.5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <span class="text-text">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

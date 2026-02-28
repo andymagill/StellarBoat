@@ -1,0 +1,235 @@
+---
+/**
+ * Hero Component
+ *
+ * A hero section with headline, subheadline, and call-to-action buttons.
+ * Supports three layout variants:
+ * - `centered`: headline and text centered, CTA buttons centered below
+ * - `split-left`: image on right, content on left
+ * - `split-right`: image on left, content on right
+ *
+ * @example
+ * ```astro
+ * <Hero
+ *   variant="centered"
+ *   headline="Start your journey"
+ *   subheadline="Build something amazing"
+ *   cta={{ label: "Get Started", href: "/contact" }}
+ *   ctaSecondary={{ label: "Learn More", href: "/about" }}
+ * />
+ *
+ * <Hero
+ *   variant="split-left"
+ *   headline="Full-featured platform"
+ *   cta={{ label: "Start Free", href: "/signup" }}
+ *   image={{ src: "/hero.png", alt: "Product screenshot" }}
+ * />
+ * ```
+ */
+
+interface CTAButton {
+  /** Button text */
+  label: string;
+  /** Button link href */
+  href: string;
+}
+
+interface HeroImage {
+  /** Image source URL */
+  src: string;
+  /** Image alt text */
+  alt: string;
+}
+
+interface Props {
+  /** Hero layout variant */
+  variant?: 'centered' | 'split-left' | 'split-right';
+  /** Main headline text */
+  headline: string;
+  /** Optional subheadline text */
+  subheadline?: string;
+  /** Primary CTA button */
+  cta: CTAButton;
+  /** Optional secondary CTA button */
+  ctaSecondary?: CTAButton;
+  /** Optional hero image (used in split variants) */
+  image?: HeroImage;
+  /** Optional background image URL */
+  backgroundImage?: string;
+  /** Whether to use full viewport height */
+  fullHeight?: boolean;
+  /** Additional CSS classes to apply to the root element */
+  class?: string;
+}
+
+const {
+  variant = 'centered',
+  headline,
+  subheadline,
+  cta,
+  ctaSecondary,
+  image,
+  backgroundImage,
+  fullHeight = false,
+  class: classProp = '',
+} = Astro.props as Props;
+
+import Button from '../ui/Button.astro';
+---
+
+{
+  variant === 'centered' && (
+    <section
+      class={`${fullHeight ? 'h-[90dvh]' : 'py-20'} px-4 sm:px-6 lg:px-8 relative w-full bg-cover bg-center overflow-hidden ${classProp}`}
+      style={
+        backgroundImage ? `background-image: url('${backgroundImage}')` : ''
+      }
+    >
+      {backgroundImage && <div class="absolute inset-0 bg-black/30" />}
+      <div
+        class={`relative z-10 ${fullHeight ? 'h-full flex items-center justify-center' : ''}`}
+      >
+        <div class={`mx-auto max-w-6xl ${fullHeight ? 'w-full' : ''}`}>
+          {fullHeight ? (
+            <div class="flex items-center justify-center h-full w-full">
+              <div class="w-full md:w-1/2 md:pl-12 text-left">
+                <h1 class="text-5xl md:text-6xl font-bold text-text mb-6 leading-tight">
+                  {headline}
+                </h1>
+                {subheadline && (
+                  <p class="text-lg md:text-xl text-text-muted mb-8 max-w-lg leading-relaxed">
+                    {subheadline}
+                  </p>
+                )}
+                <div class="flex flex-col sm:flex-row gap-4">
+                  <Button href={cta.href} variant="primary" size="lg">
+                    {cta.label}
+                  </Button>
+                  {ctaSecondary && (
+                    <Button
+                      href={ctaSecondary.href}
+                      variant="secondary"
+                      size="lg"
+                    >
+                      {ctaSecondary.label}
+                    </Button>
+                  )}
+                </div>
+              </div>
+              {image && (
+                <div class="hidden md:flex md:w-1/2 items-center justify-center h-full">
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    class="max-h-[500px] w-auto object-contain drop-shadow-2xl"
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div class="text-center">
+              <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-text mb-6">
+                {headline}
+              </h1>
+              {subheadline && (
+                <p class="text-lg sm:text-xl text-text-muted mb-8 max-w-2xl mx-auto">
+                  {subheadline}
+                </p>
+              )}
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button href={cta.href} variant="primary" size="lg">
+                  {cta.label}
+                </Button>
+                {ctaSecondary && (
+                  <Button
+                    href={ctaSecondary.href}
+                    variant="secondary"
+                    size="lg"
+                  >
+                    {ctaSecondary.label}
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  variant === 'split-left' && (
+    <section class={`py-20 px-4 sm:px-6 lg:px-8 ${classProp}`}>
+      <div class="mx-auto max-w-6xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-text mb-6">
+              {headline}
+            </h1>
+            {subheadline && (
+              <p class="text-lg text-text-muted mb-8">{subheadline}</p>
+            )}
+            <div class="flex flex-col sm:flex-row gap-4">
+              <Button href={cta.href} variant="primary" size="lg">
+                {cta.label}
+              </Button>
+              {ctaSecondary && (
+                <Button href={ctaSecondary.href} variant="secondary" size="lg">
+                  {ctaSecondary.label}
+                </Button>
+              )}
+            </div>
+          </div>
+          {image && (
+            <div class="flex justify-center lg:justify-end">
+              <img
+                src={image.src}
+                alt={image.alt}
+                class="w-full max-w-md rounded-lg shadow-2xl"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  variant === 'split-right' && (
+    <section class={`py-20 px-4 sm:px-6 lg:px-8 ${classProp}`}>
+      <div class="mx-auto max-w-6xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {image && (
+            <div class="flex justify-center lg:justify-start order-2 lg:order-1">
+              <img
+                src={image.src}
+                alt={image.alt}
+                class="w-full max-w-md rounded-lg shadow-2xl"
+              />
+            </div>
+          )}
+          <div class="order-1 lg:order-2">
+            <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-text mb-6">
+              {headline}
+            </h1>
+            {subheadline && (
+              <p class="text-lg text-text-muted mb-8">{subheadline}</p>
+            )}
+            <div class="flex flex-col sm:flex-row gap-4">
+              <Button href={cta.href} variant="primary" size="lg">
+                {cta.label}
+              </Button>
+              {ctaSecondary && (
+                <Button href={ctaSecondary.href} variant="secondary" size="lg">
+                  {ctaSecondary.label}
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

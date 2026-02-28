@@ -128,17 +128,17 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 
 ## Milestone 6 — Marketing Section Components
 
-> Build the homepage section components. Content always comes from props — never hardcoded.
+> Build the homepage section components.
 
-- [ ] `[core]` `src/components/marketing/Hero.astro` — variants: `centered`, `split-left`, `split-right`; props: `headline`, `subheadline`, `cta` (primary), `ctaSecondary` (optional), `image` (optional) (SPEC §13)
-- [ ] `[core]` `src/components/marketing/Features.astro` — variants: `grid-3`, `grid-2`, `list`; props: `items[]` with `icon`, `title`, `description`
-- [ ] `[core]` `src/components/marketing/Testimonials.astro` — props: `items[]` with `quote`, `author`, `role`, `avatar` (optional); variant: `cards`, `carousel`
-- [ ] `[core]` `src/components/marketing/Pricing.astro` — props: `plans[]` with `name`, `price`, `period`, `features[]`, `cta`, `highlighted`; gated by `features.pricing`
-- [ ] `[core]` `src/components/marketing/FAQ.astro` — accordion; props: `items[]` with `question`, `answer` (MDX-renderable string)
-- [ ] `[core]` `src/components/marketing/CTA.astro` — full-width call-to-action band; props: `headline`, `subtext`, `cta`
-- [ ] `[core]` `src/components/marketing/LogoBar.astro` — props: `logos[]` with `src`, `alt`, `href` (optional); renders a horizontal strip
-- [ ] `[demo]` Add `/demo/components` page showing every marketing component with all variants side-by-side
-- [ ] Verify: all variants render; all props accept tokens/utilities (no hardcoded brand colors)
+- [x] `[core]` `src/components/marketing/Hero.astro` — variants: `centered`, `split-left`, `split-right`; props: `headline`, `subheadline`, `cta` (primary), `ctaSecondary` (optional), `image` (optional) (SPEC §13)
+- [x] `[core]` `src/components/marketing/Features.astro` — variants: `grid-3`, `grid-2`, `list`; props: `items[]` with `icon`, `title`, `description`
+- [x] `[core]` `src/components/marketing/Testimonials.astro` — props: `items[]` with `quote`, `author`, `role`, `avatar` (optional); variant: `cards`, `carousel`
+- [x] `[core]` `src/components/marketing/Pricing.astro` — props: `plans[]` with `name`, `price`, `period`, `features[]`, `cta`, `highlighted`; gated by `features.pricing`
+- [x] `[core]` `src/components/marketing/FAQ.astro` — accordion; props: `items[]` with `question`, `answer` (MDX-renderable string)
+- [x] `[core]` `src/components/marketing/CTA.astro` — full-width call-to-action band; props: `headline`, `subtext`, `cta`
+- [x] `[core]` `src/components/marketing/LogoBar.astro` — props: `logos[]` with `src`, `alt`, `href` (optional); renders a horizontal strip
+- [x] `[demo]` Add `/demo/components` page showing every marketing component with all variants side-by-side
+- [x] Verify: all variants render; all props accept tokens/utilities (no hardcoded brand colors)
 
 ---
 

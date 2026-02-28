@@ -1,130 +1,229 @@
 ---
 import Page from '../layouts/Page.astro';
-import Button from '../components/ui/Button.astro';
-import Card from '../components/ui/Card.astro';
+import Hero from '../components/marketing/Hero.astro';
+import Features from '../components/marketing/Features.astro';
+import Testimonials from '../components/marketing/Testimonials.astro';
+import Pricing from '../components/marketing/Pricing.astro';
+import FAQ from '../components/marketing/FAQ.astro';
+import CTA from '../components/marketing/CTA.astro';
+import LogoBar from '../components/marketing/LogoBar.astro';
+
+// Hero content with background and spaceship
+const heroContent = {
+  headline: 'Welcome to StellarBoat',
+  subheadline:
+    'A production-ready Astro.js starter for marketing mini-sites and landing pages. Built with deep space aesthetics, design tokens, and modern web standards.',
+  cta: { label: 'View Design Tokens', href: '/tokens' },
+  image: { src: '/images/hero-spacecraft.png', alt: 'StellarBoat spacecraft' },
+  backgroundImage: '/images/hero-background.png',
+};
+
+// Features data
+const featuresData = [
+  {
+    icon: 'heroicons:building-library',
+    title: 'Solid Architecture',
+    description:
+      'Enterprise-grade structure designed for AI-agent-friendly forking and easy customization.',
+  },
+  {
+    icon: 'heroicons:bolt',
+    title: 'Lightweight & Fast',
+    description:
+      'Zero runtime overhead. Static site generation for blazing-fast performance and SEO optimization.',
+  },
+  {
+    icon: 'heroicons:sparkles',
+    title: 'Tailwind Ready',
+    description:
+      'Modern design tokens with Tailwind CSS v4 @theme integration for rapid customization.',
+  },
+];
+
+// Testimonials data
+const testimonialsData = [
+  {
+    quote:
+      'StellarBoat saved us weeks of development time. The architecture is incredibly clean.',
+    author: 'Alice Chen',
+    role: 'Founder, TechStartup Inc',
+    avatar:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop',
+  },
+  {
+    quote:
+      'The component system is intuitive and the design tokens make customization effortless.',
+    author: 'Bob Martinez',
+    role: 'Lead Developer, BuildCo',
+    avatar:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop',
+  },
+  {
+    quote:
+      'Exactly what we needed as a starting point. No bloat, just solid fundamentals.',
+    author: 'Carol Thompson',
+    role: 'Product Manager, InnovateLabs',
+    avatar:
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop',
+  },
+];
+
+// Pricing data
+const pricingData = [
+  {
+    name: 'Free',
+    price: '0',
+    period: 'forever',
+    features: ['Full source code', 'All components', 'Community support'],
+    cta: { label: 'Fork on GitHub', href: '#' },
+    highlighted: false,
+  },
+  {
+    name: 'Professional',
+    price: '99',
+    period: 'one-time',
+    features: [
+      'Everything in Free',
+      'Priority email support',
+      'Custom consulting session',
+      '1 year of updates',
+    ],
+    cta: { label: 'Get Professional', href: '#' },
+    highlighted: true,
+  },
+  {
+    name: 'Enterprise',
+    price: 'Custom',
+    period: 'quote',
+    features: [
+      'Everything in Pro',
+      'Dedicated support',
+      'Priority feature requests',
+      'Custom integrations',
+    ],
+    cta: { label: 'Contact Sales', href: '#' },
+    highlighted: false,
+  },
+];
+
+// FAQ data
+const faqData = [
+  {
+    question: 'What is StellarBoat?',
+    answer:
+      'StellarBoat is a production-ready Astro.js starter for marketing mini-sites. It includes pre-built components, design tokens, analytics integration, form handling, and a blog system.',
+  },
+  {
+    question: 'Can I use this with my favorite framework?',
+    answer:
+      'StellarBoat is built on Astro with zero JavaScript by default. You can add frameworks like React or Vue as needed, but the default ships framework-free for maximum performance.',
+  },
+  {
+    question: 'How do I customize the design?',
+    answer:
+      'Customization is simple: edit src/styles/tokens.css to change colors, fonts, spacing, and shadows. All components automatically pick up your changes.',
+  },
+  {
+    question: 'Is there a blog system?',
+    answer:
+      "Yes! StellarBoat includes a full blog powered by Astro's Content Layer API with MDX support, reading time estimates, tag filtering, and RSS generation.",
+  },
+];
+
+// Logo data
+const logoData = [
+  {
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/TypeScript_logo_2020.svg/64px-TypeScript_logo_2020.svg.png',
+    alt: 'TypeScript',
+  },
+  {
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Tailwind_CSS_logo.svg/64px-Tailwind_CSS_logo.svg.png',
+    alt: 'Tailwind CSS',
+  },
+  {
+    src: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Astro_%28web_framework%29_logo.png',
+    alt: 'Astro',
+  },
+  {
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/64px-Octicons-mark-github.svg.png',
+    alt: 'GitHub',
+  },
+];
 ---
 
 <Page title="Home">
-  <!-- Hero Section: Full-width with background image left, spaceship visual right -->
-  <section
-    class="relative w-full bg-cover bg-center h-[90dvh] overflow-hidden"
-    style="background-image: url('/images/hero-background.png')"
-  >
-    <!-- Dark overlay for text readability -->
-    <div class="absolute inset-0 bg-black/30"></div>
+  <!-- Hero with background and spaceship visual -->
+  <Hero
+    variant="centered"
+    fullHeight
+    headline={heroContent.headline}
+    subheadline={heroContent.subheadline}
+    cta={heroContent.cta}
+    image={heroContent.image}
+    backgroundImage={heroContent.backgroundImage}
+  />
 
-    <!-- Single column container: centered, full height -->
-    <div
-      class="relative z-10 h-full w-full max-w-6xl mx-auto px-6 flex items-center justify-center"
-    >
-      <!-- Left: Hero Content (Text left-aligned) -->
-      <div class="w-full md:w-1/2 md:pl-12 text-left">
-        <h1 class="text-5xl md:text-6xl font-bold text-text mb-6 leading-tight">
-          Welcome to <span class="text-secondary-400">StellarBoat</span>
-        </h1>
-        <p
-          class="text-lg md:text-xl text-text-muted mb-8 max-w-lg leading-relaxed"
-        >
-          A production-ready Astro.js starter for marketing mini-sites and
-          landing pages. Built with deep space aesthetics, design tokens, and
-          modern web standards.
-        </p>
-        <div class="flex gap-4 pt-4">
-          <Button href="/tokens" variant="primary" size="lg">
-            View Design Tokens
-          </Button>
-        </div>
-      </div>
-
-      <!-- Right: Spaceship Visual -->
-      <div class="hidden md:flex md:w-1/2 items-center justify-center h-full">
-        <img
-          src="/images/hero-spacecraft.png"
-          alt="StellarBoat spacecraft"
-          class="max-h-[500px] w-auto object-contain drop-shadow-2xl"
-        />
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Section: 3-column card grid -->
+  <!-- Features Section -->
   <section class="w-full bg-surface py-16 md:py-24">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-bold text-text mb-4">
-          Why StellarBoat?
-        </h2>
-        <p class="text-lg text-text-muted max-w-2xl mx-auto">
-          Built for modern web development with everything you need out of the
-          box.
-        </p>
-      </div>
-
-      <!-- Feature Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Architecture Card -->
-        <Card
-          variant="raised"
-          class="group hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
-        >
-          <div class="flex justify-center mb-6">
-            <img
-              src="/images/icon-architecture.png"
-              alt="Island architecture icon"
-              class="h-28 w-28 md:h-32 md:w-32 object-contain"
-            />
-          </div>
-          <h3 class="text-xl font-bold text-text text-center mb-3">
-            Solid Architecture
-          </h3>
-          <p class="text-text-muted text-center">
-            Enterprise-grade structure designed for AI-agent-friendly forking
-            and easy customization.
-          </p>
-        </Card>
-
-        <!-- SEO Card -->
-        <Card
-          variant="raised"
-          class="group hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
-        >
-          <div class="flex justify-center mb-6">
-            <img
-              src="/images/icon-seo.png"
-              alt="Lightweight SEO icon"
-              class="h-28 w-28 md:h-32 md:w-32 object-contain"
-            />
-          </div>
-          <h3 class="text-xl font-bold text-text text-center mb-3">
-            Lightweight & Fast
-          </h3>
-          <p class="text-text-muted text-center">
-            Zero runtime overhead. Static site generation for blazing-fast
-            performance and SEO optimization.
-          </p>
-        </Card>
-
-        <!-- Tailwind Card -->
-        <Card
-          variant="raised"
-          class="group hover:border-primary-400 hover:shadow-glow-cyan transition-all duration-300"
-        >
-          <div class="flex justify-center mb-6">
-            <img
-              src="/images/icon-tailwind.png"
-              alt="Tailwind Ready icon"
-              class="h-28 w-28 md:h-32 md:w-32 object-contain"
-            />
-          </div>
-          <h3 class="text-xl font-bold text-text text-center mb-3">
-            Tailwind Ready
-          </h3>
-          <p class="text-text-muted text-center">
-            Modern design tokens with Tailwind CSS v4 @theme integration for
-            rapid customization.
-          </p>
-        </Card>
-      </div>
+    <div class="max-w-6xl mx-auto px-6 text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-text mb-4">
+        Why StellarBoat?
+      </h2>
+      <p class="text-lg text-text-muted max-w-2xl mx-auto">
+        Built for modern web development with everything you need out of the
+        box.
+      </p>
     </div>
+    <Features variant="grid-3" items={featuresData} />
   </section>
+
+  <!-- Testimonials Section - Cards -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-6xl mb-12 text-center">
+      <h2 class="text-4xl font-bold text-text mb-4">What customers say</h2>
+      <p class="text-lg text-text-muted">
+        Real feedback from teams using StellarBoat
+      </p>
+    </div>
+    <Testimonials variant="cards" items={testimonialsData} />
+  </section>
+
+  <!-- Testimonials Section - Carousel -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8 bg-surface">
+    <div class="mx-auto max-w-6xl mb-12 text-center">
+      <h2 class="text-4xl font-bold text-text mb-4">Featured testimonials</h2>
+      <p class="text-lg text-text-muted">Scroll to see more customer stories</p>
+    </div>
+    <Testimonials
+      variant="carousel"
+      items={testimonialsData}
+      class="mx-8 sm:mx-16"
+    />
+  </section>
+
+  <!-- Pricing Section -->
+  <Pricing plans={pricingData} />
+
+  <!-- Logo Bar -->
+  <LogoBar logos={logoData} />
+
+  <!-- FAQ Section -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-3xl mb-12 text-center">
+      <h2 class="text-4xl font-bold text-text mb-4">
+        Frequently Asked Questions
+      </h2>
+      <p class="text-lg text-text-muted">
+        Everything you need to know about StellarBoat
+      </p>
+    </div>
+    <FAQ items={faqData} />
+  </section>
+
+  <!-- Final CTA -->
+  <CTA
+    headline="Ready to launch your marketing site?"
+    subtext="Get started with StellarBoat in minutes. No credit card required."
+    cta={{ label: 'Fork on GitHub', href: '#' }}
+  />
 </Page>

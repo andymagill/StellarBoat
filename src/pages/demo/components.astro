@@ -1,0 +1,400 @@
+---
+import Page from '../../layouts/Page.astro';
+import Hero from '../../components/marketing/Hero.astro';
+import Features from '../../components/marketing/Features.astro';
+import Testimonials from '../../components/marketing/Testimonials.astro';
+import Pricing from '../../components/marketing/Pricing.astro';
+import FAQ from '../../components/marketing/FAQ.astro';
+import CTA from '../../components/marketing/CTA.astro';
+import LogoBar from '../../components/marketing/LogoBar.astro';
+
+// Example data for each component
+const heroData = {
+  centered: {
+    variant: 'centered' as const,
+    headline: 'Welcome to StellarBoat',
+    subheadline: 'A modern framework for marketing sites',
+    cta: { label: 'Get Started', href: '#' },
+    ctaSecondary: { label: 'Learn More', href: '#' },
+  },
+  splitLeft: {
+    variant: 'split-left' as const,
+    headline: 'Built with Astro & Tailwind',
+    subheadline: 'Ship fast, scale effortlessly',
+    cta: { label: 'Start Building', href: '#' },
+    image: {
+      src: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&h=500&fit=crop',
+      alt: 'Product demo',
+    },
+  },
+  splitRight: {
+    variant: 'split-right' as const,
+    headline: 'Deploy anywhere',
+    subheadline: 'Cloudflare, Netlify, Vercel — your choice',
+    cta: { label: 'Explore Deployment', href: '#' },
+    image: {
+      src: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&h=500&fit=crop',
+      alt: 'Deployment options',
+    },
+  },
+};
+
+const featuresData = [
+  {
+    icon: 'heroicons:rocket-launch',
+    title: 'Lightning Fast',
+    description: 'Static generation ensures optimal performance',
+  },
+  {
+    icon: 'heroicons:lock-closed',
+    title: 'Secure by Default',
+    description: 'No backend footprint, no exposure',
+  },
+  {
+    icon: 'heroicons:bolt',
+    title: 'Edge Ready',
+    description: 'Deploy edge functions where you need them',
+  },
+  {
+    icon: 'heroicons:code-bracket-square',
+    title: 'Developer Friendly',
+    description: 'Built with TypeScript and modern tooling',
+  },
+  {
+    icon: 'heroicons:swatch',
+    title: 'Fully Themeable',
+    description: 'CSS tokens system for easy customization',
+  },
+  {
+    icon: 'heroicons:arrow-trending-up',
+    title: 'SEO Optimized',
+    description: 'JSON-LD, sitemaps, and open graph included',
+  },
+];
+
+const testimonialsData = [
+  {
+    quote:
+      'StellarBoat saved us weeks of development time and got us to market faster.',
+    author: 'Alice Chen',
+    role: 'Founder, TechStartup Inc',
+    avatar:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop',
+  },
+  {
+    quote:
+      'The architecture is so clean and well-documented. Perfect for our team.',
+    author: 'Bob Martinez',
+    role: 'Lead Developer, BuildCo',
+    avatar:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop',
+  },
+  {
+    quote: 'I love how easy it is to customize. No fighting the framework.',
+    author: 'Carol Thompson',
+    role: 'Product Manager, InnovateLabs',
+    avatar:
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop',
+  },
+];
+
+const pricingData = [
+  {
+    name: 'Starter',
+    price: '0',
+    period: 'month',
+    features: [
+      'Static site generation',
+      'Astro 5.x framework',
+      'Community support',
+      'Deploy anywhere',
+    ],
+    cta: { label: 'Clone on GitHub', href: '#' },
+    highlighted: false,
+  },
+  {
+    name: 'Pro',
+    price: '29',
+    period: 'month',
+    features: [
+      'Everything in Starter',
+      'Priority support',
+      'Analytics integration',
+      'Form backends',
+      'Blog system with MDX',
+    ],
+    cta: { label: 'Start Free Trial', href: '#' },
+    highlighted: true,
+  },
+  {
+    name: 'Enterprise',
+    price: 'Custom',
+    period: 'month',
+    features: [
+      'Everything in Pro',
+      'Custom development',
+      'Dedicated support',
+      'SLA guarantees',
+      'White-label options',
+    ],
+    cta: { label: 'Contact Sales', href: '#' },
+    highlighted: false,
+  },
+];
+
+const faqData = [
+  {
+    question: 'What makes StellarBoat different?',
+    answer:
+      "StellarBoat combines Astro's performance with battle-tested patterns for marketing sites. It's a starting point that handles SEO, forms, analytics, and blog systems out of the box.",
+  },
+  {
+    question: 'Can I use this with frameworks like React or Vue?',
+    answer:
+      'StellarBoat is built on Astro with zero JavaScript by default. You can integrate frameworks as needed, but the core philosophy is minimal JavaScript for maximum performance.',
+  },
+  {
+    question: 'How do I customize the design?',
+    answer:
+      'Everything is customizable via src/styles/tokens.css. Update colors, fonts, spacing, and shadows using CSS custom properties. Tailwind v4 picks up your changes automatically.',
+  },
+  {
+    question: 'Is there support for blog posts?',
+    answer:
+      "Yes! StellarBoat includes a full blog system using Astro's Content Layer API. MDX support lets you embed components directly in posts.",
+  },
+  {
+    question: 'What are the deployment options?',
+    answer:
+      'Deploy to Cloudflare Pages, Netlify, Vercel, or any static host. The default is Cloudflare Pages, but changing hosts is as simple as swapping the Astro adapter.',
+  },
+];
+
+const logosData = [
+  {
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/TypeScript_logo_2020.svg/64px-TypeScript_logo_2020.svg.png',
+    alt: 'TypeScript',
+  },
+  {
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Tailwind_CSS_logo.svg/64px-Tailwind_CSS_logo.svg.png',
+    alt: 'Tailwind CSS',
+  },
+  {
+    src: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Astro_%28web_framework%29_logo.png',
+    alt: 'Astro',
+  },
+  {
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/64px-Octicons-mark-github.svg.png',
+    alt: 'GitHub',
+  },
+];
+---
+
+<Page>
+  <div class="space-y-20">
+    <!-- Hero Section Title -->
+    <section class="py-12 px-4 sm:px-6 lg:px-8 bg-surface-raised">
+      <div class="mx-auto max-w-4xl text-center">
+        <h1 class="text-4xl sm:text-5xl font-bold text-text mb-4">
+          Marketing Components
+        </h1>
+        <p class="text-lg text-text-muted">
+          Interactive showcase of all marketing sections with multiple layout
+          variants
+        </p>
+      </div>
+    </section>
+
+    <!-- Hero Variants Section -->
+    <section class="px-4">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="text-3xl font-bold text-text mb-8">Hero Component</h2>
+        <p class="text-text-muted mb-8">
+          Supports three variants: centered, split-left, and split-right
+        </p>
+      </div>
+    </section>
+
+    <!-- Hero Centered Variant -->
+    <div class="border-t border-b border-border">
+      <div class="px-4">
+        <div class="mx-auto max-w-6xl py-4">
+          <p class="text-sm font-mono text-text-muted mb-4">
+            Variant: <code class="bg-surface-1 px-2 py-1 rounded"
+              >centered</code>
+          </p>
+        </div>
+      </div>
+      <Hero {...heroData.centered} />
+    </div>
+
+    <!-- Hero Split Left Variant -->
+    <div class="border-t border-b border-border">
+      <div class="px-4">
+        <div class="mx-auto max-w-6xl py-4">
+          <p class="text-sm font-mono text-text-muted mb-4">
+            Variant: <code class="bg-surface-1 px-2 py-1 rounded"
+              >split-left</code>
+          </p>
+        </div>
+      </div>
+      <Hero {...heroData.splitLeft} />
+    </div>
+
+    <!-- Hero Split Right Variant -->
+    <div class="border-t border-b border-border">
+      <div class="px-4">
+        <div class="mx-auto max-w-6xl py-4">
+          <p class="text-sm font-mono text-text-muted mb-4">
+            Variant: <code class="bg-surface-1 px-2 py-1 rounded"
+              >split-right</code>
+          </p>
+        </div>
+      </div>
+      <Hero {...heroData.splitRight} />
+    </div>
+
+    <!-- Features Section -->
+    <section class="px-4">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="text-3xl font-bold text-text mb-8">Features Component</h2>
+        <p class="text-text-muted mb-12">
+          Supports three variants: grid-3, grid-2, and list
+        </p>
+      </div>
+    </section>
+
+    <!-- Features Grid 3 -->
+    <div class="border-t border-b border-border">
+      <div class="px-4">
+        <div class="mx-auto max-w-6xl py-4">
+          <p class="text-sm font-mono text-text-muted mb-4">
+            Variant: <code class="bg-surface-1 px-2 py-1 rounded">grid-3</code>
+          </p>
+        </div>
+      </div>
+      <Features variant="grid-3" items={featuresData} />
+    </div>
+
+    <!-- Features Grid 2 -->
+    <div class="border-t border-b border-border">
+      <div class="px-4">
+        <div class="mx-auto max-w-6xl py-4">
+          <p class="text-sm font-mono text-text-muted mb-4">
+            Variant: <code class="bg-surface-1 px-2 py-1 rounded">grid-2</code>
+          </p>
+        </div>
+      </div>
+      <Features variant="grid-2" items={featuresData} />
+    </div>
+
+    <!-- Features List -->
+    <div class="border-t border-b border-border">
+      <div class="px-4">
+        <div class="mx-auto max-w-6xl py-4">
+          <p class="text-sm font-mono text-text-muted mb-4">
+            Variant: <code class="bg-surface-1 px-2 py-1 rounded">list</code>
+          </p>
+        </div>
+      </div>
+      <Features variant="list" items={featuresData.slice(0, 4)} />
+    </div>
+
+    <!-- Testimonials Section -->
+    <section class="px-4">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="text-3xl font-bold text-text mb-8">
+          Testimonials Component
+        </h2>
+        <p class="text-text-muted mb-12">
+          Supports two variants: cards and carousel
+        </p>
+      </div>
+    </section>
+
+    <!-- Testimonials Cards -->
+    <div class="border-t border-b border-border">
+      <div class="px-4">
+        <div class="mx-auto max-w-6xl py-4">
+          <p class="text-sm font-mono text-text-muted mb-4">
+            Variant: <code class="bg-surface-1 px-2 py-1 rounded">cards</code>
+          </p>
+        </div>
+      </div>
+      <Testimonials variant="cards" items={testimonialsData} />
+    </div>
+
+    <!-- Testimonials Carousel -->
+    <div class="border-t border-b border-border">
+      <div class="px-4">
+        <div class="mx-auto max-w-6xl py-4">
+          <p class="text-sm font-mono text-text-muted mb-4">
+            Variant: <code class="bg-surface-1 px-2 py-1 rounded"
+              >carousel</code>
+          </p>
+        </div>
+      </div>
+      <Testimonials variant="carousel" items={testimonialsData} />
+    </div>
+
+    <!-- Pricing Section -->
+    <section class="px-4">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="text-3xl font-bold text-text mb-8">Pricing Component</h2>
+        <p class="text-text-muted mb-12">
+          Highlight one plan as the recommended option
+        </p>
+      </div>
+    </section>
+
+    <div class="border-t border-b border-border">
+      <Pricing plans={pricingData} />
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="px-4">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="text-3xl font-bold text-text mb-8">FAQ Component</h2>
+        <p class="text-text-muted mb-12">
+          Interactive accordion for frequently asked questions
+        </p>
+      </div>
+    </section>
+
+    <div class="border-t border-b border-border">
+      <FAQ items={faqData} />
+    </div>
+
+    <!-- LogoBar Section -->
+    <section class="px-4">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="text-3xl font-bold text-text mb-8">LogoBar Component</h2>
+        <p class="text-text-muted mb-12">
+          Horizontal strip of partner or technology logos
+        </p>
+      </div>
+    </section>
+
+    <div class="border-t border-b border-border">
+      <LogoBar logos={logosData} />
+    </div>
+
+    <!-- CTA Section -->
+    <section class="px-4">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="text-3xl font-bold text-text mb-8">CTA Component</h2>
+        <p class="text-text-muted mb-12">
+          Full-width call-to-action band with high contrast
+        </p>
+      </div>
+    </section>
+
+    <div class="border-t border-b border-border">
+      <CTA
+        headline="Ready to build your marketing site?"
+        subtext="Get started with StellarBoat and launch in under an hour"
+        cta={{ label: 'Start Building', href: '#' }}
+      />
+    </div>
+  </div>
+</Page>
