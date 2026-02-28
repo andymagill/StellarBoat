@@ -11,6 +11,7 @@
 Tasks are grouped into **milestones**. Within each milestone, order matters — later tasks depend on earlier ones. The demo site is built alongside core features so every feature is exercised as it's implemented.
 
 **Labels:**
+
 - `[core]` — goes in `src/components/`, `src/layouts/`, `src/pages/` (core infrastructure)
 - `[config]` — goes in `src/config/` or `src/types/` (fork customization surface)
 - `[demo]` — goes in `src/demo/` (demo content and pages)
@@ -48,8 +49,7 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 - [ ] `[config]` Add Inter + JetBrains Mono via `@fontsource` packages (zero runtime, font files served locally); import in `tokens.css`
 - [ ] `[core]` Create `src/styles/global.css` — CSS reset, base element styles using token utilities; imported by `Base.astro`
 - [ ] `[core]` Create `src/styles/prose.css` — typography styles for MDX content (headings, lists, code blocks, blockquotes, links); uses token utilities
-- [ ] `[demo]` Add `/demo/tokens` page visually rendering all token values — color swatches showing hex + var name, type scale, spacing scale, radius, shadows
-- [ ] Verify: token page renders; changing `--color-primary-500` in `@theme` updates `bg-primary-500` utilities across the whole build
+- [ ] Verify: `npm run check` passes; `npm run build` succeeds; fonts resolve; no CSS warnings
 
 ---
 
@@ -70,7 +70,8 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 - [ ] `[core]` Create `src/pages/404.astro` — token-styled error page
 - [ ] `[ci]` Add `@astrojs/sitemap` to `astro.config.mjs` integrations with a placeholder filter (finalized in Milestone 8); this ensures sitemap is generated from the first buildable commit
 - [ ] `[demo]` Create a placeholder `src/pages/index.astro` using `Page` layout with "StellarBoat demo" heading
-- [ ] Verify: site builds; title format correct (`"Page — Site"` vs `"Site — Tagline"`); nav renders on mobile and desktop; 404 works
+- [ ] `[demo]` Create `src/pages/demo/tokens.astro` page using `Page` layout — visually render all token values: color swatches showing hex + var name, type scale with examples, spacing scale, radius samples, shadows and glows
+- [ ] Verify: site builds; title format correct (`"Page — Site"` vs `"Site — Tagline"`); nav renders on mobile and desktop; 404 works; `/demo/tokens` renders correctly; changing `--color-primary-500` in `@theme` updates `bg-primary-500` utilities
 
 ---
 

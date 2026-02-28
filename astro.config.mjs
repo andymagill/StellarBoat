@@ -1,7 +1,6 @@
 import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
-import rss from '@astrojs/rss';
 import icon from 'astro-icon';
 import tailwindPlugin from '@tailwindcss/vite';
 
@@ -17,7 +16,7 @@ export default defineConfig({
   adapter: cloudflare(),
   // To use Netlify, change the adapter to:
   // adapter: netlify(),
-  // 
+  //
   // To use Vercel, change the adapter to:
   // adapter: vercel(),
   integrations: [
@@ -29,6 +28,8 @@ export default defineConfig({
     icon(),
   ],
   vite: {
+    // Tailwind v4: tokens.css is the entry point containing @import "tailwindcss"
+    // and the @theme block. The plugin auto-discovers it; no explicit path needed.
     plugins: [tailwindPlugin()],
   },
 });

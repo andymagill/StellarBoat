@@ -38,5 +38,9 @@
     "prettier-plugin-astro": "latest",
     "tailwindcss": "latest",
     "typescript": "latest"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8"
   }
 }
