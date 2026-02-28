@@ -1,0 +1,36 @@
+{
+  "name": "stellarboat",
+  "version": "0.1.0",
+  "description": "A production-ready Astro.js starter for marketing mini-sites and landing pages.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "lint": "eslint .",
+    "check": "astro check",
+    "format": "prettier --write ."
+  },
+  "keywords": [],
+  "author": "StellarBoat Contributors",
+  "license": "MIT",
+  "devDependencies": {
+    "astro": "latest",
+    "@astrojs/cloudflare": "latest",
+    "@astrojs/sitemap": "latest",
+    "@astrojs/rss": "latest",
+    "@astrojs/check": "latest",
+    "astro-icon": "latest",
+    "typescript": "latest",
+    "@eslint/js": "latest",
+    "eslint": "latest",
+    "eslint-plugin-astro": "latest",
+    "@typescript-eslint/parser": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "prettier": "latest",
+    "prettier-plugin-astro": "latest",
+    "tailwindcss": "latest",
+    "@tailwindcss/vite": "latest"
+  }
+}
+

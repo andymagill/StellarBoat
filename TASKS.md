@@ -30,7 +30,6 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 - [ ] `[ci]` Install `@astrojs/sitemap`, `@astrojs/rss`, `astro-icon`
 - [ ] `[ci]` Create `.env.example` with all expected variables documented (SPEC §15)
 - [ ] `[ci]` Add `.github/workflows/ci.yml` — lint, type-check, build, Lighthouse CI (SPEC §15); **no deploy step**
-- [ ] `[ci]` Add `wrangler.toml`, `netlify.toml`, `vercel.json` with minimal required config for each platform
 - [ ] `[docs]` Add a one-time setup note in `DEPLOYMENT.md`: connect the repo to Cloudflare Pages via the GitHub App in the CF dashboard; production deploys on `main`, previews on every PR branch — no workflow file needed
 - [ ] `[docs]` Commit `README.md`, `SPEC.md`, `CONTRIBUTING.md`, `TASKS.md`
 - [ ] `[config]` Create `src/config/site.example.ts` with full `SiteConfig` type and all fields documented via JSDoc
