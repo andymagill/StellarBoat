@@ -1,0 +1,115 @@
+---
+import { analytics } from '../../config/analytics';
+
+/**
+ * CookieBanner.astro
+ * 
+ * Renders an accessible consent banner for users to accept or decline analytics cookies.
+ * Only renders when `analytics.consentMode` is true.
+ * 
+ * On accept: calls gtag('consent', 'update', ...) and sets a persistent cookie.
+ * On decline: calls gtag('consent', 'update', ...) and sets a persistent cookie.
+ * Hidden if the consent cookie already exists.
+ * 
+ * Requires GTM to be loaded (dataLayer must be present).
+ */
+
+const shouldRender = analytics.consentMode;
+---
+
+{shouldRender && (
+  <div
+    id="consent-banner"
+    class="fixed bottom-0 left-0 right-0 z-50 bg-surface border-t border-border p-4 shadow-lg"
+    role="region"
+    aria-label="Consent banner"
+    aria-live="polite"
+  >
+    <div class="mx-auto max-w-4xl">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex-1">
+          <p class="text-sm text-foreground-secondary">
+            We use cookies and analytics to improve your experience. By accepting, you consent to our use of cookies.
+          </p>
+        </div>
+        <div class="flex gap-3 flex-shrink-0">
+          <button
+            id="consent-decline"
+            class="px-4 py-2 text-sm font-medium rounded border border-border bg-transparent text-foreground hover:bg-surface-secondary transition-colors"
+            aria-label="Decline analytics cookies"
+          >
+            Decline
+          </button>
+          <button
+            id="consent-accept"
+            class="px-4 py-2 text-sm font-medium rounded bg-primary text-primary-foreground hover:bg-primary-600 transition-colors"
+            aria-label="Accept analytics cookies"
+          >
+            Accept
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Consent banner logic.
+     * Handles accept/decline and sets persistent consent cookie.
+     */
+    function initConsentBanner() {
+      const banner = document.getElementById('consent-banner');
+      const acceptBtn = document.getElementById('consent-accept');
+      const declineBtn = document.getElementById('consent-decline');
+
+      if (!banner || !acceptBtn || !declineBtn) {
+        return;
+      }
+
+      // Check if consent is already recorded
+      const hasConsent = document.cookie.includes('consent=');
+      if (hasConsent) {
+        banner.style.display = 'none';
+        return;
+      }
+
+      // Check if gtag is available
+      const hasDataLayer = typeof window !== 'undefined' && Array.isArray(window.dataLayer);
+
+      acceptBtn.addEventListener('click', () => {
+        if (hasDataLayer && typeof gtag === 'function') {
+          gtag('consent', 'update', {
+            analytics_storage: 'granted',
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted',
+          });
+        }
+        // Set persistent consent cookie (1 year)
+        document.cookie = 'consent=granted; max-age=31536000; path=/; SameSite=Lax';
+        banner.style.display = 'none';
+      });
+
+      declineBtn.addEventListener('click', () => {
+        if (hasDataLayer && typeof gtag === 'function') {
+          gtag('consent', 'update', {
+            analytics_storage: 'denied',
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+          });
+        }
+        // Set persistent consent cookie (1 year)
+        document.cookie = 'consent=declined; max-age=31536000; path=/; SameSite=Lax';
+        banner.style.display = 'none';
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initConsentBanner);
+    } else {
+      initConsentBanner();
+    }
+  </script>
+)}

@@ -1,8 +1,11 @@
 ---
 import { siteConfig } from '../config/site';
+import { analytics } from '../config/analytics';
 import SEO from '../components/seo/SEO.astro';
 import OpenGraph from '../components/seo/OpenGraph.astro';
 import JsonLd from '../components/seo/JsonLd.astro';
+import Analytics from '../components/analytics/Analytics.astro';
+import CookieBanner from '../components/analytics/CookieBanner.astro';
 import '../styles/tokens.css';
 import '../styles/global.css';
 
@@ -46,6 +49,8 @@ const websiteSchema = {
     <OpenGraph {title} {description} {image} />
     <JsonLd schema={websiteSchema} />
 
+    <Analytics />
+
     <!-- Preload hero background image for LCP optimization -->
     <link rel="preload" as="image" href="/images/hero-background.png" />
 
@@ -53,6 +58,20 @@ const websiteSchema = {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
+    {
+      analytics.gtmId && import.meta.env.PROD && (
+        <noscript>
+          <iframe
+            title="Google Tag Manager (noscript)"
+            src={`https://www.googletagmanager.com/ns.html?id=${analytics.gtmId}`}
+            height="0"
+            width="0"
+            style="display:none;visibility:hidden"
+          />
+        </noscript>
+      )
+    }
     <slot />
+    <CookieBanner />
   </body>
 </html>
