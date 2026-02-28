@@ -38,6 +38,11 @@ export default [
         sourceType: 'module',
         project: true,
       },
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly',
+      },
     },
     plugins: {
       '@typescript-eslint': tsPlugin,

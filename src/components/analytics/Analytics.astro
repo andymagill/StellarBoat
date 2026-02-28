@@ -3,13 +3,13 @@ import { analytics } from '../../config/analytics';
 
 /**
  * Analytics.astro
- * 
+ *
  * Renders the Google Tag Manager script in the document head.
  * Only renders in production (`import.meta.env.PROD`) and when `gtmId` is configured.
- * 
+ *
  * When `consentMode: true`, injects a consent defaults block before the GTM script.
  * When `consentMode: false`, GTM script loads immediately.
- * 
+ *
  * This component outputs only in <head>. The GTM <noscript> iframe is rendered
  * separately in Base.astro at the start of <body>.
  */
@@ -18,32 +18,26 @@ const shouldRender = import.meta.env.PROD && analytics.gtmId;
 const { gtmId } = analytics;
 ---
 
-{shouldRender && (
-  <>
-    {analytics.consentMode && (
+{
+  shouldRender && (
+    <>
+      {analytics.consentMode && (
+        <script define:vars={{ gtmId }}>
+          window.dataLayer = window.dataLayer || []; var payload = {};
+          payload.event = 'consent'; payload.analytics_storage = 'denied';
+          payload.ad_storage = 'denied'; payload.ad_user_data = 'denied';
+          payload.ad_personalization = 'denied'; window.dataLayer.push(payload);
+        </script>
+      )}
+      <script
+        async
+        define:vars={{ gtmId }}
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtmId}`}
+      />
       <script define:vars={{ gtmId }}>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-        gtag('consent', 'default', {
-          analytics_storage: 'denied',
-          ad_storage: 'denied',
-          ad_user_data: 'denied',
-          ad_personalization: 'denied',
-          wait_for_update: 500,
-          region: ['US'],
-        });
+        window.dataLayer = window.dataLayer || []; var config = {}; config.gtmId
+        = gtmId; window.dataLayer.push(config);
       </script>
-    )}
-    <script async define:vars={{ gtmId }} src={`https://www.googletagmanager.com/gtag/js?id=${gtmId}`}></script>
-    <script define:vars={{ gtmId }}>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', gtmId);
-    </script>
-  </>
-)}
+    </>
+  )
+}

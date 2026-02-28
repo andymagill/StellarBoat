@@ -96,12 +96,12 @@
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 /* Semantic Aliases: CSS variables (not utilities) — Fork Customization Zone   */
-/* Components reference these via var() in inline styles and @apply blocks      *//*                                                                               */
+/* Components reference these via var() in inline styles and @apply blocks      */ /*                                                                               */
 /* ⚠️  SYNC NOTE: Some tokens below (text, border, surface, success, warning,    */
 /*    error, info) are ALSO defined in the @theme block above so Tailwind        */
 /*    generates utility classes (bg-success, text-error, etc.).                  */
 /*    If you change a value here, update the matching @theme entry too —        */
-/*    and vice versa. There is no automatic cross-reference.                     *//* ─────────────────────────────────────────────────────────────────────────── */
+/*    and vice versa. There is no automatic cross-reference.                     */ /* ─────────────────────────────────────────────────────────────────────────── */
 
 @layer base {
   :root {
