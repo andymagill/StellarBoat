@@ -13,7 +13,7 @@ interface Props {
   class?: string;
 }
 
-const { variant = 'info', class: classProp = '' } = Astro.props;
+const { variant = 'info', class: classProp = '' } = Astro.props as Props;
 
 // Base styles
 const baseStyles = 'flex gap-3 rounded-lg border-l-4 p-4';

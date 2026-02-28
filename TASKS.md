@@ -79,14 +79,14 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 
 > Build atomic UI components. These are the building blocks for all marketing sections.
 
-- [ ] `[core]` `src/components/ui/Button.astro` — variants: `primary`, `secondary`, `ghost`; sizes: `sm`, `md`, `lg`; supports `href` (renders `<a>`) or `type` (renders `<button>`); `class` prop passthrough
-- [ ] `[core]` `src/components/ui/Card.astro` — surface container with border, radius, shadow tokens; `class` passthrough
-- [ ] `[core]` `src/components/ui/Badge.astro` — small label pill; color variants
-- [ ] `[core]` `src/components/ui/Alert.astro` — info/success/warning/error variants; `role="alert"` when error/warning
-- [ ] `[core]` `src/components/ui/Divider.astro` — horizontal rule using border token
-- [ ] `[core]` `src/components/ui/Icon.astro` — thin wrapper around `astro-icon`; enforces `aria-hidden` when decorative, `aria-label` when meaningful
-- [ ] `[demo]` Add `/demo/ui` page rendering all UI primitives with all variants labeled
-- [ ] Verify: all variants render correctly; no hardcoded colors (all use token utilities)
+- [x] `[core]` `src/components/ui/Button.astro` — variants: `primary`, `secondary`, `ghost`; sizes: `sm`, `md`, `lg`; supports `href` (renders `<a>`) or `type` (renders `<button>`); `class` prop passthrough
+- [x] `[core]` `src/components/ui/Card.astro` — surface container with border, radius, shadow tokens; `class` passthrough
+- [x] `[core]` `src/components/ui/Badge.astro` — small label pill; color variants
+- [x] `[core]` `src/components/ui/Alert.astro` — info/success/warning/error variants; `role="alert"` when error/warning
+- [x] `[core]` `src/components/ui/Divider.astro` — horizontal rule using border token
+- [x] `[core]` `src/components/ui/Icon.astro` — thin wrapper around `astro-icon`; enforces `aria-hidden` when decorative, `aria-label` when meaningful
+- [x] `[demo]` Add `/demo/ui` page rendering all UI primitives with all variants labeled
+- [x] Verify: all variants render correctly; no hardcoded colors (all use token utilities)
 
 ---
 

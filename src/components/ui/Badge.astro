@@ -13,7 +13,7 @@ interface Props {
   class?: string;
 }
 
-const { variant = 'primary', class: classProp = '' } = Astro.props;
+const { variant = 'primary', class: classProp = '' } = Astro.props as Props;
 
 // Base styles
 const baseStyles =

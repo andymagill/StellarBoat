@@ -13,7 +13,7 @@ interface Props {
   class?: string;
 }
 
-const { variant = 'default', class: classProp = '' } = Astro.props;
+const { variant = 'default', class: classProp = '' } = Astro.props as Props;
 
 // Variant background colors
 const variantStyles = {
