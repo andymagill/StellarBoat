@@ -13,6 +13,7 @@ export const footerConfig: FooterConfig = {
   nav: [
     { label: 'Home', href: '/' },
     { label: 'Design Tokens', href: '/demo/tokens' },
+    { label: 'Forms', href: '/demo/forms' },
   ],
   columns: [
     {

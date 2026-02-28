@@ -27,7 +27,7 @@ h6 {
   font-family: var(--font-sans);
   font-weight: 600;
   line-height: 1.2;
-  margin: 0;
+  margin: var(--spacing-lg) 0;
 }
 
 p {

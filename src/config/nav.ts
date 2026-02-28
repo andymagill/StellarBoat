@@ -10,6 +10,7 @@ export const navConfig: NavConfig = {
   items: [
     { label: 'Home', href: '/' },
     { label: 'Design Tokens', href: '/demo/tokens' },
+    { label: 'Forms', href: '/demo/forms' },
   ],
   includeDemo: true,
 };
