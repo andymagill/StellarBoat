@@ -9,7 +9,9 @@ import { siteConfig } from '../../config/site';
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
       <!-- Brand / Description -->
       <div>
-        <h3 class="text-lg font-bold text-primary-400 mb-2">{siteConfig.brandName}</h3>
+        <h3 class="text-lg font-bold text-primary-400 mb-2">
+          {siteConfig.brandName}
+        </h3>
         {
           footerConfig.description && (
             <p class="text-sm text-text-muted">{footerConfig.description}</p>
@@ -62,16 +64,21 @@ import { siteConfig } from '../../config/site';
       <!-- Copyright -->
       <div>
         <p class="text-sm text-text-muted">
-          © {footerConfig.copyrightYear} {siteConfig.brandName}
+          © {footerConfig.copyrightYear}
+          {siteConfig.brandName}
         </p>
       </div>
     </div>
 
     <!-- Bottom divider -->
     <div class="border-t border-border pt-6">
-      {footerConfig.tagline && (
-        <p class="text-xs text-text-muted text-center">{footerConfig.tagline}</p>
-      )}
+      {
+        footerConfig.tagline && (
+          <p class="text-xs text-text-muted text-center">
+            {footerConfig.tagline}
+          </p>
+        )
+      }
     </div>
   </div>
 </footer>

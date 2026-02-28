@@ -16,7 +16,9 @@ const items = navConfig.items;
 
   <div class="flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
     <!-- Brand/Logo -->
-    <a href="/" class="text-xl font-bold text-primary-400">{siteConfig.brandName}</a>
+    <a href="/" class="text-xl font-bold text-primary-400"
+      >{siteConfig.brandName}</a
+    >
 
     <!-- Desktop Navigation -->
     <nav aria-label="Main" class="hidden md:flex gap-6">
@@ -58,9 +60,17 @@ const items = navConfig.items;
         peer-checked:[&>span:nth-child(3)]:-rotate-45
         peer-checked:[&>span:nth-child(3)]:-translate-y-2"
     >
-      <span aria-hidden="true" class="w-6 h-0.5 bg-text block transition-all duration-300 origin-center"></span>
-      <span aria-hidden="true" class="w-6 h-0.5 bg-text block transition-all duration-300"></span>
-      <span aria-hidden="true" class="w-6 h-0.5 bg-text block transition-all duration-300 origin-center"></span>
+      <span
+        aria-hidden="true"
+        class="w-6 h-0.5 bg-text block transition-all duration-300 origin-center"
+      ></span>
+      <span
+        aria-hidden="true"
+        class="w-6 h-0.5 bg-text block transition-all duration-300"></span>
+      <span
+        aria-hidden="true"
+        class="w-6 h-0.5 bg-text block transition-all duration-300 origin-center"
+      ></span>
     </label>
   </div>
 

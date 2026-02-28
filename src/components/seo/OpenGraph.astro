@@ -32,13 +32,25 @@ const {
 <meta property="og:type" content={type} />
 {image && <meta property="og:image" content={image} />}
 {image && imageAlt && <meta property="og:image:alt" content={imageAlt} />}
-{image && imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
-{image && imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
+{
+  image && imageWidth && (
+    <meta property="og:image:width" content={String(imageWidth)} />
+  )
+}
+{
+  image && imageHeight && (
+    <meta property="og:image:height" content={String(imageHeight)} />
+  )
+}
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-{siteConfig.social?.twitter && <meta name="twitter:site" content={siteConfig.social.twitter} />}
+{
+  siteConfig.social?.twitter && (
+    <meta name="twitter:site" content={siteConfig.social.twitter} />
+  )
+}
 {image && <meta name="twitter:image" content={image} />}
 {image && imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}
