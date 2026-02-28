@@ -7,15 +7,18 @@ import Card from '../components/ui/Card.astro';
 <Page title="Home">
   <!-- Hero Section: Full-width with background image left, spaceship visual right -->
   <section
-    class="relative w-full bg-cover bg-center min-h-[600px] md:min-h-[700px] overflow-hidden"
+    class="relative w-full bg-cover bg-center h-[90dvh] overflow-hidden"
     style="background-image: url('/images/hero-background.png')"
   >
     <!-- Dark overlay for text readability -->
     <div class="absolute inset-0 bg-black/30"></div>
 
-    <div class="relative z-10 max-w-6xl mx-auto px-6 h-full flex items-center">
-      <!-- Left: Hero Content -->
-      <div class="w-full md:w-1/2 py-12 md:py-0">
+    <!-- Single column container: centered, full height -->
+    <div
+      class="relative z-10 h-full w-full max-w-6xl mx-auto px-6 flex items-center justify-center"
+    >
+      <!-- Left: Hero Content (Text left-aligned) -->
+      <div class="w-full md:w-1/2 md:pl-12 text-left">
         <h1 class="text-5xl md:text-6xl font-bold text-text mb-6 leading-tight">
           Welcome to <span class="text-secondary-400">StellarBoat</span>
         </h1>
@@ -27,14 +30,14 @@ import Card from '../components/ui/Card.astro';
           modern web standards.
         </p>
         <div class="flex gap-4 pt-4">
-          <Button href="/demo/tokens" variant="ghost" size="lg">
+          <Button href="/demo/tokens" variant="primary" size="lg">
             View Design Tokens
           </Button>
         </div>
       </div>
 
       <!-- Right: Spaceship Visual -->
-      <div class="hidden md:flex md:w-1/2 h-full items-center justify-center">
+      <div class="hidden md:flex md:w-1/2 items-center justify-center h-full">
         <img
           src="/images/hero-spacecraft.png"
           alt="StellarBoat spacecraft"
@@ -68,7 +71,7 @@ import Card from '../components/ui/Card.astro';
             <img
               src="/images/icon-architecture.png"
               alt="Island architecture icon"
-              class="h-16 w-16 md:h-20 md:w-20 object-contain"
+              class="h-28 w-28 md:h-32 md:w-32 object-contain"
             />
           </div>
           <h3 class="text-xl font-bold text-text text-center mb-3">
@@ -89,7 +92,7 @@ import Card from '../components/ui/Card.astro';
             <img
               src="/images/icon-seo.png"
               alt="Lightweight SEO icon"
-              class="h-16 w-16 md:h-20 md:w-20 object-contain"
+              class="h-28 w-28 md:h-32 md:w-32 object-contain"
             />
           </div>
           <h3 class="text-xl font-bold text-text text-center mb-3">
@@ -110,7 +113,7 @@ import Card from '../components/ui/Card.astro';
             <img
               src="/images/icon-tailwind.png"
               alt="Tailwind Ready icon"
-              class="h-16 w-16 md:h-20 md:w-20 object-contain"
+              class="h-28 w-28 md:h-32 md:w-32 object-contain"
             />
           </div>
           <h3 class="text-xl font-bold text-text text-center mb-3">
