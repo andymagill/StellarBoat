@@ -94,14 +94,14 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 
 > Implement the GTM integration. This is intentionally simple — one component, one config field.
 
-- [ ] `[config]` Create `src/config/analytics.ts` with `AnalyticsConfig` type: `gtmId: string | null`, `consentMode: boolean`; default `gtmId: null` (SPEC §9)
-- [ ] `[core]` Create `src/components/analytics/Analytics.astro` — renders consent-init block + GTM `<script>` in `<head>`; no-ops when `gtmId` is null or in dev (`import.meta.env.PROD` guard); consent defaults block fires before GTM when `consentMode: true` (SPEC §9)
-- [ ] `[core]` Add GTM `<noscript>` iframe render in `Base.astro` body slot — immediately after `<body>`, separate from `Analytics.astro`; gated on `analytics.gtmId && import.meta.env.PROD` (SPEC §9)
-- [ ] `[core]` Create `src/components/analytics/CookieBanner.astro` — accessible accept/decline banner in `src/components/analytics/`; on accept calls `gtag('consent', 'update', ...)` and sets a persistent cookie; included in `Base.astro` only when `consentMode: true` (SPEC §9)
-- [ ] `[core]` Create `src/utils/analytics.ts` — `trackEvent(name, params)` pushes to `window.dataLayer`; no-ops if `dataLayer` not initialized (SPEC §9)
-- [ ] `[core]` Integrate `<Analytics />` into `<head>` in `Base.astro`; add GTM noscript block at start of `<body>`; add `<CookieBanner />` when `consentMode: true` (SPEC §9)
-- [ ] `[demo]` Add GTM container ID to demo `analytics.ts`; document in `src/demo/README.md` how to verify events fire in GTM Preview mode
-- [ ] Verify: GTM script absent in dev, present in production HTML; consent block precedes GTM script; noscript iframe is first element inside `<body>`
+- [x] `[config]` Create `src/config/analytics.ts` with `AnalyticsConfig` type: `gtmId: string | null`, `consentMode: boolean`; default `gtmId: null` (SPEC §9)
+- [x] `[core]` Create `src/components/analytics/Analytics.astro` — renders consent-init block + GTM `<script>` in `<head>`; no-ops when `gtmId` is null or in dev (`import.meta.env.PROD` guard); consent defaults block fires before GTM when `consentMode: true` (SPEC §9)
+- [x] `[core]` Add GTM `<noscript>` iframe render in `Base.astro` body slot — immediately after `<body>`, separate from `Analytics.astro`; gated on `analytics.gtmId && import.meta.env.PROD` (SPEC §9)
+- [x] `[core]` Create `src/components/analytics/CookieBanner.astro` — accessible accept/decline banner in `src/components/analytics/`; on accept calls `gtag('consent', 'update', ...)` and sets a persistent cookie; included in `Base.astro` only when `consentMode: true` (SPEC §9)
+- [x] `[core]` Create `src/utils/analytics.ts` — `trackEvent(name, params)` pushes to `window.dataLayer`; no-ops if `dataLayer` not initialized (SPEC §9)
+- [x] `[core]` Integrate `<Analytics />` into `<head>` in `Base.astro`; add GTM noscript block at start of `<body>`; add `<CookieBanner />` when `consentMode: true` (SPEC §9)
+- [x] `[demo]` Add GTM container ID to demo `analytics.ts`; document in `src/demo/README.md` how to verify events fire in GTM Preview mode
+- [x] Verify: GTM script absent in dev, present in production HTML; consent block precedes GTM script; noscript iframe is first element inside `<body>`
 
 ---
 
@@ -109,20 +109,20 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 
 > Implement form components and the Web3Forms default backend. Per-component override is a first-class feature.
 
-- [ ] `[config]` Create `src/config/forms.ts` with `FormsConfig` type; default `backend: 'web3forms'`; document all fields with JSDoc (SPEC §10)
-- [ ] `[core]` Create `src/types/forms.ts` — export `ResolvedFormConfig` and `FormAdapter` interface; `FormsConfig` remains in `src/types/config.ts` (SPEC §10)
-- [ ] `[core]` Create `src/components/forms/FormField.astro` — accessible field wrapper: `<label>`, `<input>`/`<textarea>`/`<select>`, error message container with `role="alert"` and `aria-live="polite"` (SPEC §10)
-- [ ] `[core]` Create `src/utils/forms/adapters/web3forms.ts` — implements `FormAdapter`; POST to Web3Forms API; return `{ ok, error }` (SPEC §10)
-- [ ] `[core]` Create `src/utils/forms/adapters/netlify.ts` — adds hidden fields; POST to `/?no-cache=1`; logs build warning if not on Netlify (SPEC §10)
-- [ ] `[core]` Create `src/utils/forms/adapters/api.ts` — POST to `config.actionUrl`; return `{ ok, error }` (SPEC §10)
-- [ ] `[core]` Create community adapter stubs: `formspree.ts`, `formspark.ts` — marked community-maintained in JSDoc
-- [ ] `[core]` Create `src/utils/forms/index.ts` — `submitForm(data, overrides?)` dispatcher; merges global config with `overrides`; selects and calls correct adapter (SPEC §10)
-- [ ] `[core]` Create `src/components/forms/ContactForm.astro` — name, email, message; accepts optional `backend` prop and adapter-specific override props; passes merged config to `submitForm`; handles loading/success/error states with ARIA (SPEC §10)
-- [ ] `[core]` Create `src/components/forms/LeadCaptureForm.astro` — name, email, optional company + phone; same backend prop pattern (SPEC §10)
-- [ ] `[core]` Create `src/components/forms/NewsletterForm.astro` — email only; same backend prop pattern (SPEC §10)
-- [ ] `[demo]` Add `src/pages/demo/forms.astro` page showing: `ContactForm` with global Web3Forms default, `NewsletterForm` with `backend="api"` override, both side-by-side (SPEC §10)
-- [ ] `[demo]` Add `src/demo/edge/resend-worker.ts` — a Cloudflare Worker example for the `api` backend that forwards form data to Resend
-- [ ] Verify: contact form submits via Web3Forms; newsletter form routes to different endpoint; error state renders on failure; no-JS native POST still works
+- [x] `[config]` Create `src/config/forms.ts` with `FormsConfig` type; default `backend: 'web3forms'`; document all fields with JSDoc (SPEC §10)
+- [x] `[core]` Create `src/types/forms.ts` — export `ResolvedFormConfig` and `FormAdapter` interface; `FormsConfig` remains in `src/types/config.ts` (SPEC §10)
+- [x] `[core]` Create `src/components/forms/FormField.astro` — accessible field wrapper: `<label>`, `<input>`/`<textarea>`/`<select>`, error message container with `role="alert"` and `aria-live="polite"` (SPEC §10)
+- [x] `[core]` Create `src/utils/forms/adapters/web3forms.ts` — implements `FormAdapter`; POST to Web3Forms API; return `{ ok, error }` (SPEC §10)
+- [x] `[core]` Create `src/utils/forms/adapters/netlify.ts` — adds hidden fields; POST to `/?no-cache=1`; logs build warning if not on Netlify (SPEC §10)
+- [x] `[core]` Create `src/utils/forms/adapters/api.ts` — POST to `config.actionUrl`; return `{ ok, error }` (SPEC §10)
+- [x] `[core]` Create community adapter stubs: `formspree.ts`, `formspark.ts` — marked community-maintained in JSDoc
+- [x] `[core]` Create `src/utils/forms/index.ts` — `submitForm(data, overrides?)` dispatcher; merges global config with `overrides`; selects and calls correct adapter (SPEC §10)
+- [x] `[core]` Create `src/components/forms/ContactForm.astro` — name, email, message; accepts optional `backend` prop and adapter-specific override props; passes merged config to `submitForm`; handles loading/success/error states with ARIA (SPEC §10)
+- [x] `[core]` Create `src/components/forms/LeadCaptureForm.astro` — name, email, optional company + phone; same backend prop pattern (SPEC §10)
+- [x] `[core]` Create `src/components/forms/NewsletterForm.astro` — email only; same backend prop pattern (SPEC §10)
+- [x] `[demo]` Add `src/pages/demo/forms.astro` page showing: `ContactForm` with global Web3Forms default, `NewsletterForm` with `backend="api"` override, both side-by-side (SPEC §10)
+- [x] `[demo]` Add `src/demo/edge/resend-worker.ts` — a Cloudflare Worker example for the `api` backend that forwards form data to Resend
+- [x] Verify: contact form submits via Web3Forms; newsletter form routes to different endpoint; error state renders on failure; no-JS native POST still works
 
 ---
 

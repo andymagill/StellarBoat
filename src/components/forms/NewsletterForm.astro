@@ -1,0 +1,196 @@
+---
+/**
+ * Newsletter signup form component.
+ *
+ * A single-field email form for newsletter/list signup with:
+ * - Compact, inline-friendly layout
+ * - Same progressive enhancement as other forms
+ * - Backend override support
+ *
+ * @example
+ * ```astro
+ * <!-- Uses global Web3Forms backend -->
+ * <NewsletterForm />
+ *
+ * <!-- Override backend for a different endpoint -->
+ * <NewsletterForm backend="api" apiUrl="https://api.mysite.com/newsletter" />
+ * ```
+ */
+
+import { forms } from '../../config/forms';
+import FormField from './FormField.astro';
+import Button from '../ui/Button.astro';
+import type { FormsConfig } from '../../types/config';
+
+export interface Props {
+  backend?: FormsConfig['defaultBackend'];
+  apiUrl?: string;
+  web3formsKey?: string;
+  formspreeEndpoint?: string;
+  formsparProjectId?: string;
+  class?: string;
+  /** Show success/error messages inline or in modal (for footer usage) */
+  compact?: boolean;
+}
+
+const {
+  backend = forms.defaultBackend,
+  apiUrl = forms.apiUrl,
+  web3formsKey = forms.web3formsKey,
+  formspreeEndpoint = forms.formspreeEndpoint,
+  formsparProjectId = forms.formsparProjectId,
+  class: className = '',
+  compact = false,
+} = Astro.props;
+
+const getFormAction = (): string => {
+  switch (backend) {
+    case 'web3forms':
+      return 'https://api.web3forms.com/submit';
+    case 'netlify':
+      return '/?no-cache=1';
+    case 'api':
+      return apiUrl || '#';
+    case 'formspree':
+      return formspreeEndpoint || '#';
+    case 'formspark':
+      return 'https://submit-form.com/formsparkapi';
+    default:
+      return '#';
+  }
+};
+---
+
+<form
+  method="POST"
+  action={getFormAction()}
+  class={`${compact ? 'flex gap-2' : 'space-y-4'} ${className}`}
+>
+  {
+    backend === 'web3forms' && (
+      <input type="hidden" name="access_key" value={web3formsKey} />
+    )
+  }
+  {
+    backend === 'netlify' && (
+      <input type="hidden" name="form-name" value="newsletter" />
+    )
+  }
+  {
+    backend === 'formspark' && (
+      <input type="hidden" name="projectId" value={formsparProjectId} />
+    )
+  }
+
+  {
+    !compact ? (
+      <FormField
+        id="email"
+        label="Email Address"
+        type="email"
+        required
+        placeholder="you@example.com"
+        autocomplete="email"
+      />
+    ) : (
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        placeholder="your@email.com"
+        class="flex-1 px-4 py-2.5 bg-surface-2 border border-border text-text rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400"
+      />
+    )
+  }
+
+  <div id="newsletter-form-messages" class="hidden"></div>
+
+  <Button type="submit" variant="primary" size={compact ? 'md' : 'md'}>
+    {compact ? 'Subscribe' : 'Join'}
+  </Button>
+</form>
+
+<script
+  define:vars={{
+    backend,
+    apiUrl,
+    web3formsKey,
+    formspreeEndpoint,
+    formsparProjectId,
+    compact,
+  }}
+>
+  const form = document.querySelector('form');
+  const messagesContainer = document.getElementById('newsletter-form-messages');
+  const submitButton = form?.querySelector('button[type="submit"]');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => {
+      if (
+        !key.startsWith('_') &&
+        key !== 'access_key' &&
+        key !== 'form-name' &&
+        key !== 'projectId'
+      ) {
+        data[key] = String(value);
+      }
+    });
+
+    submitButton.disabled = true;
+    submitButton.setAttribute('aria-busy', 'true');
+
+    try {
+      const { submitForm } = await import('../../utils/forms');
+
+      const result = await submitForm(data, {
+        defaultBackend: backend,
+        apiUrl,
+        web3formsKey,
+        formspreeEndpoint,
+        formsparProjectId,
+      });
+
+      messagesContainer.innerHTML = '';
+
+      if (result.ok) {
+        const successAlert = document.createElement('div');
+        successAlert.className =
+          'p-3 bg-success/10 border border-success text-success rounded-md text-sm';
+        successAlert.setAttribute('role', 'status');
+        successAlert.textContent = 'Thanks for signing up!';
+        messagesContainer.appendChild(successAlert);
+        messagesContainer.classList.remove('hidden');
+        form.reset();
+      } else {
+        const errorAlert = document.createElement('div');
+        errorAlert.className =
+          'p-3 bg-error/10 border border-error text-error rounded-md text-sm';
+        errorAlert.setAttribute('role', 'alert');
+        errorAlert.textContent =
+          result.error || 'Something went wrong. Try again.';
+        messagesContainer.appendChild(errorAlert);
+        messagesContainer.classList.remove('hidden');
+      }
+    } catch (error) {
+      messagesContainer.innerHTML = '';
+      const errorAlert = document.createElement('div');
+      errorAlert.className =
+        'p-3 bg-error/10 border border-error text-error rounded-md text-sm';
+      errorAlert.setAttribute('role', 'alert');
+      errorAlert.textContent =
+        error instanceof Error
+          ? error.message
+          : 'An unexpected error occurred.';
+      messagesContainer.appendChild(errorAlert);
+      messagesContainer.classList.remove('hidden');
+    } finally {
+      submitButton.disabled = false;
+      submitButton.removeAttribute('aria-busy');
+    }
+  });
+</script>

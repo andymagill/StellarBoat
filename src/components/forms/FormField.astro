@@ -1,0 +1,144 @@
+---
+/**
+ * Accessible form field wrapper.
+ *
+ * Renders a labeled input/textarea/select with error message container.
+ * Supports required fields, ARIA attributes for accessibility, and error states.
+ *
+ * @example
+ * ```astro
+ * <FormField
+ *   id="email"
+ *   label="Email Address"
+ *   type="email"
+ *   required
+ *   placeholder="you@example.com"
+ * />
+ * ```
+ */
+
+export interface Props {
+  /** Unique field identifier (used in name, id, for attributes) */
+  id: string;
+
+  /** Human-readable field label */
+  label: string;
+
+  /**
+   * Input type: 'text', 'email', 'tel', 'textarea', 'select'
+   * @default 'text'
+   */
+  type?: 'text' | 'email' | 'tel' | 'textarea' | 'select';
+
+  /** Whether the field is required */
+  required?: boolean;
+
+  /** Placeholder text for input fields */
+  placeholder?: string;
+
+  /** Additional CSS classes for the input element */
+  class?: string;
+
+  /** For select fields: array of option values */
+  options?: string[];
+
+  /** Enable spellcheck for textarea */
+  spellcheck?: boolean;
+
+  /** Autocomplete attribute */
+  autocomplete?: string;
+
+  /** Pattern for HTML5 validation */
+  pattern?: string;
+}
+
+const {
+  id,
+  label,
+  type = 'text',
+  required = false,
+  placeholder,
+  class: className,
+  options = [],
+  spellcheck,
+  autocomplete,
+  pattern,
+} = Astro.props;
+
+const inputClasses = `
+  w-full
+  px-4 py-2.5
+  bg-surface-2 border border-border
+  text-text placeholder-text-muted
+  rounded-md
+  hover:border-primary-400
+  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400
+  transition-colors
+  disabled:opacity-50 disabled:cursor-not-allowed
+  ${className || ''}
+`.trim();
+---
+
+<div class="form-field space-y-2">
+  <label for={id} class="block text-sm font-medium text-text">
+    {label}
+    {
+      required && (
+        <span class="text-error" aria-label="required">
+          *
+        </span>
+      )
+    }
+  </label>
+
+  {
+    type === 'textarea' ? (
+      <textarea
+        id={id}
+        name={id}
+        class={inputClasses}
+        required={required}
+        placeholder={placeholder}
+        spellcheck={spellcheck}
+        aria-required={required}
+        aria-describedby={`${id}-error`}
+      />
+    ) : type === 'select' ? (
+      <select
+        id={id}
+        name={id}
+        class={inputClasses}
+        required={required}
+        aria-required={required}
+        aria-describedby={`${id}-error`}
+      >
+        <option value="">— Select an option —</option>
+        {options.map((option) => (
+          <option value={option}>{option}</option>
+        ))}
+      </select>
+    ) : (
+      <input
+        type={type}
+        id={id}
+        name={id}
+        class={inputClasses}
+        required={required}
+        placeholder={placeholder}
+        autocomplete={autocomplete}
+        pattern={pattern}
+        aria-required={required}
+        aria-describedby={`${id}-error`}
+      />
+    )
+  }
+
+  {/* Error message container (hidden by default, shown by JS on validation) */}
+  <p
+    id={`${id}-error`}
+    role="alert"
+    aria-live="polite"
+    class="hidden text-sm text-error"
+  >
+  </p>
+</div>

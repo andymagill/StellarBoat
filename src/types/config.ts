@@ -127,14 +127,21 @@ export interface FormsConfig {
   /**
    * Default form backend.
    * Individual form components can override this with a `backend` prop.
+   * Supported: 'web3forms' (default), 'netlify', 'api', 'formspree', 'formspark'
    */
-  defaultBackend: 'web3forms' | 'netlify' | 'api';
+  defaultBackend: 'web3forms' | 'netlify' | 'api' | 'formspree' | 'formspark';
 
   /** Web3Forms access key (required if defaultBackend is 'web3forms') */
   web3formsKey?: string;
 
   /** Default form action URL for 'api' backend */
   apiUrl?: string;
+
+  /** Formspree form endpoint (required if defaultBackend is 'formspree') */
+  formspreeEndpoint?: string;
+
+  /** Formspark project ID (required if defaultBackend is 'formspark') */
+  formsparProjectId?: string;
 
   /** Enable reCAPTCHA integration (optional) */
   recaptchaEnabled?: boolean;

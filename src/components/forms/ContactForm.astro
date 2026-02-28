@@ -1,0 +1,225 @@
+---
+/**
+ * Contact form component.
+ *
+ * A three-field contact form (name, email, message) with:
+ * - Native HTML5 form that works without JavaScript
+ * - Progressive enhancement: AJAX submission when JS is available
+ * - Loading, success, and error states with accessible messaging
+ * - Backend override support (can switch from Web3Forms to API, etc.)
+ *
+ * @example
+ * ```astro
+ * <!-- Uses global Web3Forms backend -->
+ * <ContactForm />
+ *
+ * <!-- Override to a different backend -->
+ * <ContactForm backend="api" apiUrl="https://api.mysite.com/submit" />
+ * ```
+ */
+
+import { forms } from '../../config/forms';
+import FormField from './FormField.astro';
+import Button from '../ui/Button.astro';
+import type { FormsConfig } from '../../types/config';
+
+export interface Props {
+  /** Backend override: switch from global default to a different adapter */
+  backend?: FormsConfig['defaultBackend'];
+
+  /** API URL for 'api' backend override */
+  apiUrl?: string;
+
+  /** Web3Forms key override */
+  web3formsKey?: string;
+
+  /** Formspree endpoint override */
+  formspreeEndpoint?: string;
+
+  /** Formspark project ID override */
+  formsparProjectId?: string;
+
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const {
+  backend = forms.defaultBackend,
+  apiUrl = forms.apiUrl,
+  web3formsKey = forms.web3formsKey,
+  formspreeEndpoint = forms.formspreeEndpoint,
+  formsparProjectId = forms.formsparProjectId,
+  class: className = '',
+} = Astro.props;
+
+// Determine the form action URL for native HTML POST fallback
+const getFormAction = (): string => {
+  switch (backend) {
+    case 'web3forms':
+      return 'https://api.web3forms.com/submit';
+    case 'netlify':
+      return '/?no-cache=1';
+    case 'api':
+      return apiUrl || '#';
+    case 'formspree':
+      return formspreeEndpoint || '#';
+    case 'formspark':
+      return 'https://submit-form.com/formsparkapi';
+    default:
+      return '#';
+  }
+};
+---
+
+<form method="POST" action={getFormAction()} class={`space-y-6 ${className}`}>
+  {/* Hidden fields for backend-specific handling */}
+  {
+    backend === 'web3forms' && (
+      <input type="hidden" name="access_key" value={web3formsKey} />
+    )
+  }
+  {
+    backend === 'netlify' && (
+      <input type="hidden" name="form-name" value="contact" />
+    )
+  }
+  {
+    backend === 'formspark' && (
+      <input type="hidden" name="projectId" value={formsparProjectId} />
+    )
+  }
+
+  <FormField
+    id="name"
+    label="Name"
+    type="text"
+    required
+    placeholder="Your name"
+  />
+
+  <FormField
+    id="email"
+    label="Email"
+    type="email"
+    required
+    placeholder="you@example.com"
+    autocomplete="email"
+  />
+
+  <FormField
+    id="message"
+    label="Message"
+    type="textarea"
+    required
+    placeholder="Your message here..."
+  />
+
+  {/* Success/error alerts (hidden by default) */}
+  <div id="contact-form-messages" class="hidden"></div>
+
+  {/* Submit button - JS will add data attributes for state management */}
+  <Button type="submit" variant="primary" size="md">Send Message</Button>
+</form>
+
+<script
+  define:vars={{
+    backend,
+    apiUrl,
+    web3formsKey,
+    formspreeEndpoint,
+    formsparProjectId,
+  }}
+>
+  /**
+   * Progressive form enhancement.
+   * When JS is available, intercept submit, use AJAX, show accessible state changes.
+   */
+  const form = document.querySelector('form');
+  const messagesContainer = document.getElementById('contact-form-messages');
+  const submitButton = form?.querySelector('button[type="submit"]');
+
+  if (!form || !submitButton) {
+    console.warn('[ContactForm] Form or submit button not found');
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    // Prevent native form submission
+    e.preventDefault();
+
+    // Collect form data
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => {
+      // Skip hidden fields specific to backends
+      if (
+        !key.startsWith('_') &&
+        key !== 'access_key' &&
+        key !== 'form-name' &&
+        key !== 'projectId'
+      ) {
+        data[key] = String(value);
+      }
+    });
+
+    // Set loading state
+    submitButton.disabled = true;
+    submitButton.setAttribute('aria-busy', 'true');
+
+    try {
+      // Dynamically import submitForm (client-side only)
+      const { submitForm } = await import('../../utils/forms');
+
+      const result = await submitForm(data, {
+        defaultBackend: backend,
+        apiUrl,
+        web3formsKey,
+        formspreeEndpoint,
+        formsparProjectId,
+      });
+
+      // Clear previous messages
+      messagesContainer.innerHTML = '';
+
+      if (result.ok) {
+        // Show success
+        const successAlert = document.createElement('div');
+        successAlert.className =
+          'p-4 bg-success/10 border border-success text-success rounded-md';
+        successAlert.setAttribute('role', 'status');
+        successAlert.textContent = 'Thank you! Your message has been sent.';
+        messagesContainer.appendChild(successAlert);
+        messagesContainer.classList.remove('hidden');
+
+        // Reset form
+        form.reset();
+      } else {
+        // Show error
+        const errorAlert = document.createElement('div');
+        errorAlert.className =
+          'p-4 bg-error/10 border border-error text-error rounded-md';
+        errorAlert.setAttribute('role', 'alert');
+        errorAlert.textContent =
+          result.error || 'Something went wrong. Please try again.';
+        messagesContainer.appendChild(errorAlert);
+        messagesContainer.classList.remove('hidden');
+      }
+    } catch (error) {
+      // Network or other error
+      messagesContainer.innerHTML = '';
+      const errorAlert = document.createElement('div');
+      errorAlert.className =
+        'p-4 bg-error/10 border border-error text-error rounded-md';
+      errorAlert.setAttribute('role', 'alert');
+      errorAlert.textContent =
+        error instanceof Error
+          ? error.message
+          : 'An unexpected error occurred.';
+      messagesContainer.appendChild(errorAlert);
+      messagesContainer.classList.remove('hidden');
+    } finally {
+      // Clear loading state
+      submitButton.disabled = false;
+      submitButton.removeAttribute('aria-busy');
+    }
+  });
+</script>

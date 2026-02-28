@@ -124,9 +124,10 @@ export const siteConfig: SiteConfig = {
      * Default form backend.
      * Options:
      * - 'web3forms' — free, no backend required (sign up at https://web3forms.com)
-     * - 'netlify' — Netlify form handling (netlify.com only)
+     * - 'netlify' — Netlify form handling (deployed on netlify.com)
      * - 'api' — custom API endpoint (set apiUrl below)
-     * - Custom name (must have matching adapter in src/utils/forms/adapters/)
+     * - 'formspree' — community adapter (set formspreeEndpoint below)
+     * - 'formspark' — community adapter (set formsparProjectId below)
      *
      * Individual form components can override this with a `backend` prop.
      */
@@ -145,6 +146,20 @@ export const siteConfig: SiteConfig = {
      * Example: 'https://your-api.com/forms/submit'
      */
     apiUrl: undefined,
+
+    /**
+     * Formspree endpoint URL for 'formspree' backend.
+     * [OPTIONAL if using different backend]
+     * Get from: https://formspree.io → new form
+     */
+    formspreeEndpoint: undefined,
+
+    /**
+     * Formspark project ID for 'formspark' backend.
+     * [OPTIONAL if using different backend]
+     * Get from: https://formspark.io → project settings
+     */
+    formsparProjectId: undefined,
 
     /**
      * [OPTIONAL] Enable reCAPTCHA spam protection on forms
