@@ -33,6 +33,8 @@ npm run dev
 
 The demo site at `http://localhost:4321/demo` shows all components.
 
+**Note:** On first `npm install`, Husky will automatically set up git hooks to lint and format your changes before each commit.
+
 ---
 
 ## Development Workflow
@@ -40,13 +42,17 @@ The demo site at `http://localhost:4321/demo` shows all components.
 1. **Open an issue first** for significant changes — discuss the approach before writing code
 2. Fork the repo and create a feature branch: `git checkout -b feat/my-feature`
 3. Make your changes
-4. Run `npm run lint` — ESLint + Prettier must pass
+4. When you commit (`git commit`), linting and formatting will run automatically via Husky → lint-staged:
+   - ESLint will fix fixable issues on `*.{js,mjs,cjs,ts}` files
+   - Prettier will format all staged `*.{astro,js,mjs,cjs,ts,json,md}` files
 5. Run `npm run check` — `astro check` (TypeScript + Astro type errors) must pass
 6. Run `npm run build` — production build must succeed
 7. Run `npm run test` — all tests must pass
 8. Add or update tests if your change affects behavior
 9. Update `SPEC.md` if your change affects the architecture
 10. Open a pull request against `main`
+
+You can also manually run `npm run lint` and `npm run format` at any time.
 
 ---
 
@@ -84,7 +90,7 @@ The only code-level analytics contribution that makes sense is improving `Analyt
 
 ## Pull Request Checklist
 
-- [ ] `npm run lint` passes (ESLint + Prettier)
+- [ ] All commits passed Husky pre-commit hooks (lint-staged ran ESLint and Prettier)
 - [ ] `npm run check` passes (`astro check` — TypeScript + Astro types)
 - [ ] `npm run build` passes (production build succeeds)
 - [ ] `npm run test` passes
