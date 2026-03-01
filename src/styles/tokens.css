@@ -97,6 +97,7 @@
     /* ─── Brand Colors (Deep Space Theme) ───────────────────────────────────── */
     --color-bg: #0a0e27; /* midnight, primary background */
     --color-surface: #1a1f3a; /* space-blue, elevated surfaces/cards */
+    --color-surface-2: #2a2f4a; /* slightly lighter surface for nested/secondary surfaces */
     --color-text: #ffffff; /* bright white for high contrast */
     --color-text-muted: #b0b8c8; /* soft gray-white for secondary text */
     --color-border: #2d3a5a; /* subtle dividers and input borders */

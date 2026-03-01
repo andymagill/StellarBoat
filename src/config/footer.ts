@@ -1,22 +1,19 @@
 import type { FooterConfig } from '../types/config.ts';
+import { navConfig } from './nav';
 
 /**
  * Footer configuration
  *
  * Used by Footer.astro to render the footer section.
  * Update this object to customize footer content and links.
+ *
+ * Note: The `nav` array is derived from navConfig to maintain a single source of truth.
  */
 export const footerConfig: FooterConfig = {
   copyrightYear: new Date().getFullYear().toString(),
   description: 'Built with StellarBoat',
   tagline: 'Built with care · Deep Space theme',
-  nav: [
-    { label: 'Home', href: '/' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Design Tokens', href: '/tokens' },
-    { label: 'UI Primitives', href: '/ui' },
-    { label: 'Forms', href: '/forms' },
-  ],
+  nav: navConfig.items,
   columns: [
     {
       title: 'Tech Stack',

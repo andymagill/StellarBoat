@@ -47,7 +47,8 @@ const fallbackImage = placeholders[placeholderIndex];
           src={image.src}
           alt={image.alt}
           class="w-full h-48 object-cover transition-transform group-hover:scale-105"
-          onError={`this.src='${fallbackImage}'`}
+          class:list={['post-card-img']}
+          data-fallback={fallbackImage}
           loading="lazy"
         />
       </a>
@@ -121,3 +122,15 @@ const fallbackImage = placeholders[placeholderIndex];
     </a>
   </div>
 </article>
+
+<script>
+  // Attach error handler to post card images for CSP compliance
+  document.querySelectorAll('.post-card-img').forEach((img) => {
+    img.addEventListener('error', function () {
+      const fallback = this.dataset.fallback;
+      if (fallback) {
+        this.src = fallback;
+      }
+    });
+  });
+</script>

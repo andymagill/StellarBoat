@@ -48,6 +48,9 @@ const {
   items,
   class: classProp = '',
 } = Astro.props as Props;
+
+// Generate a unique ID for this component instance to support multiple instances per page
+const carouselId = `testimonials-carousel-${Math.random().toString(36).substring(7)}`;
 ---
 
 <section class={`py-16 px-4 sm:px-6 lg:px-8 ${classProp}`}>
@@ -82,7 +85,7 @@ const {
         <div class="relative w-full px-8 sm:px-16">
           <div
             class="overflow-x-auto carousel-scroll snap-x snap-mandatory"
-            id="testimonials-carousel"
+            id={carouselId}
           >
             <div class="flex gap-6 pb-4">
               {items.map((testimonial, index) => (
@@ -115,8 +118,9 @@ const {
           {items.length > 1 && (
             <>
               <button
-                class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-primary-500 text-white rounded-full p-2 hover:bg-primary-600 transition-colors hidden sm:flex items-center justify-center w-10 h-10"
-                onclick="document.getElementById('testimonials-carousel').scrollBy({ left: -400, behavior: 'smooth' })"
+                class="carousel-nav carousel-nav-prev absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-primary-500 text-white rounded-full p-2 hover:bg-primary-600 transition-colors hidden sm:flex items-center justify-center w-10 h-10"
+                data-carousel-id={carouselId}
+                data-direction="left"
                 aria-label="Scroll testimonials left"
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -128,8 +132,9 @@ const {
                 </svg>
               </button>
               <button
-                class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-primary-500 text-white rounded-full p-2 hover:bg-primary-600 transition-colors hidden sm:flex items-center justify-center w-10 h-10"
-                onclick="document.getElementById('testimonials-carousel').scrollBy({ left: 400, behavior: 'smooth' })"
+                class="carousel-nav carousel-nav-next absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-primary-500 text-white rounded-full p-2 hover:bg-primary-600 transition-colors hidden sm:flex items-center justify-center w-10 h-10"
+                data-carousel-id={carouselId}
+                data-direction="right"
                 aria-label="Scroll testimonials right"
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -147,6 +152,22 @@ const {
     }
   </div>
 </section>
+
+<script>
+  // Attach carousel navigation to buttons with CSP-safe event listeners
+  document.querySelectorAll('.carousel-nav').forEach((button) => {
+    button.addEventListener('click', function () {
+      const carouselId = this.dataset.carouselId;
+      const direction = this.dataset.direction;
+      const carousel = document.getElementById(carouselId);
+
+      if (carousel) {
+        const distance = direction === 'left' ? -400 : 400;
+        carousel.scrollBy({ left: distance, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
 
 <style>
   /* Hide scrollbar while maintaining scroll functionality */
