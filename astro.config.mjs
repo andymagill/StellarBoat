@@ -24,8 +24,13 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      // Exclude demo routes from sitemap
-      filter: (page) => !page.includes('/demo/'),
+      // Exclude demo routes, the thank-you page, and any noIndex utility pages.
+      // Note: pages with noIndex prop must be added here manually — the integration
+      // only receives URL strings at build time, not Astro component props.
+      filter: (page) =>
+        !page.includes('/demo/') &&
+        !page.endsWith('/thank-you') &&
+        !page.endsWith('/thank-you/'),
     }),
     icon(),
   ],

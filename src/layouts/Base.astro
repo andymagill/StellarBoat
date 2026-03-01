@@ -15,6 +15,8 @@ interface Props {
   image?: string;
   canonicalUrl?: string;
   noIndex?: boolean;
+  /** JSON-LD schema objects to inject in <head>. Each layout populates this. */
+  schemas?: Record<string, unknown>[];
 }
 
 const {
@@ -23,20 +25,8 @@ const {
   image,
   canonicalUrl = Astro.url.href,
   noIndex = false,
+  schemas,
 } = Astro.props;
-
-const websiteSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: siteConfig.name,
-  url: siteConfig.url,
-  description: siteConfig.tagline,
-  author: {
-    '@type': 'Organization',
-    name: siteConfig.author,
-    email: siteConfig.contactEmail,
-  },
-};
 ---
 
 <!doctype html>
@@ -47,7 +37,7 @@ const websiteSchema = {
 
     <SEO {title} {description} {canonicalUrl} {noIndex} />
     <OpenGraph {title} {description} {image} />
-    <JsonLd schema={websiteSchema} />
+    {schemas?.map((schema) => <JsonLd schema={schema} />)}
 
     <Analytics />
 

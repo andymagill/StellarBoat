@@ -27,6 +27,7 @@
  *    ```
  */
 
+/* eslint-disable no-undef */
 // Example using Resend API (via Node-compatible SDK in Worker)
 export default {
   async fetch(request: Request, env: CloudflareEnv): Promise<Response> {

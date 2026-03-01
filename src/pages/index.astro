@@ -7,6 +7,7 @@ import Pricing from '../components/marketing/Pricing.astro';
 import FAQ from '../components/marketing/FAQ.astro';
 import CTA from '../components/marketing/CTA.astro';
 import LogoBar from '../components/marketing/LogoBar.astro';
+import { siteConfig } from '../config/site';
 
 // Hero content with background and spaceship
 const heroContent = {
@@ -149,9 +150,31 @@ const logoData = [
     alt: 'GitHub',
   },
 ];
+
+// ── JSON-LD: WebSite + Organization for homepage ──────────────────────────────
+const websiteSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteConfig.name,
+  url: siteConfig.url,
+  description: siteConfig.tagline,
+};
+
+const sameAs = siteConfig.social
+  ? Object.values(siteConfig.social).filter(Boolean)
+  : [];
+
+const organizationSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: siteConfig.name,
+  url: siteConfig.url,
+  email: siteConfig.contactEmail,
+  ...(sameAs.length ? { sameAs } : {}),
+};
 ---
 
-<Page title="Home">
+<Page title="Home" schemas={[websiteSchema, organizationSchema]}>
   <!-- Hero with background and spaceship visual -->
   <Hero
     variant="centered"

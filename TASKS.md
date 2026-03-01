@@ -169,10 +169,10 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 
 > Wire JSON-LD structured data per layout type and finalize the sitemap integration.
 
-- [ ] `[core]` Add JSON-LD per layout: `WebSite` + `Organization` on homepage (from `site.ts`), `WebPage` on standard pages, `BlogPosting` on blog posts (SPEC §8)
-- [ ] `[core]` Add `BreadcrumbList` JSON-LD to blog post (`/blog/[...slug]`) and tag pages (`/blog/tag/[tag]`) (SPEC §8)
-- [ ] `[core]` Configure `@astrojs/sitemap` integration in `astro.config.mjs` with a `filter` function excluding `/demo/` routes, `noIndex` pages, and `/thank-you`; **no `src/pages/sitemap.xml.ts` file** — the integration generates `sitemap.xml` automatically (SPEC §8)
-- [ ] `[core]` Create `src/pages/robots.txt.ts` — allow all in production, `Disallow: /` when `PUBLIC_NOINDEX=true` env var is set (SPEC §8)
+- [x] `[core]` Add JSON-LD per layout: `WebSite` + `Organization` on homepage (from `site.ts`), `WebPage` on standard pages, `BlogPosting` on blog posts (SPEC §8)
+- [x] `[core]` Add `BreadcrumbList` JSON-LD to blog post (`/blog/[...slug]`) and tag pages (`/blog/tag/[tag]`) (SPEC §8)
+- [x] `[core]` Configure `@astrojs/sitemap` integration in `astro.config.mjs` with a `filter` function excluding `/demo/` routes, `noIndex` pages, and `/thank-you`; **no `src/pages/sitemap.xml.ts` file** — the integration generates `sitemap.xml` automatically (SPEC §8)
+- [x] `[core]` Create `src/pages/robots.txt.ts` — allow all in production, `Disallow: /` when `PUBLIC_NOINDEX=true` env var is set (SPEC §8)
 - [ ] `[ci]` Confirm Lighthouse SEO threshold = 100 is set in `lighthouserc.cjs` (added in Milestone 11)
 - [ ] Verify: `sitemap.xml` present in `dist/` after build; lists all non-demo public pages; `robots.txt` correct; JSON-LD valid via Google Rich Results Test; blog post breadcrumb renders correctly
 

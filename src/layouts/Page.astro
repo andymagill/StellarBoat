@@ -2,6 +2,7 @@
 import Base from './Base.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
+import { siteConfig } from '../config/site';
 
 interface Props {
   title?: string;
@@ -9,12 +10,44 @@ interface Props {
   image?: string;
   canonicalUrl?: string;
   noIndex?: boolean;
+  /** Additional JSON-LD schemas to inject alongside the auto-generated WebPage schema. */
+  schemas?: Record<string, unknown>[];
+  /** When true, suppresses the auto-generated WebPage schema (use in BlogPost layout). */
+  skipWebPageSchema?: boolean;
 }
 
-const baseProps = Astro.props;
+const {
+  schemas: incomingSchemas,
+  skipWebPageSchema,
+  ...baseProps
+} = Astro.props;
+
+const {
+  title,
+  description = siteConfig.tagline,
+  canonicalUrl = Astro.url.href,
+} = baseProps;
+
+const webPageSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title ?? siteConfig.name,
+  description,
+  url: canonicalUrl,
+  isPartOf: {
+    '@type': 'WebSite',
+    name: siteConfig.name,
+    url: siteConfig.url,
+  },
+};
+
+const mergedSchemas = [
+  ...(skipWebPageSchema ? [] : [webPageSchema]),
+  ...(incomingSchemas ?? []),
+];
 ---
 
-<Base {...baseProps}>
+<Base {...baseProps} schemas={mergedSchemas}>
   <Header />
   <main id="main-content">
     <slot />

@@ -4,6 +4,8 @@
  * Displays published posts in a list.
  * Returns empty getStaticPaths() when features.blog is false.
  */
+/* eslint-disable no-undef */
+// Response is a built-in global in Astro pages
 
 import { siteConfig } from '../../config/site';
 import { getPublishedPosts, getAllTags } from '../../utils/blog';
