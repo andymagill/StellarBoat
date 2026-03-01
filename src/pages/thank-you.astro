@@ -1,0 +1,72 @@
+---
+import Page from '../layouts/Page.astro';
+import Button from '../components/ui/Button.astro';
+
+/**
+ * Thank You page — fork-editable confirmation
+ *
+ * This page is displayed after a form submission.
+ * Customize the headline, message, and redirect URL to match your brand.
+ *
+ * To add an auto-redirect with countdown, see the commented example below.
+ */
+
+// ── Configuration (edit these for your fork) ──────────────────────────────
+const headline = 'Thank You!';
+const message = '(Demo) This is not a real submission — no message was sent.';
+const subMessage =
+  'To discuss StellarBoat or request features, please create an issue on GitHub.';
+// To enable redirect, set redirectDelay to milliseconds (e.g. 10000 for 10 seconds)
+// and add the script section at the bottom of the page template
+// ──────────────────────────────────────────────────────────────────────────
+---
+
+<Page title="Thank You" description="Thank you for getting in touch.">
+  <div class="min-h-screen flex items-center justify-center px-6 py-12">
+    <div class="max-w-2xl w-full text-center">
+      <!-- Success Icon/Badge -->
+      <div class="mb-8 flex justify-center">
+        <div
+          class="w-16 h-16 bg-success-100 rounded-full flex items-center justify-center"
+        >
+          <svg
+            class="w-8 h-8 text-success-600"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">
+        {headline}
+      </h1>
+
+      <!-- Message -->
+      <p class="text-lg text-text-muted mb-4">
+        {message}
+      </p>
+
+      <p class="text-text-muted mb-8">
+        {subMessage}
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <Button
+          href="https://github.com/andymagill/stellarboat/issues"
+          variant="primary"
+          size="lg"
+        >
+          Discuss on GitHub
+        </Button>
+        <Button href="/" variant="secondary" size="lg"> Back to Home </Button>
+      </div>
+    </div>
+  </div>
+</Page>

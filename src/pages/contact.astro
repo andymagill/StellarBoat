@@ -1,0 +1,144 @@
+---
+import Page from '../layouts/Page.astro';
+import ContactForm from '../components/forms/ContactForm.astro';
+import Card from '../components/ui/Card.astro';
+import CodeBlock from '../components/mdx/CodeBlock.astro';
+import Alert from '../components/ui/Alert.astro';
+
+/**
+ * Contact page — fork-editable
+ *
+ * This page shows a single contact form and usage examples for how to
+ * customize forms with different backends. The LeadCaptureForm example
+ * demonstrates per-form backend override.
+ *
+ * Edit the headline, description, and examples below.
+ */
+---
+
+<Page
+  title="Contact"
+  description="Get in touch with StellarBoat. We'd love to hear from you."
+>
+  <div class="max-w-4xl mx-auto px-6 py-12 lg:py-16">
+    <!-- Demo Notice -->
+    <Alert variant="info" class="mb-8">
+      <div>
+        <p class="font-semibold mb-2">
+          This is a demo page — no message will be sent
+        </p>
+        <p class="text-sm">
+          To discuss StellarBoat or report issues, please <a
+            href="https://github.com/andymagill/stellarboat/issues"
+            class="underline font-semibold hover:opacity-80"
+            >create an issue on GitHub</a
+          >
+        </p>
+      </div>
+    </Alert>
+
+    <!-- Header -->
+    <div class="mb-12 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">
+        Get in Touch
+      </h1>
+      <p class="text-lg text-text-muted max-w-2xl mx-auto">
+        Have questions about StellarBoat? Fill out the form below to see how the
+        contact form component works. (Note: no message is actually sent.)
+      </p>
+    </div>
+
+    <!-- Main Contact Form -->
+    <Card class="p-8 mb-12">
+      <ContactForm />
+    </Card>
+
+    <!-- Usage Examples Section -->
+    <section class="mt-16 pt-12 border-t border-border">
+      <h2 class="text-2xl font-bold text-text mb-6">Form Usage Examples</h2>
+      <p class="text-text-muted mb-8">
+        StellarBoat's form components support multiple backends and per-form
+        customization. Here are common patterns you can use in your fork:
+      </p>
+
+      <!-- Example 1: ContactForm with global backend -->
+      <div class="mb-10">
+        <h3 class="text-lg font-semibold text-text mb-3">
+          1. Contact Form (global backend)
+        </h3>
+        <p class="text-text-muted mb-4">
+          Uses the default backend from <code class="bg-surface-2 px-1 rounded"
+            >src/config/forms.ts</code
+          >:
+        </p>
+        <CodeBlock lang="astro" code={`<ContactForm />`} />
+      </div>
+
+      <!-- Example 2: LeadCaptureForm with API override -->
+      <div class="mb-10">
+        <h3 class="text-lg font-semibold text-text mb-3">
+          2. Lead Capture Form (custom API backend)
+        </h3>
+        <p class="text-text-muted mb-4">
+          Override the backend per-form to route leads to a different endpoint:
+        </p>
+        <CodeBlock
+          lang="astro"
+          code={`<LeadCaptureForm 
+  backend="api"
+  actionUrl="https://your-api.com/leads"
+/>`}
+        />
+      </div>
+
+      <!-- Example 3: NewsletterForm with redirect -->
+      <div class="mb-10">
+        <h3 class="text-lg font-semibold text-text mb-3">
+          3. Newsletter Form (with custom action)
+        </h3>
+        <p class="text-text-muted mb-4">
+          After submission, redirect to a thank-you page or external URL:
+        </p>
+        <CodeBlock
+          lang="astro"
+          code={`<NewsletterForm 
+  backend="api"
+  actionUrl="/api/newsletter"
+  redirectUrl="/thank-you"
+/>`}
+        />
+      </div>
+
+      <!-- See the forms page -->
+      <div class="pt-6 border-t border-border">
+        <p class="text-text-muted">
+          For more details, see the <a
+            href="/forms"
+            class="text-primary-500 hover:text-primary-600 font-semibold"
+          >
+            Forms Components page
+          </a> — it demonstrates all three form variants with different backends.
+        </p>
+      </div>
+    </section>
+
+    <!-- Get involved -->
+    <section class="mt-16 pt-12 border-t border-border text-center">
+      <h3 class="text-xl font-semibold text-text mb-4">
+        Get involved with StellarBoat
+      </h3>
+      <p class="text-text-muted mb-6 max-w-2xl mx-auto">
+        StellarBoat is open source. Have ideas, feature requests, or found a
+        bug? Visit the project on GitHub:
+      </p>
+      <div>
+        <a
+          href="https://github.com/andymagill/stellarboat"
+          class="inline-block text-primary-500 hover:text-primary-600 font-semibold text-lg"
+        >
+          github.com/andymagill/stellarboat
+        </a>
+      </div>
+    </section>
+  </div>
+</Page>

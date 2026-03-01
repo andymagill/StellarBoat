@@ -1,0 +1,39 @@
+---
+import { getCollection, render } from 'astro:content';
+import Page from '../../layouts/Page.astro';
+
+/**
+ * Demo: Content-Powered Page
+ *
+ * This page demonstrates how to render an MDX file from the pages collection.
+ * The content lives in src/content/pages/about.mdx and is loaded here via getCollection().
+ *
+ * This pattern allows you to create static pages with full markdown/MDX support,
+ * frontmatter metadata, and the ability to reuse components within content.
+ *
+ * To create your own content pages:
+ * 1. Add a new .mdx file to src/content/pages/
+ * 2. Define its frontmatter (title, description, etc.)
+ * 3. Create a route that calls getCollection() to fetch the entry
+ * 4. Use render() to get the Content component
+ */
+
+// Load all pages from content collection
+const allPages = await getCollection('pages');
+const page = allPages.find((p) => p.id === 'about');
+
+if (!page) {
+  // Response is a built-in global in Astro pages
+  // eslint-disable-next-line no-undef
+  return new Response('Not found', { status: 404 });
+}
+
+const { Content } = await render(page);
+const { title, description, noIndex } = page.data;
+---
+
+<Page {title} {description} noIndex={noIndex}>
+  <article class="max-w-3xl mx-auto px-6 py-12 lg:py-16 prose prose-lg">
+    <Content />
+  </article>
+</Page>
