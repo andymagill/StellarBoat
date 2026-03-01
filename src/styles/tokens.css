@@ -53,12 +53,6 @@
   --color-neutral-900: #1e293b;
   --color-neutral-950: #0f1729;
 
-  /* ─── Deep Space Background & Surface ────────────────────────────────────── */
-  --color-midnight: #0a0e27;
-  --color-starfield: #000000;
-  --color-surface: #1a1f3a;
-  --color-surface-raised: #252a45;
-
   /* ─── Typography ─────────────────────────────────────────────────────────── */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -82,12 +76,7 @@
   --shadow-glow-cyan: 0 0 20px rgb(0 217 255 / 0.3);
   --shadow-glow-purple: 0 0 20px rgb(192 0 255 / 0.3);
 
-  /* ─── Semantic Aliases (for component utilities) ──────────────────────────── */
-  --color-text: #ffffff;
-  --color-text-muted: #b0b8c8;
-  --color-border: #2d3a5a;
-  --color-surface-1: #1a1f3a;
-  --color-surface-2: #141824;
+  /* ─── Status & Semantic Colors (generate utilities: bg-success, text-error, etc.) */
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;

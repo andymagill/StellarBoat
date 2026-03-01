@@ -29,10 +29,13 @@
  */
 
 import Icon from '../ui/Icon.astro';
+import Card from '../ui/Card.astro';
 
 interface Feature {
-  /** Icon name (Iconify format, e.g., "heroicons:rocket-launch") */
-  icon: string;
+  /** Icon name (Heroicons format, e.g., "heroicons:rocket-launch") or image path */
+  icon?: string;
+  /** Optional image URL for icon instead of Heroicons */
+  iconImage?: string;
   /** Feature title */
   title: string;
   /** Feature description */
@@ -66,19 +69,27 @@ const gridClasses = {
     <div class={gridClasses[variant]}>
       {
         items.map((feature) => (
-          <div class={variant === 'list' ? 'flex gap-4' : ''}>
-            <div class={variant === 'list' ? 'flex-shrink-0' : ''}>
-              <div class="flex items-center justify-center h-12 w-12 rounded-md bg-primary-500 text-white">
-                <Icon name={feature.icon} class="h-6 w-6" />
-              </div>
+          <Card variant="raised" class="flex flex-col items-center text-center">
+            <div class="mb-4">
+              {feature.iconImage ? (
+                <img
+                  src={feature.iconImage}
+                  alt={feature.title}
+                  class="h-32 w-32 md:h-40 md:w-40 object-contain"
+                />
+              ) : (
+                <div class="flex items-center justify-center h-32 w-32 md:h-40 md:w-40 rounded-md bg-primary-500 text-white">
+                  {feature.icon && (
+                    <Icon name={feature.icon} class="h-16 w-16" />
+                  )}
+                </div>
+              )}
             </div>
-            <div class={variant === 'list' ? 'flex-1' : ''}>
-              <h3 class="text-lg font-semibold text-text mb-2">
-                {feature.title}
-              </h3>
-              <p class="text-text-muted">{feature.description}</p>
-            </div>
-          </div>
+            <h3 class="text-lg font-semibold text-white mb-2">
+              {feature.title}
+            </h3>
+            <p class="text-neutral-400">{feature.description}</p>
+          </Card>
         ))
       }
     </div>

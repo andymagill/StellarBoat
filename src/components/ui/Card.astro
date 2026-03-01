@@ -17,11 +17,11 @@ const { variant = 'default', class: classProp = '' } = Astro.props as Props;
 
 // Variant background colors
 const variantStyles = {
-  default: 'bg-surface-1',
-  raised: 'bg-surface-raised',
+  default: 'bg-neutral-900',
+  raised: 'bg-neutral-800',
 };
 
-const classes = `${variantStyles[variant]} border border-border rounded-lg shadow-md p-6 my-6 card-container ${classProp}`;
+const classes = `${variantStyles[variant]} border border-neutral-700 rounded-lg shadow-md p-6 my-6 card-container ${classProp}`;
 ---
 
 <div class={classes}>

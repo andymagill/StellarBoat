@@ -39,23 +39,18 @@ const { headline, subtext, cta, class: classProp = '' } = Astro.props as Props;
 ---
 
 <section class={`bg-primary-500 py-16 px-4 sm:px-6 lg:px-8 ${classProp}`}>
-  <div class="mx-auto max-w-4xl text-center">
-    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+  <div class="mx-auto max-w-6xl text-center">
+    <h2
+      class="text-3xl sm:text-4xl font-bold text-primary-800 mb-4 text-center"
+    >
       {headline}
     </h2>
     {
       subtext && (
-        <p class="text-lg text-primary-50 mb-8 max-w-2xl mx-auto text-center">
-          {subtext}
-        </p>
+        <p class="text-lg text-primary-800 mb-8 text-center">{subtext}</p>
       )
     }
-    <Button
-      href={cta.href}
-      variant="ghost"
-      size="lg"
-      class="!text-white hover:!text-primary-50"
-    >
+    <Button href={cta.href} variant="secondary" size="lg">
       {cta.label}
     </Button>
   </div>

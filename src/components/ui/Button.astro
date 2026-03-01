@@ -41,10 +41,10 @@ const sizeStyles = {
 // Variant styles
 const variantStyles = {
   primary:
-    'bg-primary-500 !text-text hover:!text-midnight hover:bg-primary-200 hover:!no-underline active:bg-primary-500 transition-colors',
+    'bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700 transition-colors',
   secondary:
-    'border-2 border-primary-400 text-primary-400 hover:bg-primary-700 hover:!text-text hover:border-text hover:!no-underline active:bg-primary-500 active:border-primary-500 transition-all',
-  ghost: 'text-text-muted hover:text-text active:text-primary-400',
+    'border-2 border-primary-400 text-primary-400 hover:bg-primary-700 hover:text-white hover:border-primary-600 active:bg-primary-600 active:border-primary-500 transition-all',
+  ghost: 'text-neutral-400 hover:text-white active:text-primary-400',
 };
 
 const classes = `${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${classProp}`;

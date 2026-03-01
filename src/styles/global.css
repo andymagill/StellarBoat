@@ -40,7 +40,13 @@ a {
   transition: color 0.2s ease;
 }
 
-a:hover {
+/* Don't override text color for button-styled links */
+a[class*='px-'][class*='py-'],
+a.inline-flex {
+  color: inherit;
+}
+
+a:hover:not([class*='px-']):not([class*='py-']):not(.inline-flex) {
   color: var(--color-text);
   text-decoration: underline;
 }

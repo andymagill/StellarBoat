@@ -68,8 +68,8 @@ const {
 const inputClasses = `
   w-full
   px-4 py-2.5
-  bg-surface-2 border border-border
-  text-text placeholder-text-muted
+  bg-neutral-800 border border-neutral-700
+  text-white placeholder-neutral-400
   rounded-md
   hover:border-primary-400
   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400
@@ -80,7 +80,7 @@ const inputClasses = `
 ---
 
 <div class="form-field space-y-2">
-  <label for={id} class="block text-sm font-medium text-text">
+  <label for={id} class="block text-sm font-medium text-white">
     {label}
     {
       required && (

@@ -9,7 +9,7 @@ const items = navConfig.items;
   <!-- Skip to main content (appears on keyboard focus) -->
   <a
     href="#main-content"
-    class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:bg-surface focus:text-text focus:rounded-md focus:ring-2 focus:ring-primary-400 focus:outline-none"
+    class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:bg-neutral-800 focus:text-white focus:rounded-md focus:ring-2 focus:ring-primary-400 focus:outline-none"
   >
     Skip to content
   </a>
@@ -29,7 +29,7 @@ const items = navConfig.items;
             class={`text-sm font-medium transition-colors ${
               item.active
                 ? 'text-primary-400'
-                : 'text-text-muted hover:text-text'
+                : 'text-neutral-400 hover:text-white'
             }`}
           >
             {item.label}
@@ -62,14 +62,14 @@ const items = navConfig.items;
     >
       <span
         aria-hidden="true"
-        class="w-6 h-0.5 bg-text block transition-all duration-300 origin-center"
+        class="w-6 h-0.5 bg-white block transition-all duration-300 origin-center"
       ></span>
       <span
         aria-hidden="true"
-        class="w-6 h-0.5 bg-text block transition-all duration-300"></span>
+        class="w-6 h-0.5 bg-white block transition-all duration-300"></span>
       <span
         aria-hidden="true"
-        class="w-6 h-0.5 bg-text block transition-all duration-300 origin-center"
+        class="w-6 h-0.5 bg-white block transition-all duration-300 origin-center"
       ></span>
     </label>
   </div>
@@ -77,14 +77,16 @@ const items = navConfig.items;
   <!-- Mobile Navigation Menu (peer-checked:flex overrides hidden; specificity wins) -->
   <nav
     aria-label="Mobile"
-    class="hidden peer-checked:flex flex-col bg-surface-2 border-t border-border px-6 py-4 gap-3"
+    class="hidden peer-checked:flex flex-col bg-neutral-800 border-t border-neutral-700 px-6 py-4 gap-3"
   >
     {
       items.map((item) => (
         <a
           href={item.href}
           class={`block py-2 font-medium transition-colors ${
-            item.active ? 'text-primary-400' : 'text-text-muted hover:text-text'
+            item.active
+              ? 'text-primary-400'
+              : 'text-neutral-400 hover:text-white'
           }`}
         >
           {item.label}

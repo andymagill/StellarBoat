@@ -45,13 +45,13 @@ const { items, class: classProp = '' } = Astro.props as Props;
       {
         items.map((item, index) => (
           <details
-            class="bg-surface-1 border border-border rounded-lg p-6 cursor-pointer hover:border-primary-400 transition-colors group"
+            class="bg-neutral-900 border border-neutral-700 rounded-lg p-6 cursor-pointer hover:border-primary-500 transition-colors group"
             id={`faq-${index}`}
           >
-            <summary class="flex items-center justify-between font-semibold text-text cursor-pointer select-none">
+            <summary class="flex items-center justify-between font-semibold text-white cursor-pointer select-none">
               <span>{item.question}</span>
               <svg
-                class="h-5 w-5 text-text-muted group-open:rotate-180 transition-transform flex-shrink-0"
+                class="h-5 w-5 text-neutral-400 group-open:rotate-180 transition-transform flex-shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -64,7 +64,7 @@ const { items, class: classProp = '' } = Astro.props as Props;
                 />
               </svg>
             </summary>
-            <div class="mt-4 text-text-muted leading-relaxed">
+            <div class="mt-4 text-neutral-400 leading-relaxed">
               <p>{item.answer}</p>
             </div>
           </details>

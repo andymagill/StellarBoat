@@ -3,7 +3,7 @@ import { footerConfig } from '../../config/footer';
 import { siteConfig } from '../../config/site';
 ---
 
-<footer class="bg-surface-2 border-t border-border mt-12">
+<footer class="bg-neutral-800 border-t border-neutral-700 mt-12">
   <div class="max-w-6xl mx-auto px-6 py-12">
     <!-- Footer content grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
@@ -14,7 +14,7 @@ import { siteConfig } from '../../config/site';
         </h3>
         {
           footerConfig.description && (
-            <p class="text-sm text-text-muted">{footerConfig.description}</p>
+            <p class="text-sm text-neutral-400">{footerConfig.description}</p>
           )
         }
       </div>
@@ -23,13 +23,13 @@ import { siteConfig } from '../../config/site';
       {
         footerConfig.nav && footerConfig.nav.length > 0 && (
           <nav aria-label="Site map" class="flex flex-col gap-2">
-            <h4 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+            <h4 class="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">
               Links
             </h4>
             {footerConfig.nav.map((item) => (
               <a
                 href={item.href}
-                class="text-sm text-text-muted hover:text-text transition-colors"
+                class="text-sm text-neutral-400 hover:text-white transition-colors"
               >
                 {item.label}
               </a>
@@ -44,14 +44,14 @@ import { siteConfig } from '../../config/site';
           footerConfig.columns.length > 0 &&
           footerConfig.columns.map((column) => (
             <div>
-              <h4 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+              <h4 class="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">
                 {column.title}
               </h4>
               <nav aria-label={column.title} class="flex flex-col gap-2">
                 {column.links.map((item) => (
                   <a
                     href={item.href}
-                    class="text-sm text-text-muted hover:text-text transition-colors"
+                    class="text-sm text-neutral-400 hover:text-white transition-colors"
                   >
                     {item.label}
                   </a>
@@ -63,7 +63,7 @@ import { siteConfig } from '../../config/site';
 
       <!-- Copyright -->
       <div>
-        <p class="text-sm text-text-muted">
+        <p class="text-sm text-neutral-400">
           © {footerConfig.copyrightYear}
           {siteConfig.brandName}
         </p>
@@ -71,10 +71,10 @@ import { siteConfig } from '../../config/site';
     </div>
 
     <!-- Bottom divider -->
-    <div class="border-t border-border pt-6">
+    <div class="border-t border-neutral-700 pt-6">
       {
         footerConfig.tagline && (
-          <p class="text-xs text-text-muted text-center">
+          <p class="text-xs text-neutral-400 text-center">
             {footerConfig.tagline}
           </p>
         )
