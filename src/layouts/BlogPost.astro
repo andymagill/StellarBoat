@@ -1,0 +1,214 @@
+---
+/**
+ * BlogPost.astro
+ *
+ * Layout for individual blog post pages.
+ * Extends Page layout; adds post header, reading progress bar, and prev/next navigation.
+ */
+
+import type { BlogPost } from '../utils/blog';
+import { getReadingTime, getPrevNextPosts } from '../utils/blog';
+import Page from './Page.astro';
+import AuthorBio from '../components/blog/AuthorBio.astro';
+import Badge from '../components/ui/Badge.astro';
+import Button from '../components/ui/Button.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  publishedAt: Date;
+  updatedAt?: Date;
+  author: string;
+  tags: string[];
+  image?: {
+    src: string;
+    alt: string;
+  };
+  canonicalUrl?: string;
+  readingTime?: number;
+  prevPost?: BlogPost | null;
+  nextPost?: BlogPost | null;
+}
+
+const {
+  title,
+  description,
+  publishedAt,
+  updatedAt,
+  author,
+  tags,
+  image,
+  canonicalUrl,
+  readingTime,
+  prevPost,
+  nextPost,
+} = Astro.props;
+---
+
+<Page {title} {description} image={image?.src} canonicalUrl={canonicalUrl}>
+  {/* Reading progress indicator */}
+  <style>
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      height: 3px;
+      background: linear-gradient(
+        to right,
+        var(--color-accent),
+        var(--color-accent-dark)
+      );
+      width: calc(100% * (var(--scroll-percent, 0)));
+      transition: width 0.1s ease-out;
+    }
+  </style>
+
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <script>
+    function updateReadingProgress() {
+      const scrollHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = window.scrollY;
+      const progress = scrollHeight > 0 ? (scrolled / scrollHeight) * 100 : 0;
+      document.documentElement.style.setProperty(
+        '--scroll-percent',
+        progress / 100
+      );
+    }
+
+    window.addEventListener('scroll', updateReadingProgress, { passive: true });
+  </script>
+
+  <article class="py-12 md:py-16">
+    <div class="max-w-2xl mx-auto px-4 md:px-6">
+      {/* Post header */}
+      <header class="mb-10 md:mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold leading-tight text-text mb-4">
+          {title}
+        </h1>
+
+        {/* Meta information */}
+        <div class="flex flex-col gap-4 mb-6">
+          <div class="flex items-center gap-3 text-sm text-text-muted">
+            <time datetime={publishedAt.toISOString()}>
+              {
+                publishedAt.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })
+              }
+            </time>
+
+            {
+              updatedAt && (
+                <>
+                  <span>•</span>
+                  <span class="text-xs px-2 py-1 bg-neutral-100 rounded">
+                    Updated{' '}
+                    {updatedAt.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </>
+              )
+            }
+
+            {
+              readingTime && (
+                <>
+                  <span>•</span>
+                  <span>{readingTime} min read</span>
+                </>
+              )
+            }
+          </div>
+
+          {/* Tags */}
+          {
+            tags.length > 0 && (
+              <div class="flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <Badge>
+                    <a
+                      href={`/blog/tag/${tag.toLowerCase()}`}
+                      class="hover:underline"
+                    >
+                      {tag}
+                    </a>
+                  </Badge>
+                ))}
+              </div>
+            )
+          }
+        </div>
+
+        {/* Featured image */}
+        {
+          image && (
+            <figure class="mb-8">
+              <img
+                src={image.src}
+                alt={image.alt}
+                class="w-full h-auto rounded-lg shadow-md"
+              />
+              <figcaption class="text-sm text-text-muted mt-2 text-center">
+                {image.alt}
+              </figcaption>
+            </figure>
+          )
+        }
+      </header>
+
+      {/* Post content */}
+      <div class="prose prose-sm md:prose-base max-w-none mb-12">
+        <slot />
+      </div>
+
+      {/* Author bio */}
+      <div class="border-t border-b border-border py-8 my-8">
+        <AuthorBio authorSlug={author} />
+      </div>
+
+      {/* Previous/Next navigation */}
+      {
+        (prevPost || nextPost) && (
+          <nav class="grid grid-cols-2 gap-4 md:gap-6 py-8">
+            {prevPost ? (
+              <a href={`/blog/${prevPost.id}`} class="group">
+                <div class="text-xs text-text-muted mb-1">← Previous</div>
+                <h3 class="text-lg font-semibold text-text group-hover:text-accent transition-colors line-clamp-2">
+                  {prevPost.data.title}
+                </h3>
+              </a>
+            ) : (
+              <div />
+            )}
+
+            {nextPost ? (
+              <a href={`/blog/${nextPost.id}`} class="group text-right">
+                <div class="text-xs text-text-muted mb-1">Next →</div>
+                <h3 class="text-lg font-semibold text-text group-hover:text-accent transition-colors line-clamp-2">
+                  {nextPost.data.title}
+                </h3>
+              </a>
+            ) : (
+              <div />
+            )}
+          </nav>
+        )
+      }
+
+      {/* Back to blog link */}
+      <div class="text-center mt-12">
+        <a href="/blog" class="text-accent hover:underline">
+          ← Back to all posts
+        </a>
+      </div>
+    </div>
+  </article>
+</Page>

@@ -1,0 +1,96 @@
+---
+title: "SEO Best Practices for Astro Sites"
+description: "A comprehensive guide to optimizing your Astro site for search engines with structured data, meta tags, and more."
+publishedAt: 2026-02-05
+author: "marcus-rodriguez"
+tags: ["seo", "astro", "performance"]
+---
+
+# SEO Best Practices for Astro Sites
+
+Astro's static output is naturally SEO-friendly. Here's how to maximize your search visibility.
+
+## Meta Tags
+
+Always include essential meta tags in your base layout:
+
+```astro
+---
+// Base.astro
+const { title, description, image } = Astro.props;
+---
+
+<head>
+  <title>{title} — My Site</title>
+  <meta name="description" content={description} />
+  <meta property="og:image" content={image} />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+```
+
+## JSON-LD Structured Data
+
+Use structured data for rich results:
+
+```astro
+---
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished: publishedAt,
+  author: {
+    '@type': 'Person',
+    name: authorName,
+  },
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+```
+
+## Sitemap and Robots
+
+Generate a sitemap with `@astrojs/sitemap`:
+
+```javascript
+// astro.config.mjs
+import sitemap from '@astrojs/sitemap';
+
+export default defineConfig({
+  integrations: [
+    sitemap({
+      filter: (page) => !page.includes('/admin/'),
+    }),
+  ],
+});
+```
+
+And a `robots.txt`:
+
+```
+User-agent: *
+Allow: /
+Disallow: /admin/
+```
+
+## Performance Matters
+
+Core Web Vitals impact rankings. Focus on:
+
+- **LCP** — preload critical images
+- **CLS** — avoid layout shifts
+- **FID** — minimize JavaScript
+
+Astro's zero-JS-by-default helps here significantly.
+
+## Canonical URLs
+
+For cross-posts, set the canonical URL:
+
+```astro
+<link rel="canonical" href={canonicalUrl} />
+```
+
+These practices will help your Astro site rank well.

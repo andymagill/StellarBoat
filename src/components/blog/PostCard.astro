@@ -1,0 +1,123 @@
+---
+/**
+ * PostCard.astro
+ *
+ * Displays a single blog post in card format.
+ * Shows title, date, author, tags, excerpt, and optional cover image.
+ *
+ * @example
+ * ```astro
+ * <PostCard post={post} />
+ * ```
+ */
+
+import type { BlogPost } from '../../utils/blog';
+import { getReadingTime } from '../../utils/blog';
+import Badge from '../ui/Badge.astro';
+
+interface Props {
+  /** Blog post entry from collection */
+  post: BlogPost;
+  /** Additional CSS classes for the card root */
+  class?: string;
+}
+
+const { post, class: classList } = Astro.props;
+const { title, description, publishedAt, author, tags, image } = post.data;
+const readingTime = getReadingTime(post.body);
+const postUrl = `/blog/${post.id}`;
+
+// Get consistent placeholder based on post ID
+const placeholders = [
+  '/images/blog-placeholder.svg',
+  '/images/blog-placeholder-2.svg',
+  '/images/blog-placeholder-3.svg',
+];
+const placeholderIndex =
+  post.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) %
+  placeholders.length;
+const fallbackImage = placeholders[placeholderIndex];
+---
+
+<article class={`group ${classList ?? ''}`}>
+  {
+    image && (
+      <a href={postUrl} class="block overflow-hidden rounded-lg mb-4">
+        <img
+          src={image.src}
+          alt={image.alt}
+          class="w-full h-48 object-cover transition-transform group-hover:scale-105"
+          onError={`this.src='${fallbackImage}'`}
+          loading="lazy"
+        />
+      </a>
+    )
+  }
+
+  {
+    !image && (
+      <a
+        href={postUrl}
+        class="block overflow-hidden rounded-lg mb-4 bg-neutral-800"
+      >
+        <img
+          src={fallbackImage}
+          alt="Blog post placeholder"
+          class="w-full h-48 object-cover"
+        />
+      </a>
+    )
+  }
+
+  <div class="space-y-2">
+    <a href={postUrl} class="inline-block">
+      <h3
+        class="text-xl font-semibold text-text hover:text-accent transition-colors"
+      >
+        {title}
+      </h3>
+    </a>
+
+    <div class="flex items-center gap-2 text-sm text-text-muted">
+      <time datetime={publishedAt.toISOString()}>
+        {
+          publishedAt.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })
+        }
+      </time>
+      <span>•</span>
+      <span>{readingTime} min read</span>
+    </div>
+
+    <p class="text-text-muted text-sm">{author}</p>
+
+    <p class="text-text-muted line-clamp-2 mt-3">{description}</p>
+
+    {
+      tags.length > 0 && (
+        <div class="flex flex-wrap gap-1 mt-3 pt-3 border-t border-border">
+          {tags.map((tag) => (
+            <Badge>
+              <a
+                href={`/blog/tag/${tag.toLowerCase()}`}
+                class="hover:underline"
+              >
+                {tag}
+              </a>
+            </Badge>
+          ))}
+        </div>
+      )
+    }
+
+    <a
+      href={postUrl}
+      class="inline-block mt-4 text-accent hover:underline font-medium text-sm"
+    >
+      Read more →
+    </a>
+  </div>
+</article>

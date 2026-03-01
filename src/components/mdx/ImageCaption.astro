@@ -1,0 +1,37 @@
+---
+/**
+ * ImageCaption.astro
+ *
+ * Wrapper for images with captions.
+ * Renders <figure> with <figcaption> semantic HTML.
+ *
+ * @example
+ * ```astro
+ * <ImageCaption src="/image.jpg" alt="..." caption="Caption text" />
+ * ```
+ */
+
+interface Props {
+  /** Image source URL */
+  src: string;
+  /** Image alt text */
+  alt: string;
+  /** Optional: caption text */
+  caption?: string;
+  /** CSS classes for figure element */
+  class?: string;
+}
+
+const { src, alt, caption, class: classList } = Astro.props;
+---
+
+<figure class={`my-6 ${classList ?? ''}`}>
+  <img src={src} alt={alt} class="w-full rounded-lg" loading="lazy" />
+  {
+    caption && (
+      <figcaption class="text-sm text-text-muted text-center mt-3">
+        {caption}
+      </figcaption>
+    )
+  }
+</figure>

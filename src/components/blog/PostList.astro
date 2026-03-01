@@ -1,0 +1,48 @@
+---
+/**
+ * PostList.astro
+ *
+ * Renders a list of blog posts as PostCards.
+ * Accepts an optional 'featured' slot for special treatment of the first post.
+ *
+ * @example
+ * ```astro
+ * <PostList posts={posts}>
+ *   <fragment slot="featured">
+ *     <div class="featured-post">{firstPost.data.title}</div>
+ *   </fragment>
+ * </PostList>
+ * ```
+ */
+
+import type { BlogPost } from '../../utils/blog';
+import PostCard from './PostCard.astro';
+
+interface Props {
+  /** Array of blog posts to display */
+  posts: BlogPost[];
+  /** Additional CSS classes for the list container */
+  class?: string;
+}
+
+const { posts, class: classList } = Astro.props;
+---
+
+<div class={`space-y-8 ${classList ?? ''}`}>
+  {/* Featured slot for custom hero treatment of first post */}
+  {posts.length > 0 && <slot name="featured" />}
+
+  {/* Post cards grid */}
+  <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    {posts.map((post) => <PostCard {post} />)}
+  </div>
+
+  {/* Empty state */}
+  {
+    posts.length === 0 && (
+      <div class="text-center py-12">
+        <p class="text-text-muted">No posts found.</p>
+      </div>
+    )
+  }
+</div>

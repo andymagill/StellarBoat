@@ -1,0 +1,68 @@
+---
+/**
+ * CodeBlock.astro
+ *
+ * Enhanced code block with optional filename label and copy button.
+ * Wraps code from MDX or Astro with syntax highlighting.
+ *
+ * @example
+ * ```astro
+ * <CodeBlock filename="package.json">
+ *   {code}
+ * </CodeBlock>
+ * ```
+ */
+
+interface Props {
+  /** Optional: filename or language label */
+  filename?: string;
+  /** Optional: language for syntax highlighting class */
+  lang?: string;
+  /** CSS classes */
+  class?: string;
+}
+
+const { filename, lang, class: classList } = Astro.props;
+---
+
+<div class={`relative mb-4 ${classList ?? ''}`}>
+  {
+    filename && (
+      <div class="bg-neutral-700 text-neutral-200 text-xs px-4 py-2 rounded-t-lg font-mono">
+        {filename}
+      </div>
+    )
+  }
+
+  <pre
+    class={`bg-neutral-900 text-neutral-100 px-4 py-4 overflow-x-auto ${filename ? '' : 'rounded-lg'}`}>
+    <code class={lang ? `language-${lang}` : ''}>
+      <slot />
+    </code>
+  </pre>
+
+  <button
+    class="absolute top-2 right-2 bg-neutral-700 hover:bg-neutral-600 text-neutral-100 text-xs px-2 py-1 rounded transition-colors"
+    data-copy-button
+  >
+    Copy
+  </button>
+
+  <script>
+    document.querySelectorAll('[data-copy-button]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const codeBlock = button.nextElementSibling;
+        if (!codeBlock) return;
+
+        const text = codeBlock.textContent || '';
+        await navigator.clipboard.writeText(text);
+
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(() => {
+          button.textContent = originalText;
+        }, 2000);
+      });
+    });
+  </script>
+</div>

@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
+import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 import tailwindPlugin from '@tailwindcss/vite';
@@ -21,6 +22,7 @@ export default defineConfig({
   // To use Vercel, change the adapter to:
   // adapter: vercel(),
   integrations: [
+    mdx(),
     sitemap({
       // Exclude demo routes from sitemap
       filter: (page) => !page.includes('/demo/'),

@@ -1,0 +1,82 @@
+---
+/**
+ * AuthorBio.astro
+ *
+ * Displays author information: avatar, name, bio, and social links.
+ * Degrades gracefully if author entry is not found.
+ *
+ * @example
+ * ```astro
+ * <AuthorBio authorSlug="sarah-chen" />
+ * ```
+ */
+
+import { getAuthor } from '../../utils/blog';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  /** Author slug (filename without .json extension) */
+  authorSlug: string;
+  /** Additional CSS classes for the container */
+  class?: string;
+}
+
+const { authorSlug, class: classList } = Astro.props;
+const author = await getAuthor(authorSlug);
+---
+
+{
+  author ? (
+    <div
+      class={`bg-neutral-50 p-6 rounded-lg border border-border ${classList ?? ''}`}
+    >
+      <div class="flex gap-4">
+        {author.avatar && (
+          <img
+            src={author.avatar}
+            alt={author.name}
+            class="w-16 h-16 rounded-full object-cover flex-shrink-0"
+          />
+        )}
+
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-text">{author.name}</h3>
+          <p class="text-sm text-text-muted mt-1">{author.bio}</p>
+
+          {/* Social links */}
+          {(author.twitter || author.website) && (
+            <div class="flex gap-3 mt-3">
+              {author.twitter && (
+                <a
+                  href={`https://twitter.com/${author.twitter}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`${author.name} on Twitter`}
+                  class="text-accent hover:text-accent-dark transition-colors"
+                >
+                  <Icon name="heroicons:x-mark-solid" class="w-5 h-5" />
+                </a>
+              )}
+
+              {author.website && (
+                <a
+                  href={author.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`${author.name}'s website`}
+                  class="text-accent hover:text-accent-dark transition-colors"
+                >
+                  <Icon name="heroicons:globe-alt-solid" class="w-5 h-5" />
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div class={`bg-neutral-50 p-6 rounded-lg ${classList ?? ''}`}>
+      <p class="text-sm text-text-muted">Author not found.</p>
+    </div>
+  )
+}

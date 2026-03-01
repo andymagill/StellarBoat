@@ -1,0 +1,93 @@
+---
+title: "Advanced Component Patterns in Astro"
+description: "Explore advanced patterns for building reusable, type-safe components in Astro."
+publishedAt: 2026-02-01
+author: "sarah-chen"
+tags: ["astro", "components", "typescript"]
+canonicalUrl: "https://sarahchen.dev/astro-component-patterns"
+image:
+  src: "/blog/astro-components.jpg"
+  alt: "Astro components architecture diagram"
+---
+
+# Advanced Component Patterns in Astro
+
+Once you grasp the basics of Astro components, you can unlock more sophisticated patterns that make your codebase more maintainable and scalable.
+
+## Props Validation with TypeScript
+
+Always define a `Props` interface for your components:
+
+```astro
+---
+interface Props {
+  title: string;
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+}
+
+const { title, size = 'md', disabled = false } = Astro.props;
+---
+
+<button class={`btn-${size}`} disabled={disabled}>
+  {title}
+</button>
+```
+
+## Slot Patterns
+
+Astro's `<slot />` is powerful for composition:
+
+```astro
+---
+// Card.astro
+interface Props {
+  title: string;
+}
+---
+
+<div class="card">
+  <h2>{Astro.props.title}</h2>
+  <slot />
+  <slot name="footer" />
+</div>
+```
+
+Usage:
+
+```astro
+<Card title="My Card">
+  <p>Main content</p>
+  <p slot="footer">Footer content</p>
+</Card>
+```
+
+## Named Slots
+
+Use named slots for complex layouts:
+
+```astro
+<slot name="header" />
+<main>
+  <slot />
+</main>
+<slot name="sidebar" />
+```
+
+## Composition over Inheritance
+
+Build complex components by combining simpler ones:
+
+```astro
+---
+import Button from './Button.astro';
+import Card from './Card.astro';
+---
+
+<Card title="Actions">
+  <Button>Submit</Button>
+  <Button variant="secondary">Cancel</Button>
+</Card>
+```
+
+These patterns enable powerful, flexible component architectures.

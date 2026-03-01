@@ -35,20 +35,17 @@ p {
 }
 
 a {
-  color: var(--color-accent);
-  text-decoration: none;
+
   transition: color 0.2s ease;
 }
 
-/* Don't override text color for button-styled links */
-a[class*='px-'][class*='py-'],
-a.inline-flex {
-  color: inherit;
+/* Default link color - let Tailwind classes override */
+a:not([class*='text-']) {
+  color: var(--color-accent);
 }
 
-a:hover:not([class*='px-']):not([class*='py-']):not(.inline-flex) {
+a:hover:not([class*='text-']) {
   color: var(--color-text);
-  text-decoration: underline;
 }
 
 a:focus-visible {

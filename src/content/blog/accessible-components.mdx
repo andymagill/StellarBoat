@@ -1,0 +1,87 @@
+---
+title: "Building Accessible Web Components"
+description: "Learn semantic HTML, ARIA attributes, and keyboard navigation best practices for truly accessible components."
+publishedAt: 2026-02-10
+author: "sarah-chen"
+tags: ["accessibility", "a11y", "web-standards"]
+featured: true
+---
+
+# Building Accessible Web Components
+
+Accessibility is not an afterthought — it's a foundational aspect of good web design. Here's how to build components that work for everyone.
+
+## Semantic HTML First
+
+Always start with proper semantic HTML:
+
+```astro
+<!-- ✅ Good -->
+<button onclick="handleClick()">Submit</button>
+
+<!-- ❌ Bad -->
+<div onclick="handleClick()">Submit</div>
+```
+
+Semantic elements give you accessibility benefits for free.
+
+## ARIA Attributes
+
+Use ARIA to enhance semantics when semantic HTML isn't enough:
+
+```astro
+<div role="tablist">
+  <button aria-selected="true" aria-controls="panel-1">Tab 1</button>
+  <button aria-selected="false" aria-controls="panel-2">Tab 2</button>
+</div>
+
+<div id="panel-1" role="tabpanel">Content 1</div>
+<div id="panel-2" role="tabpanel" hidden>Content 2</div>
+```
+
+## Keyboard Navigation
+
+Ensure all interactive elements are keyboard-accessible:
+
+```astro
+<input type="text" aria-label="Search" />
+<button tabindex="0">Search</button>
+```
+
+Use semantic elements like `<button>` and `<a>` — they're keyboard-accessible by default.
+
+## Focus Indicators
+
+Never remove focus outlines:
+
+```css
+button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+```
+
+Clear focus indicators help keyboard users navigate your site.
+
+## Color Contrast
+
+Ensure sufficient contrast ratios:
+
+```css
+/* At least 4.5:1 for normal text, 3:1 for large text */
+body {
+  color: #111827; /* dark text */
+  background: #ffffff; /* light background */
+}
+```
+
+## Testing
+
+Use tools like:
+
+- axe DevTools
+- WAVE
+- Lighthouse Accessibility audit
+- Screen readers (NVDA, JAWS)
+
+Accessibility is an ongoing practice, not a destination.

@@ -1,0 +1,60 @@
+---
+/**
+ * TagFilter.astro
+ *
+ * Displays all blog tags as interactive pills.
+ * Current/active tag is highlighted.
+ * Links to /blog/tag/[tag] route.
+ *
+ * @example
+ * ```astro
+ * <TagFilter tags={allTags} currentTag={tag} />
+ * ```
+ */
+
+import Badge from '../ui/Badge.astro';
+
+interface Props {
+  /** Array of all available tags */
+  tags: string[];
+  /** Optional: currently selected tag (for highlighting) */
+  currentTag?: string;
+  /** Additional CSS classes for the container */
+  class?: string;
+}
+
+const { tags, currentTag, class: classList } = Astro.props;
+---
+
+<div class={`flex flex-wrap gap-2 ${classList ?? ''}`}>
+  {/* All posts link */}
+  <a
+    href="/blog"
+    class={`px-3 py-1 rounded-md text-sm transition-colors ${
+      !currentTag
+        ? 'bg-neutral-100 text-neutral-900'
+        : 'bg-neutral-800 text-neutral-100 hover:bg-neutral-700'
+    }`}
+  >
+    All
+  </a>
+
+  {/* Individual tag pills */}
+  {
+    tags.map((tag) => {
+      const isActive = currentTag?.toLowerCase() === tag.toLowerCase();
+      return (
+        <a
+          href={`/blog/tag/${tag.toLowerCase()}`}
+          class={`px-3 py-1 rounded-md text-sm transition-colors ${
+            isActive
+              ? 'bg-neutral-100 text-neutral-900'
+              : 'bg-neutral-800 text-neutral-100 hover:bg-neutral-700'
+          }`}
+        >
+          {tag}
+        </a>
+      );
+    })
+  }
+</div>

@@ -1,0 +1,76 @@
+---
+/**
+ * Tag-filtered blog index: /blog/tag/[tag]
+ * Displays posts matching a specific tag.
+ */
+
+import { siteConfig } from '../../../config/site';
+import {
+  getPublishedPosts,
+  getPostsByTag,
+  getAllTags,
+} from '../../../utils/blog';
+import Page from '../../../layouts/Page.astro';
+import PostList from '../../../components/blog/PostList.astro';
+import TagFilter from '../../../components/blog/TagFilter.astro';
+
+export async function getStaticPaths() {
+  // Return empty paths if blog is disabled
+  if (!siteConfig.features.blog) {
+    return [];
+  }
+
+  const allTags = await getAllTags();
+
+  return allTags.map((tag) => ({
+    params: { tag: tag.toLowerCase() },
+    props: { tag },
+  }));
+}
+
+interface Props {
+  tag: string;
+}
+
+const { tag } = Astro.props;
+const posts = await getPostsByTag(tag);
+const allTags = await getAllTags();
+---
+
+<Page
+  title={`Posts tagged "${tag}"`}
+  description={`Blog posts tagged with "${tag}"`}
+>
+  <div class="py-12 md:py-16">
+    <div class="max-w-4xl mx-auto px-4 md:px-6">
+      {/* Header */}
+      <header class="mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">
+          Posts tagged <span class="text-accent">"{tag}"</span>
+        </h1>
+        <p class="text-lg text-text-muted">
+          {
+            posts.length === 0
+              ? 'No posts found with this tag.'
+              : `${posts.length} post${posts.length !== 1 ? 's' : ''} tagged "${tag}".`
+          }
+        </p>
+      </header>
+
+      {/* Tag filter */}
+      <div class="mb-8 pb-8 border-b border-border">
+        <TagFilter tags={allTags} currentTag={tag} />
+      </div>
+
+      {/* Posts */}
+      <PostList posts={posts} />
+
+      {/* Back to blog */}
+      <div class="text-center mt-12">
+        <a href="/blog" class="text-accent hover:underline">
+          ← Back to all posts
+        </a>
+      </div>
+    </div>
+  </div>
+</Page>

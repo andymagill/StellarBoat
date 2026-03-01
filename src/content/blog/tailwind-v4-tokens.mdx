@@ -1,0 +1,71 @@
+---
+title: "Tailwind CSS v4: A Major Shift in Token Management"
+description: "Tailwind CSS v4 introduces a CSS-native token system with @theme. Learn how to leverage it for better design consistency."
+publishedAt: 2026-01-22
+author: "marcus-rodriguez"
+tags: ["tailwind", "css", "design-tokens"]
+image:
+  src: "/blog/tailwind-tokens.jpg"
+  alt: "Tailwind CSS version 4 logo"
+---
+
+# Tailwind CSS v4: A Major Shift in Token Management
+
+Tailwind CSS v4 marks a significant departure from previous versions. Instead of a JavaScript config file, tokens are declared directly in CSS using the `@theme` directive.
+
+## What Changed?
+
+In Tailwind v3, you'd customize colors in `tailwind.config.js`:
+
+```javascript
+// Old way (Tailwind v3)
+module.exports = {
+  theme: {
+    colors: {
+      primary: '#3b82f6',
+    },
+  },
+};
+```
+
+In v4, that config lives in your CSS:
+
+```css
+/* New way (Tailwind v4) */
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #3b82f6;
+}
+```
+
+## Benefits
+
+- **Faster** — pure CSS, no JS overhead
+- **Co-located** — tokens live next to your styles
+- **Type-safe** — IDEs understand CSS custom properties
+- **No build config** — simpler project structure
+
+## The `@layer` Pattern for Semantic Aliases
+
+For brand customization, use `@layer base` to define semantic variables:
+
+```css
+@layer base {
+  :root {
+    --color-accent: var(--color-primary);
+    --color-accent-dark: var(--color-primary-600);
+  }
+}
+```
+
+Components then reference these semantic names.
+
+## Migration Tips
+
+1. Check your theme config — drop it into `src/styles/tokens.css`
+2. Update your Vite plugin import — use `@tailwindcss/vite`
+3. Test your build — all utilities should work as before
+4. Add semantic aliases for your brand
+
+The migration is straightforward and usually takes under an hour for most projects.

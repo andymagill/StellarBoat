@@ -1,0 +1,72 @@
+---
+/**
+ * Callout.astro
+ *
+ * Highlighted callout box for MDX content.
+ * Variants: info, warning, tip, danger
+ *
+ * @example
+ * ```astro
+ * <Callout variant="warning">
+ *   Be careful with this setting.
+ * </Callout>
+ * ```
+ */
+
+interface Props {
+  /** Callout variant/type */
+  variant?: 'info' | 'warning' | 'tip' | 'danger';
+  /** Optional title/heading */
+  title?: string;
+  /** CSS classes */
+  class?: string;
+}
+
+const { variant = 'info', title, class: classList } = Astro.props;
+
+const variants = {
+  info: {
+    bg: 'bg-blue-50',
+    border: 'border-blue-200',
+    icon: '📘',
+    text: 'text-blue-900',
+  },
+  warning: {
+    bg: 'bg-yellow-50',
+    border: 'border-yellow-200',
+    icon: '⚠️',
+    text: 'text-yellow-900',
+  },
+  tip: {
+    bg: 'bg-green-50',
+    border: 'border-green-200',
+    icon: '💡',
+    text: 'text-green-900',
+  },
+  danger: {
+    bg: 'bg-red-50',
+    border: 'border-red-200',
+    icon: '🚨',
+    text: 'text-red-900',
+  },
+};
+
+const config = variants[variant];
+---
+
+<aside
+  class={`${config.bg} border-l-4 ${config.border} px-4 py-3 rounded-r ${classList ?? ''}`}
+  role={variant === 'warning' || variant === 'danger' ? 'alert' : 'note'}
+>
+  <div class={`${config.text}`}>
+    {
+      title && (
+        <strong class="flex items-center gap-2 font-semibold mb-2">
+          <span>{config.icon}</span>
+          {title}
+        </strong>
+      )
+    }
+    <slot />
+  </div>
+</aside>

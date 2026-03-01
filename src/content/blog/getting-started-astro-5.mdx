@@ -1,0 +1,82 @@
+---
+title: "Getting Started with Astro 5"
+description: "Learn how to set up your first Astro 5 project and understand the core concepts that make it powerful."
+publishedAt: 2026-01-15
+author: "sarah-chen"
+tags: ["astro", "tutorial", "javascript"]
+featured: true
+image:
+  src: "/blog/astro-getting-started.jpg"
+  alt: "Astro 5 logo and code editor"
+---
+
+# Getting Started with Astro 5
+
+Astro is a modern web framework that lets you build faster websites while using less JavaScript. In this tutorial, we'll walk through the basics of getting started with Astro 5.
+
+## Why Astro?
+
+Astro stands out because:
+
+- **Zero JavaScript by default** — only ship JS you actually need
+- **Partial hydration** — intelligently hydrate components that need interactivity
+- **Content collections** — type-safe content authoring
+- **Multiple output modes** — static, SSR, edge functions
+
+## Installation
+
+Getting started is straightforward:
+
+```bash
+npm create astro@latest my-site
+cd my-site
+npm run dev
+```
+
+The CLI will ask you a few questions about your project setup.
+
+## File-based routing
+
+Astro uses file-based routing just like Next.js or SvelteKit. Create a file in `src/pages/` and it becomes a route:
+
+```
+src/pages/
+  index.astro       → / 
+  about.astro       → /about
+  blog/
+    index.astro     → /blog
+    [slug].astro    → /blog/:slug
+```
+
+## Layouts
+
+Layouts are reusable template files that wrap content:
+
+```astro
+---
+// src/layouts/Base.astro
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+```
+
+## Next Steps
+
+- Read the docs at astro.build
+- Join the Discord community
+- Build your first component
+
+Happy coding!

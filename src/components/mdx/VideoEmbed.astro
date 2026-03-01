@@ -1,0 +1,33 @@
+---
+/**
+ * VideoEmbed.astro
+ *
+ * Responsive iframe embed for videos.
+ * Supports YouTube, Vimeo, and other embeddable video sources.
+ *
+ * @example
+ * ```astro
+ * <VideoEmbed src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video" />
+ * ```
+ */
+
+interface Props {
+  /** Video embed URL (e.g., YouTube embed URL) */
+  src: string;
+  /** Video title for accessibility */
+  title: string;
+  /** CSS classes */
+  class?: string;
+}
+
+const { src, title, class: classList } = Astro.props;
+---
+
+<div class={`my-6 aspect-video ${classList ?? ''}`}>
+  <iframe
+    src={src}
+    title={title}
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+    class="w-full h-full rounded-lg"></iframe>
+</div>

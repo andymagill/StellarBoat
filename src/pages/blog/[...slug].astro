@@ -1,0 +1,57 @@
+---
+/**
+ * Dynamic blog post route [...slug].astro
+ * Renders individual blog posts using the BlogPost layout.
+ * Returns empty getStaticPaths() when features.blog is false.
+ */
+
+import { siteConfig } from '../../config/site';
+import {
+  getPublishedPosts,
+  getReadingTime,
+  getPrevNextPosts,
+} from '../../utils/blog';
+import BlogPost from '../../layouts/BlogPost.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  // Return empty paths if blog is disabled
+  if (!siteConfig.features.blog) {
+    return [];
+  }
+
+  const published = await getPublishedPosts();
+
+  return published.map((post) => ({
+    params: { slug: post.id },
+  }));
+}
+
+const { slug } = Astro.params;
+const allPosts = await getCollection('blog');
+const post = allPosts.find((p) => p.id === slug);
+
+if (!post) {
+  return new Response('Not Found', { status: 404 });
+}
+
+const { Content } = await render(post);
+const readingTime = getReadingTime(post.body);
+const { prev: prevPost, next: nextPost } = await getPrevNextPosts(post.id);
+---
+
+<BlogPost
+  title={post.data.title}
+  description={post.data.description}
+  publishedAt={post.data.publishedAt}
+  updatedAt={post.data.updatedAt}
+  author={post.data.author}
+  tags={post.data.tags}
+  image={post.data.image}
+  canonicalUrl={post.data.canonicalUrl}
+  readingTime={readingTime}
+  prevPost={prevPost}
+  nextPost={nextPost}
+>
+  <Content />
+</BlogPost>

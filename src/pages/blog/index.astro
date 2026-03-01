@@ -1,0 +1,43 @@
+---
+/**
+ * Blog index page.
+ * Displays published posts in a list.
+ * Returns empty getStaticPaths() when features.blog is false.
+ */
+
+import { siteConfig } from '../../config/site';
+import { getPublishedPosts, getAllTags } from '../../utils/blog';
+import Page from '../../layouts/Page.astro';
+import PostList from '../../components/blog/PostList.astro';
+import TagFilter from '../../components/blog/TagFilter.astro';
+
+// Only render page if blog is enabled
+if (!siteConfig.features.blog) {
+  return new Response('Not Found', { status: 404 });
+}
+
+const posts = await getPublishedPosts();
+const allTags = await getAllTags();
+---
+
+<Page title="Blog" description="Latest articles and tutorials">
+  <div class="py-12 md:py-16">
+    <div class="max-w-4xl mx-auto px-4 md:px-6">
+      {/* Header */}
+      <header class="mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">Blog</h1>
+        <p class="text-lg text-text-muted">
+          Insights, tutorials, and thoughts on web development.
+        </p>
+      </header>
+
+      {/* Tag filter */}
+      <div class="mb-8 pb-8 border-b border-border">
+        <TagFilter tags={allTags} />
+      </div>
+
+      {/* Posts list */}
+      <PostList posts={posts} />
+    </div>
+  </div>
+</Page>
