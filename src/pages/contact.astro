@@ -71,7 +71,7 @@ import Alert from '../components/ui/Alert.astro';
             >src/config/forms.ts</code
           >:
         </p>
-        <CodeBlock lang="astro" code={`<ContactForm />`} />
+        <CodeBlock lang="astro"> &lt;ContactForm /&gt; </CodeBlock>
       </div>
 
       <!-- Example 2: LeadCaptureForm with API override -->
@@ -82,13 +82,10 @@ import Alert from '../components/ui/Alert.astro';
         <p class="text-text-muted mb-4">
           Override the backend per-form to route leads to a different endpoint:
         </p>
-        <CodeBlock
-          lang="astro"
-          code={`<LeadCaptureForm 
-  backend="api"
-  actionUrl="https://your-api.com/leads"
-/>`}
-        />
+        <CodeBlock lang="astro">
+          &lt;LeadCaptureForm backend="api"
+          actionUrl="https://your-api.com/leads" /&gt;
+        </CodeBlock>
       </div>
 
       <!-- Example 3: NewsletterForm with redirect -->
@@ -99,14 +96,10 @@ import Alert from '../components/ui/Alert.astro';
         <p class="text-text-muted mb-4">
           After submission, redirect to a thank-you page or external URL:
         </p>
-        <CodeBlock
-          lang="astro"
-          code={`<NewsletterForm 
-  backend="api"
-  actionUrl="/api/newsletter"
-  redirectUrl="/thank-you"
-/>`}
-        />
+        <CodeBlock lang="astro">
+          &lt;NewsletterForm backend="api" actionUrl="/api/newsletter"
+          redirectUrl="/thank-you" /&gt;
+        </CodeBlock>
       </div>
 
       <!-- See the forms page -->
