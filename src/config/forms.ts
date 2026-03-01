@@ -2,19 +2,10 @@ import type { FormsConfig } from '../types/config';
 
 /**
  * Global forms configuration.
- * This config controls which form backend is used by default, API keys, and endpoint URLs.
+ * This config controls Web3Forms API keys and reCAPTCHA settings.
  *
- * Individual form components can override this backend with a `backend` prop:
- * ```astro
- * <ContactForm backend="api" apiUrl="https://api.mysite.com/submit" />
- * ```
- *
- * Supported backends:
- * - `web3forms` — Free, no backend required. Requires `web3formsKey` from https://web3forms.com
- * - `netlify` — Netlify form handling (detection-based, works on Netlify deploys only)
- * - `api` — Custom API endpoint. Requires `apiUrl`
- * - `formspree` — Community addon. Requires `formspreeEndpoint` from https://formspree.io
- * - `formspark` — Community addon. Requires `formsparProjectId` from https://formspark.io
+ * All form components use Web3Forms as the backend.
+ * Get your API key from: https://web3forms.com → Dashboard → Copy your Access Key
  */
 export const forms: FormsConfig = {
   /**

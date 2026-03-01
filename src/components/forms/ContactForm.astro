@@ -24,70 +24,23 @@ import Button from '../ui/Button.astro';
 import type { FormsConfig } from '../../types/config';
 
 export interface Props {
-  /** Backend override: switch from global default to a different adapter */
-  backend?: FormsConfig['defaultBackend'];
-
-  /** API URL for 'api' backend override */
-  apiUrl?: string;
-
   /** Web3Forms key override */
   web3formsKey?: string;
-
-  /** Formspree endpoint override */
-  formspreeEndpoint?: string;
-
-  /** Formspark project ID override */
-  formsparProjectId?: string;
 
   /** Additional CSS classes */
   class?: string;
 }
 
-const {
-  backend = forms.defaultBackend,
-  apiUrl = forms.apiUrl,
-  web3formsKey = forms.web3formsKey,
-  formspreeEndpoint = forms.formspreeEndpoint,
-  formsparProjectId = forms.formsparProjectId,
-  class: className = '',
-} = Astro.props;
+const { web3formsKey = forms.web3formsKey, class: className = '' } =
+  Astro.props;
 
-// Determine the form action URL for native HTML POST fallback
-const getFormAction = (): string => {
-  switch (backend) {
-    case 'web3forms':
-      return 'https://api.web3forms.com/submit';
-    case 'netlify':
-      return '/?no-cache=1';
-    case 'api':
-      return apiUrl || '#';
-    case 'formspree':
-      return formspreeEndpoint || '#';
-    case 'formspark':
-      return 'https://submit-form.com/formsparkapi';
-    default:
-      return '#';
-  }
-};
+// Form action URL for native HTML POST fallback
+const formAction = 'https://api.web3forms.com/submit';
 ---
 
-<form method="POST" action={getFormAction()} class={`space-y-6 ${className}`}>
-  {/* Hidden fields for backend-specific handling */}
-  {
-    backend === 'web3forms' && (
-      <input type="hidden" name="access_key" value={web3formsKey} />
-    )
-  }
-  {
-    backend === 'netlify' && (
-      <input type="hidden" name="form-name" value="contact" />
-    )
-  }
-  {
-    backend === 'formspark' && (
-      <input type="hidden" name="projectId" value={formsparProjectId} />
-    )
-  }
+<form method="POST" action={formAction} class={`space-y-6 ${className}`}>
+  {/* Web3Forms access key */}
+  <input type="hidden" name="access_key" value={web3formsKey} />
 
   <FormField
     id="name"
@@ -123,11 +76,7 @@ const getFormAction = (): string => {
 
 <script
   define:vars={{
-    backend,
-    apiUrl,
     web3formsKey,
-    formspreeEndpoint,
-    formsparProjectId,
   }}
 >
   /**
@@ -170,11 +119,7 @@ const getFormAction = (): string => {
       const { submitForm } = await import('../../utils/forms');
 
       const result = await submitForm(data, {
-        defaultBackend: backend,
-        apiUrl,
         web3formsKey,
-        formspreeEndpoint,
-        formsparProjectId,
       });
 
       // Clear previous messages

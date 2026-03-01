@@ -24,57 +24,18 @@ import Button from '../ui/Button.astro';
 import type { FormsConfig } from '../../types/config';
 
 export interface Props {
-  backend?: FormsConfig['defaultBackend'];
-  apiUrl?: string;
   web3formsKey?: string;
-  formspreeEndpoint?: string;
-  formsparProjectId?: string;
   class?: string;
 }
 
-const {
-  backend = forms.defaultBackend,
-  apiUrl = forms.apiUrl,
-  web3formsKey = forms.web3formsKey,
-  formspreeEndpoint = forms.formspreeEndpoint,
-  formsparProjectId = forms.formsparProjectId,
-  class: className = '',
-} = Astro.props;
+const { web3formsKey = forms.web3formsKey, class: className = '' } =
+  Astro.props;
 
-const getFormAction = (): string => {
-  switch (backend) {
-    case 'web3forms':
-      return 'https://api.web3forms.com/submit';
-    case 'netlify':
-      return '/?no-cache=1';
-    case 'api':
-      return apiUrl || '#';
-    case 'formspree':
-      return formspreeEndpoint || '#';
-    case 'formspark':
-      return 'https://submit-form.com/formsparkapi';
-    default:
-      return '#';
-  }
-};
+const formAction = 'https://api.web3forms.com/submit';
 ---
 
-<form method="POST" action={getFormAction()} class={`space-y-6 ${className}`}>
-  {
-    backend === 'web3forms' && (
-      <input type="hidden" name="access_key" value={web3formsKey} />
-    )
-  }
-  {
-    backend === 'netlify' && (
-      <input type="hidden" name="form-name" value="lead-capture" />
-    )
-  }
-  {
-    backend === 'formspark' && (
-      <input type="hidden" name="projectId" value={formsparProjectId} />
-    )
-  }
+<form method="POST" action={formAction} class={`space-y-6 ${className}`}>
+  <input type="hidden" name="access_key" value={web3formsKey} />
 
   <FormField
     id="name"
@@ -116,11 +77,7 @@ const getFormAction = (): string => {
 
 <script
   define:vars={{
-    backend,
-    apiUrl,
     web3formsKey,
-    formspreeEndpoint,
-    formsparProjectId,
   }}
 >
   const form = document.querySelector('form');
@@ -152,11 +109,7 @@ const getFormAction = (): string => {
       const { submitForm } = await import('../../utils/forms');
 
       const result = await submitForm(data, {
-        defaultBackend: backend,
-        apiUrl,
         web3formsKey,
-        formspreeEndpoint,
-        formsparProjectId,
       });
 
       messagesContainer.innerHTML = '';
