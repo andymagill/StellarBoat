@@ -35,7 +35,57 @@ npm run dev
 
 The demo site at `http://localhost:4321/demo` shows all components.
 
-**Note:** On first `npm install`, Husky will automatically set up git hooks to lint and format your changes before each commit.
+---
+
+## Git Hooks & Code Quality
+
+On first `npm install`, Husky automatically sets up Git hooks to lint and format your code before each commit—ensuring code quality and consistency across the codebase.
+
+### How It Works
+
+**On `npm install`:**
+
+- The `prepare` script runs `npx husky`, which installs pre-commit hooks from `.husky/`
+
+**On `git commit`:**
+
+1. The pre-commit hook runs `npx lint-staged --no-stash` on only your staged files (more efficient than checking the entire codebase)
+2. **ESLint with auto-fix** runs on `*.{js,mjs,cjs,ts}` files
+3. **Prettier formatting** runs on `*.{astro,js,mjs,cjs,ts,json,md}` files
+4. Fixed files are automatically re-staged
+5. If unfixable ESLint errors remain, the commit is blocked
+
+### Manual Commands
+
+You can also run linting and formatting manually at any time:
+
+```bash
+npm run lint      # Run ESLint with auto-fix
+npm run format    # Run Prettier
+```
+
+### Troubleshooting
+
+**Commit blocked by ESLint errors:**
+
+```bash
+# Review the ESLint error messages, fix them manually, then:
+npm run lint
+git add .
+git commit -m "your message"
+```
+
+**Bypass the hook (not recommended):**
+
+```bash
+git commit --no-verify -m "your message"
+```
+
+**Husky hook didn't run:**
+
+- Verify Husky is installed: `npm list husky`
+- Ensure `.husky/pre-commit` exists and is executable
+- Run `npm install` again to reinitialize hooks
 
 ---
 
@@ -44,17 +94,13 @@ The demo site at `http://localhost:4321/demo` shows all components.
 1. **Open an issue first** for significant changes — discuss the approach before writing code
 2. Fork the repo and create a feature branch: `git checkout -b feat/my-feature`
 3. Make your changes
-4. When you commit (`git commit`), linting and formatting will run automatically via Husky → lint-staged:
-   - ESLint will fix fixable issues on `*.{js,mjs,cjs,ts}` files
-   - Prettier will format all staged `*.{astro,js,mjs,cjs,ts,json,md}` files
+4. When you commit (`git commit`), linting and formatting will run automatically (see [Git Hooks & Code Quality](#git-hooks--code-quality) above)
 5. Run `npm run check` — `astro check` (TypeScript + Astro type errors) must pass
 6. Run `npm run build` — production build must succeed
 7. Run `npm run test` — all tests must pass
 8. Add or update tests if your change affects behavior
 9. Update `SPEC.md` if your change affects the architecture
 10. Open a pull request against `main`
-
-You can also manually run `npm run lint` and `npm run format` at any time.
 
 ---
 
