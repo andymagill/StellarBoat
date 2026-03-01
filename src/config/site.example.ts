@@ -190,10 +190,12 @@ export const siteConfig: SiteConfig = {
     rss: true,
 
     /**
-     * Enable demo site pages (/demo/*, design tokens, component showcase)
-     * Safe to disable in forks.
+     * Enable demo/showcase pages (showcase, ui, forms, blog).
+     * On the upstream site, these are production marketing pages and are indexed in the sitemap.
+     * In forks, set to false and delete src/pages/showcase.astro, src/pages/ui.astro,
+     * and src/pages/forms.astro. Also restore the sitemap filter in astro.config.mjs.
      */
-    demo: false,
+    demo: true,
 
     /**
      * Enable pricing page component

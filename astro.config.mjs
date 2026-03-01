@@ -24,13 +24,16 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      // Exclude demo routes, the thank-you page, and any noIndex utility pages.
+      // Exclude transactional pages (thank-you) and any pages marked noIndex.
       // Note: pages with noIndex prop must be added here manually — the integration
       // only receives URL strings at build time, not Astro component props.
+      //
+      // Demo/showcase pages (showcase, ui, forms) are intentionally indexed on the
+      // upstream site as part of the product. Forks should delete those pages or
+      // restore this filter: !page.includes('/showcase') && !page.endsWith('/ui') &&
+      // !page.endsWith('/forms')
       filter: (page) =>
-        !page.includes('/demo/') &&
-        !page.endsWith('/thank-you') &&
-        !page.endsWith('/thank-you/'),
+        !page.endsWith('/thank-you') && !page.endsWith('/thank-you/'),
     }),
     icon(),
   ],

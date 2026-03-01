@@ -1,12 +1,12 @@
 ---
-import Page from '../../layouts/Page.astro';
-import Hero from '../../components/marketing/Hero.astro';
-import Features from '../../components/marketing/Features.astro';
-import Testimonials from '../../components/marketing/Testimonials.astro';
-import Pricing from '../../components/marketing/Pricing.astro';
-import FAQ from '../../components/marketing/FAQ.astro';
-import CTA from '../../components/marketing/CTA.astro';
-import LogoBar from '../../components/marketing/LogoBar.astro';
+import Page from '../layouts/Page.astro';
+import Hero from '../components/marketing/Hero.astro';
+import Features from '../components/marketing/Features.astro';
+import Testimonials from '../components/marketing/Testimonials.astro';
+import Pricing from '../components/marketing/Pricing.astro';
+import FAQ from '../components/marketing/FAQ.astro';
+import CTA from '../components/marketing/CTA.astro';
+import LogoBar from '../components/marketing/LogoBar.astro';
 
 // Example data for each component
 const heroData = {
@@ -190,17 +190,20 @@ const logosData = [
 ];
 ---
 
-<Page>
+<Page
+  title="Component Gallery"
+  description="StellarBoat marketing components in all variants"
+>
   <div class="space-y-20">
     <!-- Hero Section Title -->
     <section class="py-12 px-4 sm:px-6 lg:px-8 bg-surface-raised">
       <div class="mx-auto max-w-4xl text-center">
         <h1 class="text-4xl sm:text-5xl font-bold text-text mb-4">
-          Marketing Components
+          Component Gallery
         </h1>
         <p class="text-lg text-text-muted">
-          Interactive showcase of all marketing sections with multiple layout
-          variants
+          Explore every marketing component in all its variants. Copy,
+          customize, and compose them into your own layouts.
         </p>
       </div>
     </section>

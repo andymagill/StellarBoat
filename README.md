@@ -58,6 +58,8 @@ npm run dev
 
 That's it. Visit `http://localhost:4321`.
 
+> **Fork cleanup:** After customizing your site, you can delete the demo pages. Delete `src/pages/showcase.astro`, `src/pages/ui.astro`, and `src/pages/forms.astro`. Update `src/config/site.example.ts` to set `demo: false`. See **[SPEC.md §14](SPEC.md#14-demo-site)** for details. You can also delete `src/demo/` if you don't need the architecture reference.
+
 ---
 
 ## Project Structure

@@ -892,26 +892,39 @@ Each marketing section component accepts a `variant` prop for layout variations 
 
 ## 14. Demo Site
 
-The demo site lives in `src/demo/` and is always present in the main repo. **Forks are encouraged to delete this directory** after using it as a reference.
+The demo site lives in `src/demo/` (with the architecture spec in `src/demo/DESIGN.md`) and is always present in the main repo. **Forks are encouraged to delete the demo pages** after using them as a reference.
 
 ### Purpose
 
 - Living documentation of every component and pattern
 - Architecture reference for AI coding agents working on forks
 - Test surface for CI (Playwright tests run against demo pages)
-- Accessible at `/demo/*` routes in development
+- Upstream demo deployed to stellarboat.magill.dev; demo pages are production-quality marketing content
 
 ### What the Demo Includes
 
-- One of each marketing section component, with all variants shown
-- A populated blog with several example posts
-- A contact page demonstrating each form backend
-- A demonstration of the token system showing before/after brand customization
-- An example of a complete homepage composition
+- `/showcase` — interactive gallery of all marketing section components with all variants
+- `/ui` — atomic UI primitives (Button, Card, Badge, Alert, Divider, Icon) and the complete Deep Space design system
+- `/forms` — production form components with multiple backend options
+- `/blog` — example blog posts (in `src/content/blog/` and `src/content/authors/`)
+- `src/demo/DESIGN.md` — full visual design specification for the Deep Space theme
 
-### Keeping Demo Out of Production
+### Demo Pages on the Upstream Site
 
-The demo pages are served from `/demo/*` routes. Forks that don't delete the demo can set `features.demo = false` in `src/config/features.ts`, which gates the demo routes and excludes them from the sitemap and build in production.
+The upstream StellarBoat demo is the product showcase. Showcase pages are intentionally indexed in the sitemap and meant to be marketing content. The `/showcase`, `/ui`, and `/forms` routes are part of the minimal marketing narrative.
+
+### Deleting Demo Pages in Forks
+
+To remove demo pages from a fork:
+
+1. Delete `src/pages/showcase.astro`
+2. Delete `src/pages/ui.astro`
+3. Delete `src/pages/forms.astro`
+4. Optionally delete `src/demo/` and `src/content/blog/` example posts
+5. Update `src/config/site.example.ts`: change `features.demo: true` to `features.demo: false`
+6. Update `astro.config.mjs` sitemap filter if desired (restore the excluded routes list)
+
+The `src/demo/` directory (with `DESIGN.md` and edge worker examples) is separate from the pages and can be deleted independently if its architecture guidance is not needed.
 
 ---
 
@@ -1046,7 +1059,7 @@ Edge function stubs live in `src/edge/` and are Cloudflare Workers-specific in t
 8. Edit `src/pages/index.astro`, `src/pages/contact.astro`, and `src/pages/thank-you.astro` with your content
 9. Add content to `src/content/blog/`, `src/content/authors/`, and `src/content/pages/` — or set `features.blog = false`
 10. Follow `DEPLOYMENT.md` to connect the repo to Cloudflare Pages (or Netlify/Vercel) via GitHub App
-11. Optionally delete `src/demo/` and `src/pages/demo/` once you've used them as reference
+11. **Optional: Clean up demo pages** — Delete `src/pages/showcase.astro`, `src/pages/ui.astro`, and `src/pages/forms.astro`. Update `src/config/site.example.ts` to change `demo: true` to `demo: false`. See **§14. Demo Site** for details.
 
 ### Pulling Upstream Updates
 
