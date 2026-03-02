@@ -44,6 +44,8 @@ const shouldRender = analytics.consentMode;
 }
 
 <script>
+  declare function gtag(...args: unknown[]): void;
+
   function initConsentBanner() {
     var b = document.getElementById('consent-banner');
     var a = document.getElementById('consent-accept');
@@ -57,7 +59,7 @@ const shouldRender = analytics.consentMode;
       typeof window !== 'undefined' && Array.isArray(window.dataLayer);
     a.addEventListener('click', function () {
       if (hasDataLayer && typeof gtag === 'function') {
-        var cfg = {};
+        var cfg: Record<string, string> = {};
         cfg.analytics_storage = 'granted';
         cfg.ad_storage = 'granted';
         cfg.ad_user_data = 'granted';
@@ -66,11 +68,11 @@ const shouldRender = analytics.consentMode;
       }
       document.cookie =
         'consent=granted; max-age=31536000; path=/; SameSite=Lax';
-      b.style.display = 'none';
+      b!.style.display = 'none';
     });
     d.addEventListener('click', function () {
       if (hasDataLayer && typeof gtag === 'function') {
-        var cfg2 = {};
+        var cfg2: Record<string, string> = {};
         cfg2.analytics_storage = 'denied';
         cfg2.ad_storage = 'denied';
         cfg2.ad_user_data = 'denied';
@@ -79,7 +81,7 @@ const shouldRender = analytics.consentMode;
       }
       document.cookie =
         'consent=declined; max-age=31536000; path=/; SameSite=Lax';
-      b.style.display = 'none';
+      b!.style.display = 'none';
     });
   }
   if (document.readyState === 'loading') {

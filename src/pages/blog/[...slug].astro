@@ -14,7 +14,7 @@ import {
   getPrevNextPosts,
 } from '../../utils/blog';
 import BlogPost from '../../layouts/BlogPost.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   // Return empty paths if blog is disabled
@@ -31,7 +31,7 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 const allPosts = await getCollection('blog');
-const post = allPosts.find((p) => p.id === slug);
+const post = allPosts.find((p: CollectionEntry<'blog'>) => p.id === slug);
 
 if (!post) {
   return new Response('Not Found', { status: 404 });

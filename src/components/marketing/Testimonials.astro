@@ -88,11 +88,8 @@ const carouselId = `testimonials-carousel-${Math.random().toString(36).substring
             id={carouselId}
           >
             <div class="flex gap-6 pb-4">
-              {items.map((testimonial, index) => (
-                <div
-                  key={index}
-                  class="flex-shrink-0 w-full sm:w-96 snap-start bg-neutral-900 border border-neutral-700 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
-                >
+              {items.map((testimonial) => (
+                <div class="flex-shrink-0 w-full sm:w-96 snap-start bg-neutral-900 border border-neutral-700 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
                   <p class="text-white mb-4 italic">"{testimonial.quote}"</p>
                   <div class="flex items-center gap-3">
                     {testimonial.avatar && (
@@ -156,10 +153,10 @@ const carouselId = `testimonials-carousel-${Math.random().toString(36).substring
 <script>
   // Attach carousel navigation to buttons with CSP-safe event listeners
   document.querySelectorAll('.carousel-nav').forEach((button) => {
-    button.addEventListener('click', function () {
+    button.addEventListener('click', function (this: HTMLButtonElement) {
       const carouselId = this.dataset.carouselId;
       const direction = this.dataset.direction;
-      const carousel = document.getElementById(carouselId);
+      const carousel = carouselId ? document.getElementById(carouselId) : null;
 
       if (carousel) {
         const distance = direction === 'left' ? -400 : 400;

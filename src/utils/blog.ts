@@ -17,12 +17,12 @@ export async function getPublishedPosts(): Promise<BlogPost[]> {
 
   // Filter out drafts in production
   const published = import.meta.env.PROD
-    ? allPosts.filter((post) => !post.data.draft)
+    ? allPosts.filter((post: BlogPost) => !post.data.draft)
     : allPosts;
 
   // Sort by published date, most recent first
   return published.sort(
-    (a, b) =>
+    (a: BlogPost, b: BlogPost) =>
       new Date(b.data.publishedAt).getTime() -
       new Date(a.data.publishedAt).getTime()
   );
@@ -46,7 +46,7 @@ export async function getPostsByTag(tag: string): Promise<BlogPost[]> {
   const published = await getPublishedPosts();
   const lowerTag = tag.toLowerCase();
   return published.filter((post) =>
-    post.data.tags.map((t) => t.toLowerCase()).includes(lowerTag)
+    post.data.tags.map((t: string) => t.toLowerCase()).includes(lowerTag)
   );
 }
 
@@ -59,7 +59,7 @@ export async function getAllTags(): Promise<string[]> {
   const tags = new Set<string>();
 
   published.forEach((post) => {
-    post.data.tags.forEach((tag) => tags.add(tag));
+    post.data.tags.forEach((tag: string) => tags.add(tag));
   });
 
   return Array.from(tags).sort();
