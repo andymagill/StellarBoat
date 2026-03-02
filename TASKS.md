@@ -182,12 +182,12 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 
 > Build the three fork-editable pages using the completed component library.
 
-- [ ] `[core]` Create the final `src/pages/index.astro` — a reference composition using Hero, LogoBar, Features, Testimonials, FAQ, CTA; all content data defined inline in the file (SPEC §12)
-- [ ] `[core]` Create `src/pages/contact.astro` — uses `Page` layout; renders `ContactForm` and `LeadCaptureForm` side-by-side with explanatory copy; content data inline (SPEC §12)
-- [ ] `[core]` Create `src/pages/thank-you.astro` — post-form-submission confirmation; fork-editable (branded message, optional countdown redirect); uses `Page` layout
-- [ ] `[demo]` Add `src/pages/demo/content-page.astro` — an example route that renders an MDX file from `src/content/pages/` via `getEntry()`; demonstrates the content-collection-powered static page pattern
-- [ ] `[demo]` Add `src/content/pages/about.mdx` as a demo content page
-- [ ] Verify: homepage renders all sections; form submits and lands on thank-you; thank-you page copy is easy to identify as fork-editable
+- [x] `[core]` Create the final `src/pages/index.astro` — a reference composition using Hero, LogoBar, Features, Testimonials, FAQ, CTA; all content data defined inline in the file (SPEC §12)
+- [x] `[core]` Create `src/pages/contact.astro` — uses `Page` layout; renders `ContactForm` and `LeadCaptureForm` side-by-side with explanatory copy; content data inline (SPEC §12)
+- [x] `[core]` Create `src/pages/thank-you.astro` — post-form-submission confirmation; fork-editable (branded message, optional countdown redirect); uses `Page` layout
+- [x] `[demo]` Add `src/pages/demo/content-page.astro` — an example route that renders an MDX file from `src/content/pages/` via `getEntry()`; demonstrates the content-collection-powered static page pattern
+- [x] `[demo]` Add `src/content/pages/about.mdx` as a demo content page
+- [x] Verify: homepage renders all sections; form submits and lands on thank-you; thank-you page copy is easy to identify as fork-editable
 
 ---
 
@@ -195,11 +195,11 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 
 > Finish the demo as a coherent, complete reference site.
 
-- [ ] `[demo]` Create `src/demo/README.md` — explains demo purpose, how to use it as reference, how to delete it (remove `src/demo/` and `src/pages/demo/`)
-- [ ] `[demo]` Create `src/pages/demo/index.astro` — index page listing all demo routes with descriptions
-- [ ] `[demo]` Verify all `src/pages/demo/*` routes are excluded from sitemap filter in `astro.config.mjs`
-- [ ] `[config]` Confirm `features.demo` flag is wired: when `false`, all pages in `src/pages/demo/` return empty `getStaticPaths()` or 404; demo nav links hidden
-- [ ] `[demo]` Verify the demo functions as a standalone reference: each page has a visible heading explaining what it demonstrates
+- [x] `[demo]` Create `src/demo/README.md` — explains demo purpose, how to use it as reference, how to delete it (remove `src/demo/` and `src/pages/demo/`)
+- [x] `[demo]` Create `src/pages/demo/index.astro` — index page listing all demo routes with descriptions
+- [x] `[demo]` Verify all `src/pages/demo/*` routes are excluded from sitemap filter in `astro.config.mjs`
+- [x] `[config]` Confirm `features.demo` flag is wired: when `false`, all pages in `src/pages/demo/` return empty `getStaticPaths()` or 404; demo nav links hidden
+- [x] `[demo]` Verify the demo functions as a standalone reference: each page has a visible heading explaining what it demonstrates
 
 ---
 

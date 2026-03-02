@@ -33,7 +33,12 @@ export default defineConfig({
       // restore this filter: !page.includes('/showcase') && !page.endsWith('/ui') &&
       // !page.endsWith('/forms')
       filter: (page) =>
-        !page.endsWith('/thank-you') && !page.endsWith('/thank-you/'),
+        !page.endsWith('/thank-you') &&
+        !page.endsWith('/thank-you/') &&
+        // Exclude /demo index and all /demo/* sub-routes
+        // (root-level showcase/ui/forms are intentionally indexed)
+        !page.endsWith('/demo') &&
+        !page.includes('/demo/'),
     }),
     icon(),
   ],

@@ -11,20 +11,26 @@ This directory contains architectural guidance, design specifications, and examp
 
 The public-facing demo pages live outside this directory:
 
+- `src/pages/demo/index.astro` — Demo index listing all reference routes
 - `src/pages/showcase.astro` — Marketing component gallery
 - `src/pages/ui.astro` — UI primitives and design tokens
 - `src/pages/forms.astro` — Form components showcase
+- `src/pages/demo/content-page.astro` — Content-collection static page pattern
 
-On the upstream StellarBoat site (stellarboat.magill.dev), these are production marketing pages, indexed in the sitemap, and part of the product narrative.
+On the upstream StellarBoat site (stellarboat.magill.dev), the root-level pages (showcase, ui, forms) are production marketing pages, indexed in the sitemap, and part of the product narrative. The `/demo/*` sub-routes are excluded from the sitemap (`noIndex: true`).
 
 ## Deleting the Demo
 
 Forks are safe to delete:
 
 - **This entire `src/demo/` directory** — only needed if the architecture guidance is useful
-- **The three public demo pages** — see [SPEC.md §14](../SPEC.md#14-demo-site) for cleanup instructions
+- **The root-level demo pages** — `src/pages/showcase.astro`, `src/pages/ui.astro`, `src/pages/forms.astro`
+- **The `src/pages/demo/` directory** — `index.astro` and `content-page.astro`
 
-If you delete the demo pages, also update `src/config/site.example.ts` to set `demo: false`.
+See [SPEC.md §14](../SPEC.md#14-demo-site) for full cleanup instructions.
+
+If you delete the demo pages, also update `src/config/site.example.ts` to set `demo: false` and
+restore the sitemap filter in `astro.config.mjs` to exclude the pages you keep.
 
 ## Using as Reference
 

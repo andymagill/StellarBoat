@@ -1,6 +1,7 @@
 ---
 import Page from '../layouts/Page.astro';
 import ContactForm from '../components/forms/ContactForm.astro';
+import LeadCaptureForm from '../components/forms/LeadCaptureForm.astro';
 import Card from '../components/ui/Card.astro';
 import CodeBlock from '../components/mdx/CodeBlock.astro';
 import Alert from '../components/ui/Alert.astro';
@@ -48,10 +49,31 @@ import Alert from '../components/ui/Alert.astro';
       </p>
     </div>
 
-    <!-- Main Contact Form -->
-    <Card class="p-8 mb-12">
-      <ContactForm />
-    </Card>
+    <!-- Forms — side-by-side -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+      <!-- Contact Form -->
+      <div>
+        <h2 class="text-xl font-semibold text-text mb-2">Contact Us</h2>
+        <p class="text-sm text-text-muted mb-4">
+          General enquiries and support requests.
+        </p>
+        <Card class="p-6">
+          <ContactForm />
+        </Card>
+      </div>
+
+      <!-- Lead Capture Form -->
+      <div>
+        <h2 class="text-xl font-semibold text-text mb-2">Request a Demo</h2>
+        <p class="text-sm text-text-muted mb-4">
+          Interested in StellarBoat for your project? Share your details and
+          we&rsquo;ll be in touch.
+        </p>
+        <Card class="p-6">
+          <LeadCaptureForm />
+        </Card>
+      </div>
+    </div>
 
     <!-- Usage Examples Section -->
     <section class="mt-16 pt-12 border-t border-border">

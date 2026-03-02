@@ -1,6 +1,12 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Page from '../../layouts/Page.astro';
+import { siteConfig } from '../../config/site';
+
+if (!siteConfig.features.demo) {
+  // eslint-disable-next-line no-undef
+  return new Response('Not found', { status: 404 });
+}
 
 /**
  * Demo: Content-Powered Page
@@ -33,7 +39,19 @@ const { title, description, noIndex } = page.data;
 ---
 
 <Page {title} {description} noIndex={noIndex}>
-  <article class="max-w-3xl mx-auto px-6 py-12 lg:py-16 prose prose-lg">
+  <div class="max-w-3xl mx-auto px-6 pt-8">
+    <p
+      class="text-sm text-text-muted border border-border rounded px-4 py-3 mb-2"
+    >
+      <strong>Demo:</strong> This page demonstrates the content-collection-powered
+      static page pattern — an MDX file from <code>src/content/pages/</code> rendered
+      via
+      <code>getCollection()</code>. See <code
+        >src/pages/demo/content-page.astro</code
+      >.
+    </p>
+  </div>
+  <article class="max-w-3xl mx-auto px-6 py-8 lg:py-12 prose prose-lg">
     <Content />
   </article>
 </Page>

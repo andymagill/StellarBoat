@@ -1,0 +1,97 @@
+---
+import Page from '../../layouts/Page.astro';
+import { siteConfig } from '../../config/site';
+
+if (!siteConfig.features.demo) {
+  // eslint-disable-next-line no-undef
+  return new Response('Not found', { status: 404 });
+}
+
+const demoRoutes = [
+  {
+    href: '/showcase',
+    title: 'Component Gallery',
+    description:
+      'Every marketing section component (Hero, Features, Testimonials, Pricing, FAQ, CTA, LogoBar) rendered in all available variants side-by-side. Use this as a copy-paste reference when building your own pages.',
+    tag: 'Marketing Components',
+  },
+  {
+    href: '/ui',
+    title: 'UI Primitives & Design Tokens',
+    description:
+      'All atomic UI components (Button, Card, Badge, Alert, Divider, Icon) with every variant labeled. Also renders the full Deep Space token set — color swatches, type scale, spacing, radius, and shadow samples.',
+    tag: 'UI System',
+  },
+  {
+    href: '/forms',
+    title: 'Form Components',
+    description:
+      'All three form components (ContactForm, LeadCaptureForm, NewsletterForm) rendered with live submissions. Demonstrates pluggable backends, progressive enhancement, and ARIA accessibility patterns.',
+    tag: 'Forms',
+  },
+  {
+    href: '/demo/content-page',
+    title: 'Content-Powered Page',
+    description:
+      'An example of the content-collection static page pattern. An MDX file from src/content/pages/ is loaded via getCollection() and rendered with the BlogPost prose styles. Useful as a template for About, Privacy Policy, or Terms pages.',
+    tag: 'Content Layer',
+  },
+];
+---
+
+<Page
+  title="Demo Index"
+  description="Reference pages demonstrating every StellarBoat feature. Browse the component gallery, design system, forms, and content layer patterns."
+  noIndex={true}
+>
+  <div class="max-w-3xl mx-auto px-6 py-12 lg:py-16">
+    <h1 class="text-4xl font-bold text-text mb-4">Demo Reference Pages</h1>
+    <p class="text-text-muted mb-2">
+      These pages exist to demonstrate every StellarBoat feature in a working
+      context. Browse them before customizing your fork, then delete or
+      repurpose each one.
+    </p>
+    <p class="text-sm text-text-muted mb-10">
+      To remove the demo entirely: delete <code
+        class="bg-surface-2 px-1 rounded">src/demo/</code
+      >, the three root-level pages (<code class="bg-surface-2 px-1 rounded"
+        >/showcase</code
+      >,
+      <code class="bg-surface-2 px-1 rounded">/ui</code>,
+      <code class="bg-surface-2 px-1 rounded">/forms</code>), and
+      <code class="bg-surface-2 px-1 rounded">src/pages/demo/</code>. Then set <code
+        class="bg-surface-2 px-1 rounded">features.demo: false</code
+      > in
+      <code class="bg-surface-2 px-1 rounded">src/config/site.example.ts</code>.
+    </p>
+
+    <nav aria-label="Demo pages">
+      <ul class="space-y-6">
+        {
+          demoRoutes.map((route) => (
+            <li class="border border-border rounded-lg p-6 hover:border-primary-500 transition-colors">
+              <div class="flex items-start justify-between gap-4 mb-2">
+                <a
+                  href={route.href}
+                  class="text-xl font-semibold text-text hover:text-primary-500 transition-colors"
+                >
+                  {route.title}
+                </a>
+                <span class="shrink-0 text-xs font-medium text-primary-400 bg-surface-2 px-2 py-1 rounded">
+                  {route.tag}
+                </span>
+              </div>
+              <p class="text-text-muted text-sm">{route.description}</p>
+              <a
+                href={route.href}
+                class="inline-block mt-3 text-sm text-primary-500 hover:text-primary-400 font-medium"
+              >
+                View page &rarr;
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</Page>
