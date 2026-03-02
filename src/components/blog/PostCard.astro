@@ -34,7 +34,9 @@ const placeholders = [
   '/images/blog-placeholder-3.svg',
 ];
 const placeholderIndex =
-  post.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) %
+  post.id
+    .split('')
+    .reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0) %
   placeholders.length;
 const fallbackImage = placeholders[placeholderIndex];
 ---
@@ -100,7 +102,7 @@ const fallbackImage = placeholders[placeholderIndex];
     {
       tags.length > 0 && (
         <div class="flex flex-wrap gap-1 mt-3 pt-3 border-t border-border">
-          {tags.map((tag) => (
+          {tags.map((tag: string) => (
             <Badge>
               <a
                 href={`/blog/tag/${tag.toLowerCase()}`}
@@ -126,7 +128,7 @@ const fallbackImage = placeholders[placeholderIndex];
 <script>
   // Attach error handler to post card images for CSP compliance
   document.querySelectorAll('.post-card-img').forEach((img) => {
-    img.addEventListener('error', function () {
+    img.addEventListener('error', function (this: HTMLImageElement) {
       const fallback = this.dataset.fallback;
       if (fallback) {
         this.src = fallback;

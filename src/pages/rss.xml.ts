@@ -6,10 +6,11 @@
  */
 
 import rss from '@astrojs/rss';
+import type { APIContext } from 'astro';
 import { siteConfig } from '../config/site';
 import { getPublishedPosts } from '../utils/blog';
 
-export async function GET(context) {
+export async function GET(context: APIContext) {
   // Return 404 if RSS feature is disabled
   if (!siteConfig.features.rss) {
     return new Response('Not Found', { status: 404 });
@@ -20,7 +21,7 @@ export async function GET(context) {
     return rss({
       title: siteConfig.name,
       description: siteConfig.tagline,
-      site: context.site,
+      site: context.site ?? siteConfig.url,
       items: [],
     });
   }
@@ -30,7 +31,7 @@ export async function GET(context) {
   return rss({
     title: `${siteConfig.name} - Blog`,
     description: siteConfig.tagline,
-    site: context.site,
+    site: context.site ?? siteConfig.url,
     items: posts.map((post) => ({
       title: post.data.title,
       description: post.data.description,

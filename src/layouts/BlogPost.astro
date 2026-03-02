@@ -130,7 +130,7 @@ const breadcrumbSchema: Record<string, unknown> = {
       const progress = scrollHeight > 0 ? (scrolled / scrollHeight) * 100 : 0;
       document.documentElement.style.setProperty(
         '--scroll-percent',
-        progress / 100
+        String(progress / 100)
       );
     }
 

@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Page from '../../layouts/Page.astro';
 import { siteConfig } from '../../config/site';
 
@@ -26,7 +26,7 @@ if (!siteConfig.features.demo) {
 
 // Load all pages from content collection
 const allPages = await getCollection('pages');
-const page = allPages.find((p) => p.id === 'about');
+const page = allPages.find((p: CollectionEntry<'pages'>) => p.id === 'about');
 
 if (!page) {
   // Response is a built-in global in Astro pages

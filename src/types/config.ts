@@ -126,12 +126,20 @@ export interface AnalyticsConfig {
 export interface FormsConfig {
   /**
    * Default form backend.
-   * Currently only 'web3forms' is supported.
    */
-  defaultBackend: 'web3forms';
+  defaultBackend: 'web3forms' | 'api' | 'formspree' | 'formspark' | 'netlify';
 
   /** Web3Forms access key (required for form submissions) */
   web3formsKey?: string;
+
+  /** Custom API endpoint URL for the 'api' backend */
+  apiUrl?: string;
+
+  /** Formspree form endpoint URL for the 'formspree' backend */
+  formspreeEndpoint?: string;
+
+  /** Formspark project ID for the 'formspark' backend */
+  formsparProjectId?: string;
 
   /** Enable reCAPTCHA v3 integration (optional) */
   recaptchaEnabled?: boolean;
