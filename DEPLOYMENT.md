@@ -43,6 +43,28 @@ The official StellarBoat demo is deployed to **Cloudflare Pages**. This is the r
 2. **Custom domains** → Add your domain
 3. Follow Cloudflare's DNS setup instructions
 
+### Branch Protection (Recommended)
+
+To prevent merging pull requests that fail CI checks:
+
+1. Go to your repository on GitHub
+2. Settings → Branches
+3. Under "Branch protection rules", click "Add rule"
+4. Pattern: `main`
+5. Enable:
+   - ✓ Require a pull request before merging
+   - ✓ Dismiss stale pull request approvals when new commits are pushed
+   - ✓ Require status checks to pass before merging
+6. Select required status checks:
+   - `Lint & Format`
+   - `Type Check`
+   - `Build`
+   - `Playwright Tests`
+   - `Lighthouse CI`
+7. Click "Create"
+
+Now, any PR that fails lint, type-check, build, tests, or Lighthouse will be blocked from merging.
+
 ---
 
 ## Forks — Netlify

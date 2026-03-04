@@ -17,9 +17,7 @@ jobs:
           node-version: '20'
       - run: npm install
       - run: npm run lint
-        continue-on-error: true
       - run: npm run format -- --check
-        continue-on-error: true
 
   check:
     name: Type Check
@@ -42,33 +40,42 @@ jobs:
           node-version: '20'
       - run: npm install
       - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
 
-  # Lighthouse CI — added in Milestone 11
-  # lighthouse:
-  #   name: Lighthouse CI
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20'
-  #     - run: npm install
-  #     - run: npm run build
-  #     - run: npm install -g @lhci/cli@latest
-  #     - run: lhci autorun
-  #       continue-on-error: true
+  playwright:
+    name: Playwright Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
 
-  # Playwright smoke tests — added in Milestone 11
-  # tests:
-  #   name: Smoke Tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20'
-  #     - run: npm install
-  #     - run: npm run build
-  #     - run: npx playwright install --with-deps
-  #     - run: npx playwright test
-  #       continue-on-error: true
+  lighthouse:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - run: npm install -g @lhci/cli@latest
+      - run: npx lhci autorun

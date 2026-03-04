@@ -17,6 +17,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src", "tests", "*.config.ts"],
+  "exclude": ["node_modules", "dist", ".astro"]
 }

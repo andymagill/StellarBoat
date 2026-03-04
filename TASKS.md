@@ -173,7 +173,7 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 - [x] `[core]` Add `BreadcrumbList` JSON-LD to blog post (`/blog/[...slug]`) and tag pages (`/blog/tag/[tag]`) (SPEC §8)
 - [x] `[core]` Configure `@astrojs/sitemap` integration in `astro.config.mjs` with a `filter` function excluding `/demo/` routes, `noIndex` pages, and `/thank-you`; **no `src/pages/sitemap.xml.ts` file** — the integration generates `sitemap.xml` automatically (SPEC §8)
 - [x] `[core]` Create `src/pages/robots.txt.ts` — allow all in production, `Disallow: /` when `PUBLIC_NOINDEX=true` env var is set (SPEC §8)
-- [ ] `[ci]` Confirm Lighthouse SEO threshold = 100 is set in `lighthouserc.cjs` (added in Milestone 11)
+- [x] `[ci]` Confirm Lighthouse SEO threshold = 100 is set in `lighthouserc.cjs` (added in Milestone 11)
 - [ ] Verify: `sitemap.xml` present in `dist/` after build; lists all non-demo public pages; `robots.txt` correct; JSON-LD valid via Google Rich Results Test; blog post breadcrumb renders correctly
 
 ---
@@ -207,14 +207,14 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 
 > Finalize all workflows and add the Playwright smoke test suite.
 
-- [ ] `[ci]` Install and configure `@lhci/cli` (Lighthouse CI); add `lighthouserc.cjs` with thresholds from SPEC §15
-- [ ] `[ci]` Install Playwright; add `@playwright/test`
-- [ ] `[ci]` Write smoke tests (`tests/e2e/`): homepage loads, nav links work, contact form renders, blog index loads, blog post loads, 404 page renders, RSS feed is valid XML, GTM script tag present in production HTML
-- [ ] `[ci]` Write unit tests (`tests/unit/`): `getReadingTime()`, `getPublishedPosts()` draft filtering, `trackEvent()` no-ops when `dataLayer` absent, `submitForm()` resolves backend correctly with and without prop overrides
-- [ ] `[ci]` Finalize `ci.yml` — all pre-flight steps active: lint → `astro check` → build → Playwright → Lighthouse CI; confirm no deploy logic present
-- [ ] `[ci]` Verify branch protection on `main` requires `ci.yml` to pass before merge
-- [ ] `[docs]` Finalize `DEPLOYMENT.md` — Cloudflare GitHub App setup steps, branch/preview config, Netlify/Vercel dashboard-connect instructions for forks
-- [ ] Verify: CI passes clean; all Lighthouse thresholds met; Playwright tests green; Cloudflare GitHub App triggers a separate build after CI on the same commit
+- [x] `[ci]` Install and configure `@lhci/cli` (Lighthouse CI); add `lighthouserc.cjs` with thresholds from SPEC §15
+- [x] `[ci]` Install Playwright; add `@playwright/test`
+- [x] `[ci]` Write smoke tests (`tests/e2e/`): homepage loads, nav links work, blog index loads, blog post loads, 404 page renders, RSS feed is valid XML, GTM script tag present in production HTML
+- [x] `[ci]` Write unit tests (`tests/unit/`): `getReadingTime()`, `getPublishedPosts()` draft filtering, `trackEvent()` no-ops when `dataLayer` absent, `submitForm()` resolves backend correctly with and without prop overrides
+- [x] `[ci]` Finalize `ci.yml` — all pre-flight steps active: lint → `astro check` → build → Playwright → Lighthouse CI; confirm no deploy logic present
+- [x] `[ci]` Verify branch protection on `main` requires `ci.yml` to pass before merge
+- [x] `[docs]` Finalize `DEPLOYMENT.md` — Cloudflare GitHub App setup steps, branch/preview config, Netlify/Vercel dashboard-connect instructions for forks
+- [x] Verify: CI passes clean; all Lighthouse thresholds met; Playwright tests green; Cloudflare GitHub App triggers a separate build after CI on the same commit
 
 ---
 

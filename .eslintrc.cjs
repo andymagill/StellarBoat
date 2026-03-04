@@ -6,19 +6,48 @@ import astroParser from 'astro-eslint-parser';
 
 export default [
   {
-    ignores: ['dist/', 'node_modules/', '.astro/'],
+    ignores: [
+      'dist/',
+      'node_modules/',
+      '.astro/',
+      'test-results/',
+      '.lighthouseci/',
+    ],
   },
   js.configs.recommended,
+  // CommonJS files (.cjs)
   {
-    files: ['**/*.{js,mjs,cjs}'],
+    files: ['**/*.cjs', 'lighthouserc.cjs'],
     languageOptions: {
-      ecmaVersion: 2021,
-      sourceType: 'module',
+      sourceType: 'commonjs',
+      globals: {
+        module: 'writable',
+        exports: 'writable',
+        require: 'readonly',
+        console: 'readonly',
+        process: 'readonly',
+      },
     },
     rules: {
       'no-unused-vars': 'off',
     },
   },
+  // Regular JavaScript files
+  {
+    files: ['**/*.{js,mjs}'],
+    languageOptions: {
+      ecmaVersion: 2021,
+      sourceType: 'module',
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
+    rules: {
+      'no-unused-vars': 'off',
+    },
+  },
+  // TypeScript files
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -26,6 +55,9 @@ export default [
       parserOptions: {
         ecmaVersion: 2021,
         sourceType: 'module',
+      },
+      globals: {
+        process: 'readonly',
       },
     },
     plugins: {
@@ -43,6 +75,31 @@ export default [
       ],
     },
   },
+  // Config files
+  {
+    files: ['*.config.ts', 'playwright.config.ts', 'vitest.config.ts'],
+    languageOptions: {
+      globals: {
+        process: 'readonly',
+      },
+    },
+  },
+  // Test files
+  {
+    files: ['tests/**/*.{ts,js}'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        test: 'readonly',
+        vi: 'readonly',
+      },
+    },
+  },
+  // Astro files
   {
     files: ['**/*.astro'],
     parser: astroParser,
