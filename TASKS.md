@@ -220,13 +220,13 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 
 ## Milestone 12 — Documentation Completion & v1 Tag
 
-- [ ] `[docs]` Write `src/demo/README.md` — comprehensive guide to the demo site
-- [ ] `[docs]` Update `CONTRIBUTING.md` with finalized adapter contracts and tested local dev workflow
-- [ ] `[docs]` Update `SPEC.md` — mark all sections as implemented; add any decisions made during implementation
-- [ ] `[docs]` Update `README.md` — add live Cloudflare Pages demo URL
-- [ ] `[docs]` Add inline JSDoc to all config types in `src/types/config.ts` — every field documented
-- [ ] `[docs]` Add a `CHANGELOG.md` with v1.0.0 entry
-- [ ] Review: walk through the fork setup steps in `SPEC.md §16` on a clean clone; document any gaps found
+- [x] `[docs]` Write `src/demo/README.md` — comprehensive guide to the demo site
+- [x] `[docs]` Update `CONTRIBUTING.md` with finalized adapter contracts and tested local dev workflow
+- [x] `[docs]` Update `SPEC.md` — mark all sections as implemented; add any decisions made during implementation
+- [x] `[docs]` Update `README.md` — add live Cloudflare Pages demo URL
+- [x] `[docs]` Add inline JSDoc to all config types in `src/types/config.ts` — every field documented
+- [x] `[docs]` Add a `CHANGELOG.md` with v1.0.0 entry
+- [x] Review: walk through the fork setup steps in `SPEC.md §16` on a clean clone; document any gaps found
 - [ ] Tag `v1.0.0`
 
 ---

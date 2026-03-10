@@ -1,8 +1,8 @@
 # StellarBoat — Architecture Specification
 
-> Version: 0.1.0  
-> Status: Pre-implementation — **all architectural decisions locked, ready for implementation**  
-> Last updated: 2026-02-27
+> Version: 1.0.0  
+> Status: **v1.0.0 — all architectural decisions implemented**  
+> Last updated: 2026-03-10
 
 ---
 
@@ -10,14 +10,14 @@
 
 | Decision | Choice | Status |
 |---|---|---|
-| Framework version | Astro 5.x | ✅ Locked |
-| Rendering mode | Static (SSG) + Edge functions | ✅ Locked |
-| Styling | Tailwind CSS v4 + `@theme` CSS-native tokens | ✅ Locked |
-| Analytics | Google Tag Manager (may load GA4 or any tag) | ✅ Locked |
-| Form backend | Web3Forms (default), per-component override, custom API | ✅ Locked |
-| Content authoring | MDX/Markdown in-repo (Astro 5 Content Layer API) | ✅ Locked |
-| Live demo host | Cloudflare Pages (canonical) | ✅ Locked |
-| Deployment compatibility | Netlify, Vercel (documented, community-maintained) | ✅ Locked |
+| Framework version | Astro 5.x | ✅ Implemented |
+| Rendering mode | Static (SSG) + Edge functions | ✅ Implemented |
+| Styling | Tailwind CSS v4 + `@theme` CSS-native tokens | ✅ Implemented |
+| Analytics | Google Tag Manager (may load GA4 or any tag) | ✅ Implemented |
+| Form backend | Web3Forms (default), per-component override, custom API | ✅ Implemented |
+| Content authoring | MDX/Markdown in-repo (Astro 5 Content Layer API) | ✅ Implemented |
+| Live demo host | Cloudflare Pages (canonical) | ✅ Implemented |
+| Deployment compatibility | Netlify, Vercel (documented, community-maintained) | ✅ Implemented |
 
 ---
 
@@ -145,19 +145,17 @@ stellarboat/
 │                               # no deploy step — Cloudflare GitHub App handles all publishing
 │
 ├── public/
-│   ├── favicon.svg             # replace in fork
-│   └── og-default.png          # default OG image; replace in fork
+│   └── images/                 # static assets (SVG placeholders, hero images, etc.)
 │
 ├── src/
 │   │
 │   ├── config/                 ← FORK CUSTOMIZATION ZONE
-│   │   ├── site.example.ts     # copy to site.ts and commit (no secrets here)
-│   │   ├── site.ts             # your site name, URL, social handles
+│   │   ├── site.example.ts     # source of truth; edit directly or copy to site.local.ts
+│   │   ├── site.ts             # re-exports site.example.ts; alternatively import from site.local.ts
 │   │   ├── nav.ts              # navigation structure
 │   │   ├── footer.ts           # footer links and legal text
 │   │   ├── analytics.ts        # GTM container ID and consent mode flag
-│   │   ├── forms.ts            # form backend and keys
-│   │   └── features.ts         # feature flags (blog, pricing, demo)
+│   │   └── forms.ts            # form backend and keys
 │   │
 │   ├── content/                ← FORK CUSTOMIZATION ZONE
 │   │   ├── config.ts           # Astro 5 Content Layer collection definitions
@@ -215,8 +213,7 @@ stellarboat/
 │   ├── layouts/                ← CORE
 │   │   ├── Base.astro          # HTML shell: <head>, SEO, Analytics, fonts, global CSS
 │   │   ├── Page.astro          # Base + Header + Footer
-│   │   ├── BlogPost.astro      # Page + post header, reading progress, prev/next
-│   │   └── Landing.astro       # Base only — full-width, no nav gutters
+│   │   └── BlogPost.astro      # Page + post header, reading progress, prev/next
 │   │
 │   ├── pages/                  ← MIXED
 │   │   ├── index.astro         # homepage — FORK EDITS THIS
@@ -235,9 +232,9 @@ stellarboat/
 │   │                           # (configured in astro.config.mjs) — no page file needed
 │   │
 │   ├── types/                  ← CORE
-│   │   ├── config.ts           # SiteConfig, NavConfig, FooterConfig, AnalyticsConfig,
-│   │   │                       # FormsConfig, FeaturesConfig
-│   │   └── forms.ts            # FormAdapter interface, ResolvedFormConfig type
+│   │   ├── config.ts           # SiteConfig, NavConfig, FooterConfig, AnalyticsConfig, FormsConfig
+│   │   ├── forms.ts            # FormAdapter interface, ResolvedFormConfig type
+│   │   └── globals.d.ts        # Global type augmentations (Window.dataLayer, Window.gtag)
 │   │
 │   ├── utils/                  ← CORE
 │   │   ├── analytics.ts        # trackEvent() — pushes to window.dataLayer
@@ -245,23 +242,13 @@ stellarboat/
 │   │   └── forms/
 │   │       ├── index.ts        # submitForm() dispatcher
 │   │       └── adapters/
-│   │           ├── web3forms.ts
-│   │           ├── netlify.ts
-│   │           ├── api.ts
-│   │           ├── formspree.ts  # community-maintained
-│   │           └── formspark.ts  # community-maintained
-│   │
-│   ├── edge/                   ← OPTIONAL (Cloudflare Workers stubs)
-│   │   └── README.md           # documents edge use cases; stubs added per need
+│   │           └── web3forms.ts
 │   │
 │   └── demo/                   ← DEMO ONLY (safe to delete in production forks)
 │       ├── README.md
-│       ├── content/            # demo blog posts and authors
-│       │   ├── blog/           # demo .mdx files; use draft: true or demo: true frontmatter
-│       │   └── authors/        # demo author .json files
-│       └── edge/               # edge function examples (Resend worker, etc.)
-│       # Note: demo page routes live in src/pages/demo/ (Astro requires pages in src/pages/)
-│       # src/demo/ holds only content data and non-page assets for the demo
+│       ├── DESIGN.md           # visual design spec for Deep Space theme
+│       ├── edge/               # edge function examples (Resend, etc.)
+│       └── (demo pages live in src/pages/demo/ and src/pages/showcase.astro, etc.)
 │
 ├── tests/
 │   ├── e2e/                    # Playwright tests
@@ -270,17 +257,15 @@ stellarboat/
 ├── astro.config.mjs
 ├── tsconfig.json
 ├── .env.example
-├── wrangler.toml
-├── netlify.toml
-├── vercel.json
 ├── README.md
 ├── SPEC.md
 ├── TASKS.md
 ├── CONTRIBUTING.md
+├── CHANGELOG.md
 └── DEPLOYMENT.md               # one-time Cloudflare GitHub App setup + Netlify/Vercel guide
 ```
 
-> **`src/config/site.ts`:** All values in this file are safe to commit — API keys and secrets belong in `.env.local`. Fork owners should copy `site.example.ts` to `site.ts`, fill it in, and commit it.
+> **Fork configuration pattern:** Edit `src/config/site.example.ts` directly (recommended for simple forks), or copy it to `src/config/site.local.ts`, include it in `.gitignore`, and update `src/config/site.ts` to import from `site.local.ts` instead. All values in `site.example.ts` are safe to commit — API keys and secrets belong in `.env.local`.
 
 ---
 
@@ -292,50 +277,59 @@ All site-level configuration is centralized in `src/config/`. Every file exports
 
 ```typescript
 // src/config/site.ts
-export const site = {
-  name: 'My Site',           // used in <title> and OG tags
-  tagline: 'Short tagline',  // used in default meta description
-  url: 'https://mysite.com', // canonical base URL, no trailing slash
-  locale: 'en_US',
-  twitterHandle: '@mysite',  // or null
-  ogImage: '/og-default.png',
-  contactEmail: 'hello@mysite.com',
+// Re-exports from site.example.ts (recommended pattern)
+export { siteConfig } from './site.example';
+
+// Alternative pattern for environment-specific config:
+// export { siteConfig } from './site.local'; // add to .gitignore
+```
+
+All configuration lives in `site.example.ts`. Fork owners may either:
+1. **Direct edit (recommended):** Edit `src/config/site.example.ts` directly and commit it
+2. **Local override:** Copy `site.example.ts` → `site.local.ts`, add `site.local.ts` to `.gitignore`, and import from `site.local.ts` in `site.ts`
+
+### `src/config/site.example.ts`
+
+```typescript
+// src/config/site.example.ts
+export const siteConfig = {
+  // Site identity
+  name: 'My Site',                    // used in <title> and OG tags
+  brandName: 'My Brand',              // used in header/footer
+  tagline: 'Short tagline',           // used in default meta description
+  url: 'https://mysite.com',          // canonical base URL, no trailing slash
+  locale: 'en_US',                    // optional; defaults to 'en_US'
+  author: 'Author Name',              // blog post metadata
+  contactEmail: 'hello@mysite.com',   // contact form destination
+  social: {                           // optional social links in footer
+    twitter: '@mysite',
+    github: null,
+  },
+  
+  // Analytics
+  analytics: {
+    gtmId: null,                      // set to 'GTM-XXXXXXX'; null disables
+    consentMode: false,               // set true for GDPR cookie banner
+    customAttributes: {},             // optional GTM custom attributes
+  },
+  
+  // Forms
+  forms: {
+    defaultBackend: 'web3forms',      // 'web3forms' (only adapter in v1)
+    web3formsKey: undefined,          // from https://web3forms.com
+    apiUrl: undefined,                // custom API endpoint if using 'api' backend
+  },
+  
+  // Features
+  features: {
+    blog: true,                       // enable /blog/ routes and RSS
+    rss: true,                        // enable /rss.xml (only meaningful when blog: true)
+    demo: true,                       // enable /demo/* demo pages
+    pricing: false,                   // enable /pricing page
+    testimonials: true,               // enable Testimonials component
+  },
 } satisfies SiteConfig;
 ```
-
-### `src/config/analytics.ts`
-
-```typescript
-export const analytics = {
-  gtmId: null as string | null, // set to 'GTM-XXXXXXX'; null disables analytics entirely
-  consentMode: false,           // set true to inject consent defaults before GTM loads
-} satisfies AnalyticsConfig;
-```
-
-### `src/config/forms.ts`
-
-```typescript
-export const forms = {
-  backend: 'web3forms',          // 'web3forms' | 'netlify' | 'formspree' | 'formspark' | 'api'
-  web3formsKey: 'YOUR_KEY',      // from web3forms.com — safe to commit
-  successRedirect: '/thank-you', // or null for inline success state
-} satisfies FormsConfig;
-```
-
-### `src/config/features.ts`
-
-Feature flags allow forks to disable entire subsystems. Disabled features are excluded from the sitemap and nav. Page routes (those using `getStaticPaths()`) return no output when disabled. The `rss.xml.ts` endpoint checks the flag at the top and returns 404 when disabled. The sitemap is filtered via the `@astrojs/sitemap` integration config.
-
-```typescript
-export const features: FeaturesConfig = {
-  blog: true,       // enables /blog/*, blog nav item; required for rss to have content
-  rss: true,        // enables /rss.xml; only meaningful when blog: true
-  pricing: false,   // enables /pricing page and Pricing marketing component
-  demo: true,       // enables /demo/* routes; set false in production forks
-};
-```
-
-**RSS and blog dependency:** `rss` is only meaningful when `blog: true`. The RSS endpoint guards both: if `features.rss` is false it returns a 404; if `features.blog` is false it returns an empty feed. The recommended practice is to set both to the same value.
 
 ### `src/config/nav.ts`
 
@@ -704,15 +698,15 @@ The following are configured entirely in the GTM dashboard — StellarBoat has n
 
 ### Backend Decision & Rationale
 
-**Default: Web3Forms.** After evaluating the landscape of static-compatible form backends against the goals of "simplest free solution, modular enough to swap later," Web3Forms is the recommended default for the following reasons:
+**Shipped in v1: Web3Forms.** After evaluating the landscape of static-compatible form backends, Web3Forms is the v1 default for the following reasons:
 
 - **Genuinely free** — unlimited submissions on the free tier, no credit card, no time limit
-- **Works on any host** — a plain HTTP POST; no platform lock-in unlike Netlify Forms
+- **Works on any host** — a plain HTTP POST; no platform lock-in
 - **Zero backend setup** — register an access key, drop it in config, done
-- **Email notifications built-in** — submissions arrive in your inbox immediately without any webhook configuration
-- **Swap-friendly** — the adapter pattern means changing `forms.backend` in one config file migrates all forms to a new provider
+- **Email notifications built-in** — submissions arrive in your inbox immediately
+- **Swap-friendly** — the adapter pattern means changing `forms.defaultBackend` in config migrates all forms to a new provider
 
-Web3Forms is the out-of-the-box default. Netlify Forms ships as a fully maintained first-class adapter. Formspree and Formspark ship as community-maintained adapters. The `api` escape hatch covers any custom backend.
+**Post-v1: Additional adapters (Netlify, Formspree, Formspark, custom API) are welcome community contributions.** The adapter interface is simple and well-documented (see §10 "Modularity Contract" below).
 
 ### Form Components
 
@@ -743,24 +737,17 @@ The `backend` prop accepts the same values as `forms.backend` in config plus any
 
 ### Backend Adapters
 
-**`web3forms`** *(global default)* — POST to `https://api.web3forms.com/submit`. Free, host-agnostic, email notifications built in.
+**`web3forms`** *(v1 default)* — POST to `https://api.web3forms.com/submit`. Free tier: unlimited submissions. Get an access key from [web3forms.com](https://web3forms.com).
 
 ```typescript
 // src/config/forms.ts
 export const forms: FormsConfig = {
-  backend: 'web3forms',
+  defaultBackend: 'web3forms',
   web3formsKey: 'YOUR_ACCESS_KEY',   // safe to commit; scoped to your email
-  successRedirect: '/thank-you',     // or null for inline success message
 };
 ```
 
-**`netlify`** — Adds the `netlify` attribute and hidden `form-name` field. Auto-detected by Netlify's build bot. On non-Netlify hosts, this adapter throws a build warning and falls back to `web3forms` if a key is present.
-
-**`formspree`** — POST to Formspree. Free tier: 50/mo. Community-maintained.
-
-**`formspark`** — POST to Formspark. Free tier: 250/mo. Community-maintained.
-
-**`api`** — POST to `actionUrl`. The most flexible escape hatch: point at a Cloudflare Worker, Vercel Function, Resend endpoint, or any other HTTP handler. An example Cloudflare Worker forwarding to Resend is in `src/demo/`.
+**Post-v1 community contributions:** Adapters for Netlify Forms, Formspree, Formspark, and custom API endpoints are welcome additions. See"Modularity Contract" below for the adapter interface.
 
 ### Modularity Contract
 
@@ -1051,15 +1038,16 @@ Edge function stubs live in `src/edge/` and are Cloudflare Workers-specific in t
 
 1. Fork or use as GitHub template; clone locally
 2. `npm install`
-3. `cp src/config/site.example.ts src/config/site.ts` — fill in your site name, URL, and contact email; commit this file (no secrets)
+3. Edit `src/config/site.example.ts` — fill in your site name, URL, and contact email; **commit this file** (no secrets)
+   - *Alternative:* Copy `site.example.ts` → `site.local.ts`, add `site.local.ts` to `.gitignore`, and update `src/config/site.ts` to import from `site.local.ts` instead
 4. Edit `src/styles/tokens.css` — replace the `--color-primary-*` scale and update semantic aliases
-5. Replace `public/favicon.svg` and `public/og-default.png`
-6. Set your GTM container ID in `src/config/analytics.ts` (or leave null to disable analytics)
-7. Set your Web3Forms key in `src/config/forms.ts` (or change backend)
+5. Add your brand assets: replace `public/images/hero-spacecraft.png`, `public/images/hero-background.png`, and other images with your own
+6. Set your GTM container ID in `src/config/analytics.ts` (or leave `gtmId: null` to disable analytics)
+7. Set your Web3Forms API key in `src/config/forms.ts` (or change the form backend)
 8. Edit `src/pages/index.astro`, `src/pages/contact.astro`, and `src/pages/thank-you.astro` with your content
-9. Add content to `src/content/blog/`, `src/content/authors/`, and `src/content/pages/` — or set `features.blog = false`
+9. Add content to `src/content/blog/`, `src/content/authors/`, and `src/content/pages/` — or set `features.blog = false` in `site.example.ts`
 10. Follow `DEPLOYMENT.md` to connect the repo to Cloudflare Pages (or Netlify/Vercel) via GitHub App
-11. **Optional: Clean up demo pages** — Delete `src/pages/showcase.astro`, `src/pages/ui.astro`, and `src/pages/forms.astro`. Update `src/config/site.example.ts` to change `demo: true` to `demo: false`. See **§14. Demo Site** for details.
+11. **Optional: Clean up demo pages** — Delete `src/pages/showcase.astro`, `src/pages/ui.astro`, and `src/pages/demo/`. Update `src/config/site.example.ts` to change `features.demo: true` to `features.demo: false`. See **§14. Demo Site** for details.
 
 ### Pulling Upstream Updates
 

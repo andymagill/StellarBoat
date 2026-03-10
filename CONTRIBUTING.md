@@ -97,10 +97,11 @@ git commit --no-verify -m "your message"
 4. When you commit (`git commit`), linting and formatting will run automatically (see [Git Hooks & Code Quality](#git-hooks--code-quality) above)
 5. Run `npm run check` — `astro check` (TypeScript + Astro type errors) must pass
 6. Run `npm run build` — production build must succeed
-7. Run `npm run test` — all tests must pass
-8. Add or update tests if your change affects behavior
-9. Update `SPEC.md` if your change affects the architecture
-10. Open a pull request against `main`
+7. Run `npm run test` — all unit tests must pass
+8. Run `npm run test:e2e` — all Playwright e2e tests must pass
+9. Add or update tests if your change affects behavior
+10. Update `SPEC.md` if your change affects the architecture
+11. Open a pull request against `main`
 
 ---
 
@@ -126,13 +127,17 @@ The only code-level analytics contribution that makes sense is improving `Analyt
 
 ## Adding a Form Backend Adapter
 
-1. Create `src/utils/forms/adapters/yourbackend.ts` — implement the `FormAdapter` interface from `src/types/forms.ts`: a single `submit(data, config)` method that returns `Promise<{ ok: boolean; error?: string }>`
-2. Register the new adapter in the switch statement in `src/utils/forms/index.ts`
-3. Add the new backend key to the `FormsConfig` union type in `src/types/config.ts` and add any backend-specific config fields
-4. Add a demo example in `src/pages/demo/forms.astro`
-5. Update the adapter comparison table in `SPEC.md` Section 10
+**Note:** v1.0.0 ships with only the Web3Forms adapter. Additional adapters (Netlify, Formspree, Formspark, custom API) are welcome post-v1 contributions.
 
-**Constraint:** All form adapters must work from the browser via HTTP POST — no server-side Node.js code. StellarBoat is a static site; SSR API routes (`src/pages/api/`) are out of scope for core. If a backend requires server-side processing, the recommended pattern is a separate Cloudflare Worker or Netlify/Vercel Function that the `api` adapter POSTs to — document this with an example in `src/demo/edge/`.
+To add a new form backend adapter:
+
+1. Create `src/utils/forms/adapters/yourbackend.ts` — implement the `FormAdapter` interface from `src/types/forms.ts`: a single `submit(data, config)` method that returns `Promise<{ ok: boolean; error?: string }>`
+2. Register the new adapter in the dispatcher in `src/utils/forms/index.ts`
+3. Add the new backend key and any backend-specific config fields to `FormsConfig` in `src/types/config.ts`
+4. Add a demo example in `src/pages/demo/forms.astro` (if demo pages still exist)
+5. Update the adapter section in `SPEC.md` §10 with documentation for the new backend
+
+**Constraint:** All form adapters must work from the browser via HTTP POST — no server-side Node.js code. StellarBoat is a static site; SSR API routes (`src/pages/api/`) are out of scope for core. If a backend requires server-side processing, the recommended pattern is a separate Cloudflare Worker or Netlify/Vercel Function that the adapter POSTs to — document this with an example in `src/demo/edge/`.
 
 ---
 

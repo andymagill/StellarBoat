@@ -6,6 +6,8 @@
 [![Built with Astro](https://img.shields.io/badge/Built%20with-Astro-FF5D01)](https://astro.build)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
+**[Live Demo](https://stellarboat.magill.dev)** — See StellarBoat in action on Cloudflare Pages
+
 ---
 
 ## What is StellarBoat?
