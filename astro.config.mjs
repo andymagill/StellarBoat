@@ -1,5 +1,4 @@
 import { defineConfig } from 'astro/config';
-import cloudflare from '@astrojs/cloudflare';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
@@ -15,12 +14,6 @@ export default defineConfig({
   site: process.env.PUBLIC_SITE_URL || 'https://stellarboat.example.com',
   output: 'static',
   trailingSlash: 'never',
-  adapter: cloudflare(),
-  // To use Netlify, change the adapter to:
-  // adapter: netlify(),
-  //
-  // To use Vercel, change the adapter to:
-  // adapter: vercel(),
   integrations: [
     mdx(),
     sitemap({
