@@ -1,17 +1,22 @@
 /**
  * Site configuration entry point.
  *
- * All components import from this file — NEVER directly from site.example.ts.
+ * ⚠️  FRAGILE PATTERN: This file re-exports from site.example.ts.
+ * If site.example.ts is accidentally deleted or moved, the entire site build will fail.
  *
- * IMPORTANT: Do not delete site.example.ts! It is the source of truth for site configuration.
+ * CRITICAL: All components import from this file — NEVER directly from site.example.ts.
+ * NEVER delete site.example.ts! It is the source of truth for site configuration.
  *
  * To customize for your fork:
- * 1. Edit src/config/site.example.ts directly (recommended for simple forks)
- * 2. OR: Duplicate site.example.ts → site.local.ts, then import './site.local' below,
- *    and add site.local.ts to .gitignore for environment-specific config
+ * 1. (Simple) Edit src/config/site.example.ts directly
+ * 2. (Recommended) Duplicate site.example.ts → site.local.ts, then:
+ *    - Uncomment the import below
+ *    - Edit site.local.ts
+ *    - Add site.local.ts to .gitignore
  *
- * The current pattern (re-export from site.example.ts) is safe as long as
- * site.example.ts is never deleted. If using multiple deployment environments,
- * migrate to the site.local.ts pattern above.
+ * Multi-Environment Pattern (Commented Out):
+ * If you need environment-specific configs, uncomment this and follow the setup above:
+ * // import { siteConfig } from './site.local';
+ * // export { siteConfig };
  */
 export { siteConfig } from './site.example';

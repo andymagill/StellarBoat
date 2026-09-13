@@ -1,12 +1,17 @@
 import { forms } from '../../config/forms';
 import { web3FormsAdapter } from './adapters/web3forms';
+import { netlifyAdapter } from './adapters/netlify';
+import { apiAdapter } from './adapters/api';
+import { formspreeAdapter } from './adapters/formspree';
+import { formsparkAdapter } from './adapters/formspark';
 import type { ResolvedFormConfig } from '../../types/forms';
+import type { FormAdapter } from '../../types/forms';
 
 /**
- * Submit form data using Web3Forms adapter.
+ * Submit form data using the configured backend adapter.
  *
  * Merges global forms config with per-component overrides,
- * and submits the form data to Web3Forms.
+ * then delegates to the appropriate form backend adapter.
  *
  * @param data - Form field data (typically { name, email, message } etc.)
  * @param overrides - Per-component overrides (web3formsKey, recaptcha settings, etc.)
@@ -28,6 +33,15 @@ import type { ResolvedFormConfig } from '../../types/forms';
  *   // Show error: result.error
  * }
  * ```
+ *
+ * Supported backends:
+ * - web3forms (implemented)
+ * - netlify (stub — throws NotImplementedError)
+ * - api (stub — throws NotImplementedError)
+ * - formspree (stub — throws NotImplementedError)
+ * - formspark (stub — throws NotImplementedError)
+ *
+ * To implement a stub adapter, see ARCHITECTURE.md#form-adapters.
  */
 export async function submitForm(
   data: Record<string, string>,
@@ -37,9 +51,42 @@ export async function submitForm(
   const resolvedConfig: ResolvedFormConfig = {
     ...forms,
     ...overrides,
-    backend: 'web3forms',
+    backend: overrides?.backend || forms.defaultBackend,
   };
 
-  // Call Web3Forms adapter
-  return web3FormsAdapter.submit(data, resolvedConfig);
+  // Select adapter based on configured backend
+  const adapter = getAdapter(resolvedConfig.backend);
+
+  try {
+    return await adapter.submit(data, resolvedConfig);
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown form submission error';
+    return { ok: false, error: errorMessage };
+  }
+}
+
+/**
+ * Get the adapter for the specified backend.
+ * Throws if backend is not recognized.
+ */
+function getAdapter(backend: string): FormAdapter {
+  switch (backend) {
+    case 'web3forms':
+      return web3FormsAdapter;
+    case 'netlify':
+      return netlifyAdapter;
+    case 'api':
+      return apiAdapter;
+    case 'formspree':
+      return formspreeAdapter;
+    case 'formspark':
+      return formsparkAdapter;
+    default:
+      throw new Error(
+        `Unknown form backend: "${backend}". ` +
+          'Supported backends: web3forms, netlify, api, formspree, formspark. ' +
+          'See ARCHITECTURE.md#form-adapters for more info.'
+      );
+  }
 }

@@ -32,6 +32,8 @@ interface Testimonial {
   role: string;
   /** Optional avatar image URL */
   avatar?: string;
+  /** Optional avatar image alt text (fallback to author name) */
+  avatarAlt?: string;
 }
 
 interface Props {
@@ -65,7 +67,7 @@ const carouselId = `testimonials-carousel-${Math.random().toString(36).substring
                 {testimonial.avatar && (
                   <img
                     src={testimonial.avatar}
-                    alt={testimonial.author}
+                    alt={testimonial.avatarAlt ?? testimonial.author}
                     class="h-10 w-10 rounded-full object-cover"
                   />
                 )}
@@ -95,7 +97,7 @@ const carouselId = `testimonials-carousel-${Math.random().toString(36).substring
                     {testimonial.avatar && (
                       <img
                         src={testimonial.avatar}
-                        alt={testimonial.author}
+                        alt={testimonial.avatarAlt ?? testimonial.author}
                         class="h-10 w-10 rounded-full object-cover"
                       />
                     )}

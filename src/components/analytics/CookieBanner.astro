@@ -51,10 +51,19 @@ const shouldRender = analytics.consentMode;
     var a = document.getElementById('consent-accept');
     var d = document.getElementById('consent-decline');
     if (!b || !a || !d) return;
+
+    // Store the element that had focus before the banner appeared
+    var previouslyFocusedElement: Element | null = null;
+
     if (document.cookie.includes('consent=')) {
       b.style.display = 'none';
       return;
     }
+
+    // Move focus to the accept button (primary action)
+    previouslyFocusedElement = document.activeElement as Element;
+    a.focus();
+
     var hasDataLayer =
       typeof window !== 'undefined' && Array.isArray(window.dataLayer);
     a.addEventListener('click', function () {
@@ -69,6 +78,17 @@ const shouldRender = analytics.consentMode;
       document.cookie =
         'consent=granted; max-age=31536000; path=/; SameSite=Lax';
       b!.style.display = 'none';
+      // Restore focus to the main content or body
+      if (
+        previouslyFocusedElement &&
+        previouslyFocusedElement instanceof HTMLElement
+      ) {
+        previouslyFocusedElement.focus();
+      } else {
+        // Fallback: focus the main content area or body
+        var main = document.getElementById('main-content');
+        if (main) main.focus();
+      }
     });
     d.addEventListener('click', function () {
       if (hasDataLayer && typeof gtag === 'function') {
@@ -82,6 +102,17 @@ const shouldRender = analytics.consentMode;
       document.cookie =
         'consent=declined; max-age=31536000; path=/; SameSite=Lax';
       b!.style.display = 'none';
+      // Restore focus to the main content or body
+      if (
+        previouslyFocusedElement &&
+        previouslyFocusedElement instanceof HTMLElement
+      ) {
+        previouslyFocusedElement.focus();
+      } else {
+        // Fallback: focus the main content area or body
+        var main = document.getElementById('main-content');
+        if (main) main.focus();
+      }
     });
   }
   if (document.readyState === 'loading') {
