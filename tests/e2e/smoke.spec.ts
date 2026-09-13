@@ -172,4 +172,16 @@ test.describe('StellarBoat Smoke Tests', () => {
     // There may be some minor warnings, but no critical errors expected
     expect(criticalErrors).toEqual([]);
   });
+
+  test('contact page loads with ContactForm', async ({ page }) => {
+    await page.goto('/contact');
+
+    // Verify page title
+    const heading = page.locator('h1');
+    await expect(heading).toBeVisible();
+
+    // Verify at least one form is present
+    const form = page.locator('form').first();
+    await expect(form).toBeVisible();
+  });
 });

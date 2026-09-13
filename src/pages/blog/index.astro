@@ -18,8 +18,8 @@ if (!siteConfig.features.blog) {
   return new Response('Not Found', { status: 404 });
 }
 
-const posts = await getPublishedPosts();
-const allTags = await getAllTags();
+// Parallelize blog queries for better build performance
+const [posts, allTags] = await Promise.all([getPublishedPosts(), getAllTags()]);
 ---
 
 <Page title="Blog" description="Latest articles and tutorials">

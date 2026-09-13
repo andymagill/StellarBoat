@@ -7,6 +7,9 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type BlogPost = CollectionEntry<'blog'>;
 
+// Reading time calculation: average English speaker reads ~200 words per minute
+const WORDS_PER_MINUTE = 200;
+
 /**
  * Get all published blog posts.
  * Filters out draft posts in production; includes all posts in dev.
@@ -67,12 +70,11 @@ export async function getAllTags(): Promise<string[]> {
 
 /**
  * Calculate reading time estimate in minutes.
- * Uses average reading speed of 200 words per minute.
+ * Uses average reading speed of WORDS_PER_MINUTE.
  */
 export function getReadingTime(body: string): number {
-  const wordsPerMinute = 200;
   const wordCount = body.split(/\s+/).length;
-  return Math.ceil(wordCount / wordsPerMinute);
+  return Math.ceil(wordCount / WORDS_PER_MINUTE);
 }
 
 /**

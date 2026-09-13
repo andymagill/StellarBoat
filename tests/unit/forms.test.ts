@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Mock the config
 vi.mock('../../src/config/forms', () => ({
   forms: {
-    backend: 'web3forms',
+    defaultBackend: 'web3forms',
     web3formsKey: 'global-key-123',
     recaptcha: {
       enabled: false,
@@ -11,7 +11,7 @@ vi.mock('../../src/config/forms', () => ({
   },
 }));
 
-// Mock web3forms adapter - define the submit mock inside the factory
+// Mock all adapters
 vi.mock('../../src/utils/forms/adapters/web3forms', async () => {
   return {
     web3FormsAdapter: {
@@ -20,17 +20,57 @@ vi.mock('../../src/utils/forms/adapters/web3forms', async () => {
   };
 });
 
+vi.mock('../../src/utils/forms/adapters/netlify', async () => {
+  return {
+    netlifyAdapter: {
+      submit: vi.fn(),
+    },
+  };
+});
+
+vi.mock('../../src/utils/forms/adapters/api', async () => {
+  return {
+    apiAdapter: {
+      submit: vi.fn(),
+    },
+  };
+});
+
+vi.mock('../../src/utils/forms/adapters/formspree', async () => {
+  return {
+    formspreeAdapter: {
+      submit: vi.fn(),
+    },
+  };
+});
+
+vi.mock('../../src/utils/forms/adapters/formspark', async () => {
+  return {
+    formsparkAdapter: {
+      submit: vi.fn(),
+    },
+  };
+});
+
 // Now we can import the function we're testing
 import { submitForm } from '../../src/utils/forms';
 import { web3FormsAdapter } from '../../src/utils/forms/adapters/web3forms';
+import { netlifyAdapter } from '../../src/utils/forms/adapters/netlify';
+import { apiAdapter } from '../../src/utils/forms/adapters/api';
+import { formspreeAdapter } from '../../src/utils/forms/adapters/formspree';
+import { formsparkAdapter } from '../../src/utils/forms/adapters/formspark';
 
 describe('forms/index.ts', () => {
   describe('submitForm()', () => {
     beforeEach(() => {
       vi.mocked(web3FormsAdapter.submit).mockReset();
+      vi.mocked(netlifyAdapter.submit).mockReset();
+      vi.mocked(apiAdapter.submit).mockReset();
+      vi.mocked(formspreeAdapter.submit).mockReset();
+      vi.mocked(formsparkAdapter.submit).mockReset();
     });
 
-    it('submits form with global config', async () => {
+    it('submits form with global config using web3forms backend', async () => {
       const data = {
         name: 'John',
         email: 'john@example.com',
@@ -67,17 +107,56 @@ describe('forms/index.ts', () => {
       expect(result).toEqual({ ok: true });
     });
 
-    it('forces backend to web3forms', async () => {
+    it('selects netlify adapter when backend is netlify', async () => {
       const data = { email: 'test@example.com' };
-      vi.mocked(web3FormsAdapter.submit).mockResolvedValue({ ok: true });
+      vi.mocked(netlifyAdapter.submit).mockRejectedValue(
+        new Error('Netlify Forms adapter is not yet implemented.')
+      );
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await submitForm(data, { backend: 'api' as any });
+      const result = await submitForm(data, { backend: 'netlify' });
 
-      // Verify that backend is forced to 'web3forms'
-      const callArgs = vi.mocked(web3FormsAdapter.submit).mock.calls[0][1];
-      expect(callArgs.backend).toBe('web3forms');
-      expect(result).toEqual({ ok: true });
+      expect(vi.mocked(netlifyAdapter.submit)).toHaveBeenCalled();
+      expect(result.ok).toBe(false);
+      expect(result.error).toContain('not yet implemented');
+    });
+
+    it('selects api adapter when backend is api', async () => {
+      const data = { email: 'test@example.com' };
+      vi.mocked(apiAdapter.submit).mockRejectedValue(
+        new Error('Generic API adapter is not yet implemented.')
+      );
+
+      const result = await submitForm(data, { backend: 'api' });
+
+      expect(vi.mocked(apiAdapter.submit)).toHaveBeenCalled();
+      expect(result.ok).toBe(false);
+      expect(result.error).toContain('not yet implemented');
+    });
+
+    it('selects formspree adapter when backend is formspree', async () => {
+      const data = { email: 'test@example.com' };
+      vi.mocked(formspreeAdapter.submit).mockRejectedValue(
+        new Error('Formspree adapter is not yet implemented.')
+      );
+
+      const result = await submitForm(data, { backend: 'formspree' });
+
+      expect(vi.mocked(formspreeAdapter.submit)).toHaveBeenCalled();
+      expect(result.ok).toBe(false);
+      expect(result.error).toContain('not yet implemented');
+    });
+
+    it('selects formspark adapter when backend is formspark', async () => {
+      const data = { email: 'test@example.com' };
+      vi.mocked(formsparkAdapter.submit).mockRejectedValue(
+        new Error('Formspark adapter is not yet implemented.')
+      );
+
+      const result = await submitForm(data, { backend: 'formspark' });
+
+      expect(vi.mocked(formsparkAdapter.submit)).toHaveBeenCalled();
+      expect(result.ok).toBe(false);
+      expect(result.error).toContain('not yet implemented');
     });
 
     it('returns error from adapter on failure', async () => {
@@ -93,6 +172,19 @@ describe('forms/index.ts', () => {
         ok: false,
         error: 'Failed to submit form',
       });
+    });
+
+    it('catches and returns adapter errors', async () => {
+      const data = { email: 'test@example.com' };
+      const errorMessage = 'Adapter threw an exception';
+      vi.mocked(web3FormsAdapter.submit).mockRejectedValue(
+        new Error(errorMessage)
+      );
+
+      const result = await submitForm(data);
+
+      expect(result.ok).toBe(false);
+      expect(result.error).toContain(errorMessage);
     });
 
     it('handles empty overrides', async () => {

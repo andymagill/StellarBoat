@@ -90,9 +90,48 @@ const formAction = 'https://api.web3forms.com/submit';
     console.warn('[ContactForm] Form or submit button not found');
   }
 
+  // Validation helper functions
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function validateForm(formElement) {
+    const nameInput = formElement.querySelector('#name');
+    const emailInput = formElement.querySelector('#email');
+    const messageInput = formElement.querySelector('#message');
+
+    if (!nameInput?.value?.trim()) return 'Name is required.';
+    if (nameInput.value.trim().length < 2)
+      return 'Name must be at least 2 characters.';
+
+    if (!emailInput?.value?.trim()) return 'Email is required.';
+    if (!isValidEmail(emailInput.value))
+      return 'Please enter a valid email address.';
+
+    if (!messageInput?.value?.trim()) return 'Message is required.';
+    if (messageInput.value.trim().length < 10)
+      return 'Message must be at least 10 characters.';
+
+    return null;
+  }
+
   form?.addEventListener('submit', async (e) => {
     // Prevent native form submission
     e.preventDefault();
+
+    // Client-side validation
+    const validationError = validateForm(form);
+    if (validationError) {
+      messagesContainer.innerHTML = '';
+      const errorAlert = document.createElement('div');
+      errorAlert.className =
+        'p-4 bg-error/10 border border-error text-error rounded-md';
+      errorAlert.setAttribute('role', 'alert');
+      errorAlert.textContent = validationError;
+      messagesContainer.appendChild(errorAlert);
+      messagesContainer.classList.remove('hidden');
+      return;
+    }
 
     // Collect form data
     const formData = new FormData(form);

@@ -85,8 +85,55 @@ const formAction = 'https://api.web3forms.com/submit';
   );
   const submitButton = form?.querySelector('button[type="submit"]');
 
+  // Validation helper functions
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function isValidPhone(phone) {
+    // Allow: digits, spaces, dashes, plus sign, parentheses
+    return (
+      /^[\d\s\-+()]{0,20}$/.test(phone) && phone.replace(/\D/g, '').length >= 7
+    );
+  }
+
+  function validateForm(formElement) {
+    const nameInput = formElement.querySelector('#name');
+    const emailInput = formElement.querySelector('#email');
+    const phoneInput = formElement.querySelector('#phone');
+
+    if (!nameInput?.value?.trim()) return 'Full Name is required.';
+    if (nameInput.value.trim().length < 2)
+      return 'Full Name must be at least 2 characters.';
+
+    if (!emailInput?.value?.trim()) return 'Email Address is required.';
+    if (!isValidEmail(emailInput.value))
+      return 'Please enter a valid email address.';
+
+    // Phone is optional, but validate if provided
+    if (phoneInput?.value?.trim() && !isValidPhone(phoneInput.value)) {
+      return 'Please enter a valid phone number.';
+    }
+
+    return null;
+  }
+
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // Client-side validation
+    const validationError = validateForm(form);
+    if (validationError) {
+      messagesContainer.innerHTML = '';
+      const errorAlert = document.createElement('div');
+      errorAlert.className =
+        'p-4 bg-error/10 border border-error text-error rounded-md';
+      errorAlert.setAttribute('role', 'alert');
+      errorAlert.textContent = validationError;
+      messagesContainer.appendChild(errorAlert);
+      messagesContainer.classList.remove('hidden');
+      return;
+    }
 
     const formData = new FormData(form);
     const data = {};

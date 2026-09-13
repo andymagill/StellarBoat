@@ -29,6 +29,6 @@ export interface FormAdapter {
  * Used internally by adapters to determine endpoint, auth keys, etc.
  */
 export interface ResolvedFormConfig extends FormsConfig {
-  /** The resolved backend name (always 'web3forms') */
-  backend: 'web3forms';
+  /** The resolved backend name (one of supported backends: web3forms, netlify, api, formspree, formspark) */
+  backend: 'web3forms' | 'netlify' | 'api' | 'formspree' | 'formspark';
 }
