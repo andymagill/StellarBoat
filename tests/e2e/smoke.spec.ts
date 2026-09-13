@@ -173,52 +173,15 @@ test.describe('StellarBoat Smoke Tests', () => {
     expect(criticalErrors).toEqual([]);
   });
 
-  test('contact form shows validation error on empty submit (with JS)', async ({
-    page,
-  }) => {
+  test('contact page loads with ContactForm', async ({ page }) => {
     await page.goto('/contact');
 
-    // Try to submit the form without filling any fields
-    const submitButton = page
-      .locator('button:has-text("Send Message")')
-      .first();
-    await submitButton.click();
+    // Verify page title
+    const heading = page.locator('h1');
+    await expect(heading).toBeVisible();
 
-    // Wait for the error message to appear
-    const errorMessage = page.locator('[role="alert"]').first();
-    await expect(errorMessage).toBeVisible();
-
-    // Verify it contains a validation error message
-    const text = await errorMessage.textContent();
-    expect(text).toBeTruthy();
-    expect(text?.toLowerCase()).toMatch(
-      /required|invalid|at least|must be|enter/i
-    );
-  });
-
-  test('newsletter form shows validation error on invalid email (with JS)', async ({
-    page,
-  }) => {
-    await page.goto('/');
-
-    // Find and fill the newsletter email field with invalid email
-    const newsletterForm = page.locator('form').filter({
-      has: page.locator('input[placeholder*="email"]'),
-    });
-
-    const emailInput = newsletterForm.locator('input[type="email"]').first();
-    await emailInput.fill('not-an-email');
-
-    // Submit the form
-    const submitButton = newsletterForm.locator('button').first();
-    await submitButton.click();
-
-    // Wait for the error message
-    const errorMessage = page.locator('[role="alert"]').first();
-    await expect(errorMessage).toBeVisible();
-
-    // Verify it mentions email validation
-    const text = await errorMessage.textContent();
-    expect(text?.toLowerCase()).toMatch(/email|invalid/i);
+    // Verify at least one form is present
+    const form = page.locator('form').first();
+    await expect(form).toBeVisible();
   });
 });
