@@ -25,6 +25,7 @@ This document describes the system architecture, data flow, core modules, and ke
 ## System Overview
 
 ### Technology Stack
+
 - **Framework**: Astro 5 (static site generator)
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS v4 with `@theme` block
@@ -35,6 +36,7 @@ This document describes the system architecture, data flow, core modules, and ke
 - **Fonts**: @fontsource (Inter, JetBrains Mono subsets)
 
 ### Key Principles
+
 - **Zero Runtime JavaScript by default** — Pages are pure HTML/CSS until a user interacts (progressive enhancement)
 - **Static Generation** — All routes pre-built at deploy time (`output: 'static'`)
 - **Type Safety** — Strict TypeScript + comprehensive interfaces for all configs
@@ -158,6 +160,7 @@ This document describes the system architecture, data flow, core modules, and ke
 ## Core Concepts
 
 ### 1. Layout Hierarchy
+
 - **Base.astro** → `<html>`, `<head>`, `<body>` skeleton with global utilities (SEO, Analytics)
 - **Page.astro** → Wraps Base with `<Header>` + `<Footer>` + optional WebPage schema
 - **BlogPost.astro** → Extends Page with article-specific metadata (author, date, tags, reading time, nav)
@@ -165,18 +168,23 @@ This document describes the system architecture, data flow, core modules, and ke
 Each layout is **composable**: you only include the features you need.
 
 ### 2. Progressive Enhancement
+
 All forms work as **native HTML POST submissions** (no JavaScript required). When JavaScript loads, they upgrade to **AJAX with client-side validation** for better UX.
 
 This means:
+
 - If JS fails to load, forms still work (server-side error handling by Web3Forms)
 - Users with JavaScript disabled are not blocked
 - Validation errors appear inline (if JS loaded)
 
 ### 3. Zero Runtime JavaScript by Default
+
 Astro ships **zero client-side JavaScript by default**. Only interactive components (like the mobile menu hamburger, form validation, analytics tracking) include `<script>` blocks or use `client:*` directives.
 
 ### 4. Theme System
+
 The Deep Space theme is defined in `src/styles/tokens.css` via a Tailwind `@theme` block:
+
 - **Primary** (cyan): 9-step scale (#00d9ff, #00c9e0, etc.)
 - **Secondary** (purple): 9-step scale (#c000ff, #b000e8, etc.)
 - **Neutral** (dark blues): for backgrounds, borders, text
@@ -203,6 +211,7 @@ export { siteConfig } from './site.example';
 ```
 
 **All configs import from `siteConfig`**:
+
 ```typescript
 import { siteConfig } from '@/config/site';
 
@@ -213,17 +222,18 @@ const { gtmId } = siteConfig.analytics;
 
 ### Configuration Files
 
-| File | Purpose | Edit to Customise |
-|------|---------|-------------------|
-| `src/config/site.ts` (fork) | Site identity, analytics, features | Name, URL, analytics ID, feature flags |
-| `src/config/nav.ts` | Header navigation | Menu items, links, demo flag |
-| `src/config/footer.ts` | Footer content | Copyright year, nav columns, social links |
-| `src/config/analytics.ts` | Google Tag Manager + consent | GTM ID, consent mode, custom attributes |
-| `src/config/forms.ts` | Form backends | Web3Forms key, alternative backends, reCAPTCHA |
+| File                        | Purpose                            | Edit to Customise                              |
+| --------------------------- | ---------------------------------- | ---------------------------------------------- |
+| `src/config/site.ts` (fork) | Site identity, analytics, features | Name, URL, analytics ID, feature flags         |
+| `src/config/nav.ts`         | Header navigation                  | Menu items, links, demo flag                   |
+| `src/config/footer.ts`      | Footer content                     | Copyright year, nav columns, social links      |
+| `src/config/analytics.ts`   | Google Tag Manager + consent       | GTM ID, consent mode, custom attributes        |
+| `src/config/forms.ts`       | Form backends                      | Web3Forms key, alternative backends, reCAPTCHA |
 
 ### Type Definitions
 
 All configs are **strongly typed** in `src/types/config.ts`:
+
 ```typescript
 interface SiteConfig {
   name: string;
@@ -288,7 +298,7 @@ pages compose components (blog/[...slug].astro uses BlogPost layout + components
    Word count ÷ 200 words/minute
 6. **Render Layout**:
    ```astro
-   <BlogPost layout props={{title, author, tags, readingTime, ...}}>
+   <BlogPost layout props={{ title, author, tags, readingTime }}>
      {/* MDX content auto-enhances with Callout, CodeBlock, etc. */}
    </BlogPost>
    ```
@@ -324,19 +334,21 @@ const blog = defineCollection({
 ### Collections
 
 #### **blog** (`src/content/blog/*.mdx`)
+
 - **Format**: MDX (Markdown + JSX)
 - **Frontmatter**: YAML-style metadata (title, description, publishedAt, author, tags, etc.)
 - **Content**: Markdown with embedded JSX components (Callout, CodeBlock, VideoEmbed, etc.)
 - **Usage**: Blog posts with author bios, tags, reading time, RSS feed
 
 **Example**:
+
 ```mdx
 ---
 title: Getting Started with Astro 5
 description: A comprehensive guide to building with Astro.
 publishedAt: 2025-01-15
 author: sarah-chen
-tags: ["astro", "beginner", "tutorial"]
+tags: ['astro', 'beginner', 'tutorial']
 draft: false
 ---
 
@@ -346,11 +358,13 @@ Your markdown content here...
 ```
 
 #### **authors** (`src/content/authors/*.json`)
+
 - **Format**: JSON
 - **Fields**: name, bio, avatar (URL), twitter, website
 - **Usage**: Dynamically loaded by `getAuthor()` utility; rendered in AuthorBio component
 
 **Example**:
+
 ```json
 {
   "name": "Sarah Chen",
@@ -362,6 +376,7 @@ Your markdown content here...
 ```
 
 #### **pages** (`src/content/pages/*.mdx`)
+
 - **Format**: MDX (Markdown + JSX)
 - **Fields**: title, description, noIndex (optional), updatedAt (optional)
 - **Usage**: Static pages like About, Privacy Policy, etc.
@@ -402,37 +417,38 @@ All queries are **static** — they run at build time, not on every page load.
 
 ### UI Primitives (Layout Building Blocks)
 
-| Component | Props | Variants | Usage |
-|-----------|-------|----------|-------|
-| **Button** | href, variant, size, disabled | primary / secondary / ghost; sm / md / lg | CTAs, form submit, navigation |
-| **Card** | variant | default / raised | Content containers with optional shadow |
-| **Badge** | variant | primary / secondary / success / warning / error / info | Labels, tags, status indicators |
-| **Alert** | variant, icon | info / success / warning / error | Contextual messages (role="alert" for errors) |
-| **Icon** | name, class, aria-label, aria-hidden | (Iconify name, e.g., "heroicons:rocket") | Decorative or meaningful icons |
-| **Divider** | (none) | Horizontal line | Visual separation |
+| Component   | Props                                | Variants                                               | Usage                                         |
+| ----------- | ------------------------------------ | ------------------------------------------------------ | --------------------------------------------- |
+| **Button**  | href, variant, size, disabled        | primary / secondary / ghost; sm / md / lg              | CTAs, form submit, navigation                 |
+| **Card**    | variant                              | default / raised                                       | Content containers with optional shadow       |
+| **Badge**   | variant                              | primary / secondary / success / warning / error / info | Labels, tags, status indicators               |
+| **Alert**   | variant, icon                        | info / success / warning / error                       | Contextual messages (role="alert" for errors) |
+| **Icon**    | name, class, aria-label, aria-hidden | (Iconify name, e.g., "heroicons:rocket")               | Decorative or meaningful icons                |
+| **Divider** | (none)                               | Horizontal line                                        | Visual separation                             |
 
 ### Marketing Components (Data-Driven Sections)
 
-| Component | Props | Variants |
-|-----------|-------|----------|
-| **Hero** | headline, subheadline, ctaButtons, variant | centered / split-left / split-right |
-| **Features** | title, items, variant | grid-3 / grid-2 / list |
-| **Testimonials** | items, variant | cards / carousel |
-| **Pricing** | plans, highlightPlanId | Pricing table with featured plan |
-| **FAQ** | items | Accordion with expand/collapse |
-| **CTA** | headline, subtext, buttons | Full-width call-to-action band |
-| **LogoBar** | logos, links | Logo grid with optional hover effects |
+| Component        | Props                                      | Variants                              |
+| ---------------- | ------------------------------------------ | ------------------------------------- |
+| **Hero**         | headline, subheadline, ctaButtons, variant | centered / split-left / split-right   |
+| **Features**     | title, items, variant                      | grid-3 / grid-2 / list                |
+| **Testimonials** | items, variant                             | cards / carousel                      |
+| **Pricing**      | plans, highlightPlanId                     | Pricing table with featured plan      |
+| **FAQ**          | items                                      | Accordion with expand/collapse        |
+| **CTA**          | headline, subtext, buttons                 | Full-width call-to-action band        |
+| **LogoBar**      | logos, links                               | Logo grid with optional hover effects |
 
 ### Form Components
 
-| Component | Props | Purpose |
-|-----------|-------|---------|
-| **FormField** | id, label, type, required, placeholder, error, aria-describedby | Reusable input/textarea/select wrapper |
-| **ContactForm** | submitButtonText, onSuccess, web3formsKey | 3-field contact form (name, email, message) |
-| **LeadCaptureForm** | submitButtonText, onSuccess | 4-field lead form (name, email, company, phone) |
-| **NewsletterForm** | submitButtonText, onSuccess, inline | Email-only newsletter signup |
+| Component           | Props                                                           | Purpose                                         |
+| ------------------- | --------------------------------------------------------------- | ----------------------------------------------- |
+| **FormField**       | id, label, type, required, placeholder, error, aria-describedby | Reusable input/textarea/select wrapper          |
+| **ContactForm**     | submitButtonText, onSuccess, web3formsKey                       | 3-field contact form (name, email, message)     |
+| **LeadCaptureForm** | submitButtonText, onSuccess                                     | 4-field lead form (name, email, company, phone) |
+| **NewsletterForm**  | submitButtonText, onSuccess, inline                             | Email-only newsletter signup                    |
 
 All forms include:
+
 - **HTML5 validation** (required, email, tel attributes)
 - **Client-side JS validation** (min/max length, email regex, phone format)
 - **Error display** via FormField error containers
@@ -440,29 +456,29 @@ All forms include:
 
 ### Blog Components
 
-| Component | Props | Purpose |
-|-----------|-------|---------|
-| **PostCard** | post | Renders post title, date, author, tags, reading time, image |
-| **PostList** | posts, featured | Grid of PostCards with optional featured slot |
-| **AuthorBio** | authorName | Avatar, bio, social links (async) |
-| **TagFilter** | tags, activeTags | Interactive tag pills with active state |
+| Component     | Props            | Purpose                                                     |
+| ------------- | ---------------- | ----------------------------------------------------------- |
+| **PostCard**  | post             | Renders post title, date, author, tags, reading time, image |
+| **PostList**  | posts, featured  | Grid of PostCards with optional featured slot               |
+| **AuthorBio** | authorName       | Avatar, bio, social links (async)                           |
+| **TagFilter** | tags, activeTags | Interactive tag pills with active state                     |
 
 ### MDX Enhancement Components
 
-| Component | Props | Purpose |
-|-----------|-------|---------|
-| **Callout** | type, title | info / warning / tip / danger boxes with icons |
-| **CodeBlock** | filename, code, language | Syntax highlighting + copy button |
-| **ImageCaption** | src, alt, caption | `<figure>` + `<figcaption>` with lazy loading |
-| **VideoEmbed** | src, title | Responsive iframe (aspect-video) for YouTube/Vimeo |
+| Component        | Props                    | Purpose                                            |
+| ---------------- | ------------------------ | -------------------------------------------------- |
+| **Callout**      | type, title              | info / warning / tip / danger boxes with icons     |
+| **CodeBlock**    | filename, code, language | Syntax highlighting + copy button                  |
+| **ImageCaption** | src, alt, caption        | `<figure>` + `<figcaption>` with lazy loading      |
+| **VideoEmbed**   | src, title               | Responsive iframe (aspect-video) for YouTube/Vimeo |
 
 ### SEO Components
 
-| Component | Props | Purpose |
-|-----------|-------|---------|
-| **SEO** | title, description, canonicalUrl, robots, noIndex | Meta tags (title, description, canonical, robots) |
-| **OpenGraph** | title, description, image, type, url, twitterHandle | OG tags + Twitter Card |
-| **JsonLd** | schemas | Inlines JSON-LD structured data (WebPage, BlogPosting, etc.) |
+| Component     | Props                                               | Purpose                                                      |
+| ------------- | --------------------------------------------------- | ------------------------------------------------------------ |
+| **SEO**       | title, description, canonicalUrl, robots, noIndex   | Meta tags (title, description, canonical, robots)            |
+| **OpenGraph** | title, description, image, type, url, twitterHandle | OG tags + Twitter Card                                       |
+| **JsonLd**    | schemas                                             | Inlines JSON-LD structured data (WebPage, BlogPosting, etc.) |
 
 ---
 
@@ -476,7 +492,7 @@ All forms include:
 export function trackEvent(name: string, params?: Record<string, any>) {
   if (typeof window === 'undefined') return; // SSR safe
   if (!Array.isArray(window.dataLayer)) return; // No GTM loaded
-  
+
   window.dataLayer.push({
     event: name,
     ...params,
@@ -485,10 +501,11 @@ export function trackEvent(name: string, params?: Record<string, any>) {
 ```
 
 **Usage**:
+
 ```astro
 <script>
   import { trackEvent } from '@/utils/analytics';
-  
+
   trackEvent('contact_form_submit', {
     form_type: 'contact',
     timestamp: new Date().toISOString(),
@@ -511,8 +528,10 @@ export async function getPublishedPosts(
 ): Promise<BlogPost[]> {
   const allPosts = await getCollection('blog');
   return allPosts
-    .filter(post => includeDrafts || !post.data.draft)
-    .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+    .filter((post) => includeDrafts || !post.data.draft)
+    .sort(
+      (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+    );
 }
 
 // Calculate reading time (200 words/minute)
@@ -544,7 +563,7 @@ export async function submitForm(
 ): Promise<{ ok: boolean; message?: string; error?: string }> {
   const config = resolveFormConfig(overrides);
   const adapter = getAdapter(config.backend);
-  
+
   try {
     return await adapter.submit(data, config);
   } catch (error) {
@@ -557,6 +576,7 @@ export async function submitForm(
 ```
 
 **Flow**:
+
 1. Receive form data from component
 2. Merge with config (Web3Forms key, backend type, etc.)
 3. Select adapter based on `config.backend`
@@ -571,7 +591,10 @@ Each adapter implements the `FormAdapter` interface:
 
 ```typescript
 interface FormAdapter {
-  submit(data: Record<string, any>, config: ResolvedFormConfig): Promise<{
+  submit(
+    data: Record<string, any>,
+    config: ResolvedFormConfig
+  ): Promise<{
     ok: boolean;
     message?: string;
   }>;
@@ -579,19 +602,22 @@ interface FormAdapter {
 ```
 
 #### **web3forms.ts** (Implemented)
+
 - Posts to `https://api.web3forms.com/submit`
 - Requires `web3formsKey` in config
 - Handles: name, email, message, phone, etc.
 - Error handling: network errors return `{ ok: false, error: "..." }`
 
 #### **netlify.ts**, **api.ts**, **formspree.ts**, **formspark.ts** (Stubs)
+
 Each throws `NotImplementedError` with clear documentation:
+
 ```typescript
 export const netlifyAdapter: FormAdapter = {
   async submit() {
     throw new Error(
       'Netlify Forms adapter is not yet implemented. ' +
-      'See docs/forms.md for alternatives.'
+        'See docs/forms.md for alternatives.'
     );
   },
 };
@@ -607,15 +633,16 @@ All optional features are controlled via `siteConfig.features`:
 const { blog, rss, demo, pricing, testimonials } = siteConfig.features;
 ```
 
-| Flag | Controls | Default | Notes |
-|------|----------|---------|-------|
-| `blog` | Blog routes + RSS feed | `true` | Disables `/blog/*` pages entirely (no static paths generated) |
-| `rss` | RSS XML feed | `true` | Requires `blog: true`; independent of Pricing.astro rendering |
-| `demo` | Demo pages (showcase, ui, forms) | `true` | Disables `/demo/*` routes and demo hub |
-| `pricing` | (Unused) | `false` | Defined but not checked in code; Pricing.astro always renders if imported |
-| `testimonials` | (Unused) | `true` | Defined but not checked in code; Testimonials.astro always renders if imported |
+| Flag           | Controls                         | Default | Notes                                                                          |
+| -------------- | -------------------------------- | ------- | ------------------------------------------------------------------------------ |
+| `blog`         | Blog routes + RSS feed           | `true`  | Disables `/blog/*` pages entirely (no static paths generated)                  |
+| `rss`          | RSS XML feed                     | `true`  | Requires `blog: true`; independent of Pricing.astro rendering                  |
+| `demo`         | Demo pages (showcase, ui, forms) | `true`  | Disables `/demo/*` routes and demo hub                                         |
+| `pricing`      | (Unused)                         | `false` | Defined but not checked in code; Pricing.astro always renders if imported      |
+| `testimonials` | (Unused)                         | `true`  | Defined but not checked in code; Testimonials.astro always renders if imported |
 
 **Implementation Example** (Blog Page):
+
 ```astro
 ---
 const { blog } = siteConfig.features;
@@ -637,6 +664,7 @@ If `blog: false`, the `/blog/*` routes return 404 and are not generated at build
 ### Google Tag Manager (GTM) Integration
 
 **Config** (`src/config/analytics.ts`):
+
 ```typescript
 export const analytics = {
   gtmId: 'GTM-XXXXXX', // Set via PUBLIC_GTM_ID environment variable
@@ -667,7 +695,9 @@ export const analytics = {
    ```
 
 ### Consent Mode
+
 GTM respects user consent:
+
 - **Before user consents**: GTM fires but doesn't send analytics data to Google
 - **After user consents**: GTM sends all tracked events to Google Analytics 4
 - **User declines**: No tracking data sent (but page analytics still occur)
@@ -679,6 +709,7 @@ GTM respects user consent:
 ### End-to-End: Contact Form
 
 **HTML** (`src/components/forms/ContactForm.astro`):
+
 ```astro
 <form id="contact-form" method="POST" action="/thank-you">
   <FormField id="name" label="Full Name" type="text" required />
@@ -689,6 +720,7 @@ GTM respects user consent:
 ```
 
 **Progressive Enhancement** (`<script>` in ContactForm.astro`):
+
 1. On page load, attach event listener to form
 2. On submit:
    - Validate client-side (name length, email regex, message length)
@@ -703,12 +735,14 @@ GTM respects user consent:
    - Allow user to retry
 
 **Server-Side** (Web3Forms):
+
 1. Web3Forms receives FormData POST
 2. Validates & sends email to configured address
 3. Returns `{ success: true }` or `{ success: false, message: "..." }`
 
 **Fallback** (No JavaScript):
 If JavaScript fails to load:
+
 1. Form submits as native HTML POST to Web3Forms
 2. Web3Forms redirects to `/thank-you` (or error page)
 3. User sees native browser validation only (HTML5)
@@ -718,7 +752,9 @@ If JavaScript fails to load:
 ## Non-Obvious Edge Cases
 
 ### 1. Missing Author JSON
+
 If a blog post references an author file that doesn't exist:
+
 ```typescript
 const author = await getAuthor('nonexistent-author');
 // Returns: null (doesn't throw)
@@ -727,7 +763,9 @@ const author = await getAuthor('nonexistent-author');
 The `AuthorBio` component gracefully renders nothing.
 
 ### 2. Empty Blog Collection
+
 If no MDX files exist in `src/content/blog/`:
+
 ```typescript
 const posts = await getPublishedPosts();
 // Returns: []
@@ -736,7 +774,9 @@ const posts = await getPublishedPosts();
 The blog index page renders "No posts found" message (handled by PostList component).
 
 ### 3. Tag with No Posts
+
 If a user navigates to `/blog/tag/nonexistent-tag`:
+
 ```typescript
 // /blog/tag/[tag].astro
 const posts = await getPostsByTag('nonexistent-tag');
@@ -744,17 +784,19 @@ const posts = await getPostsByTag('nonexistent-tag');
 ```
 
 ### 4. Draft Posts in Development
+
 Drafts are excluded from production builds but **included in dev**:
+
 ```typescript
-const posts = await getPublishedPosts(
-  includeDrafts = !import.meta.env.PROD
-);
+const posts = await getPublishedPosts((includeDrafts = !import.meta.env.PROD));
 // Dev: [draft1, post1, post2]
 // Prod: [post1, post2]
 ```
 
 ### 5. Missing Web3Forms Key
+
 If `config.forms.web3formsKey` is not set:
+
 ```typescript
 const result = await submitForm(data);
 // Returns: { ok: false, error: "Web3Forms key not configured" }
@@ -763,7 +805,9 @@ const result = await submitForm(data);
 The form component displays the error message to the user.
 
 ### 6. Network Failure on Form Submit
+
 The adapter's try/catch returns:
+
 ```typescript
 catch (error) {
   return { ok: false, error: `Network error: ${error.message}` };
@@ -773,7 +817,9 @@ catch (error) {
 User sees the error message and can retry.
 
 ### 7. SSR Context (No `window`)
+
 Utilities like `trackEvent()` are SSR-safe:
+
 ```typescript
 export function trackEvent(name: string, params?: Record<string, any>) {
   if (typeof window === 'undefined') return; // No error; just skip
@@ -784,21 +830,28 @@ export function trackEvent(name: string, params?: Record<string, any>) {
 Called during static generation, the function safely no-ops.
 
 ### 8. dataLayer Not Defined
+
 If GTM script fails to load:
+
 ```typescript
 if (!Array.isArray(window.dataLayer)) return; // No error; just skip
 ```
 
 ### 9. Public Site URL Not Set
+
 `astro.config.mjs` defaults if `PUBLIC_SITE_URL` is missing:
+
 ```typescript
-const site = import.meta.env.PUBLIC_SITE_URL || 'https://stellarboat.example.com';
+const site =
+  import.meta.env.PUBLIC_SITE_URL || 'https://stellarboat.example.com';
 ```
 
 Sitemap and feeds use this URL.
 
 ### 10. Image Preload Fails
+
 If `src/layouts/Base.astro` preloads a missing hero image:
+
 ```astro
 <link rel="preload" as="image" href="/images/hero-background.png" />
 ```
@@ -810,6 +863,7 @@ The preload fails silently; the image is still fetched when needed (no 404, but 
 ## Setup & Development
 
 ### Prerequisites
+
 - **Node.js** 18+ (LTS recommended)
 - **npm** 9+ (or yarn/pnpm)
 
@@ -879,16 +933,16 @@ npm run format
 
 ### Commands Summary
 
-| Command | Purpose |
-|---------|---------|
-| `npm run dev` | Start dev server (hot reload) |
-| `npm run build` | Build static site for production |
-| `npm run preview` | Preview production build locally |
-| `npm run test:unit` | Run Vitest unit tests |
-| `npm run test:e2e` | Run Playwright e2e tests |
-| `npm run check` | Type check with astro check |
-| `npm run lint` | Check ESLint violations |
-| `npm run format` | Auto-format code with Prettier |
+| Command             | Purpose                          |
+| ------------------- | -------------------------------- |
+| `npm run dev`       | Start dev server (hot reload)    |
+| `npm run build`     | Build static site for production |
+| `npm run preview`   | Preview production build locally |
+| `npm run test:unit` | Run Vitest unit tests            |
+| `npm run test:e2e`  | Run Playwright e2e tests         |
+| `npm run check`     | Type check with astro check      |
+| `npm run lint`      | Check ESLint violations          |
+| `npm run format`    | Auto-format code with Prettier   |
 
 ---
 
@@ -909,6 +963,7 @@ wrangler deploy
 ```
 
 **Alternative Hosts**:
+
 - Vercel: Uncomment Vercel adapter in `astro.config.mjs`
 - Netlify: Uncomment Netlify adapter in `astro.config.mjs`
 - Any static host (GitHub Pages, Netlify, Surge, AWS S3, etc.): Deploy `dist/` directory
@@ -918,14 +973,16 @@ wrangler deploy
 ## FAQ
 
 ### Q: How do I add a new blog post?
+
 **A**: Create a new `.mdx` file in `src/content/blog/`:
+
 ```mdx
 ---
 title: My New Post
 description: A brief description.
 publishedAt: 2025-02-01
 author: sarah-chen
-tags: ["astro", "tutorial"]
+tags: ['astro', 'tutorial']
 draft: false
 ---
 
@@ -933,12 +990,15 @@ draft: false
 ```
 
 Astro will automatically:
+
 - Validate frontmatter against the blog schema
 - Generate a route `/blog/my-new-post`
 - Include it in blog listing + RSS feed
 
 ### Q: How do I disable the blog entirely?
+
 **A**: Edit `src/config/site.ts`:
+
 ```typescript
 features: {
   blog: false, // Disables all /blog/* routes
@@ -946,7 +1006,9 @@ features: {
 ```
 
 ### Q: How do I change the color scheme?
+
 **A**: Edit `src/styles/tokens.css` (the Tailwind `@theme` block):
+
 ```css
 @theme {
   --color-primary-{50..900}: hsl(...);
@@ -956,19 +1018,24 @@ features: {
 ```
 
 ### Q: How do I add a new form backend?
-**A**: 
+
+**A**:
+
 1. Create `src/utils/forms/adapters/my-backend.ts`
 2. Implement the `FormAdapter` interface
 3. Wire it into `src/utils/forms/index.ts` switch statement
 4. Add the backend to `src/config/forms.ts`
 
 ### Q: How do I add custom fonts?
+
 **A**: Currently using @fontsource for Inter and JetBrains Mono. To add another:
+
 ```bash
 npm install @fontsource/your-font
 ```
 
 Then import in `src/layouts/Base.astro`:
+
 ```astro
 import '@fontsource/your-font/400.css';
 ```
