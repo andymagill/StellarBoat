@@ -1,6 +1,5 @@
 import { forms } from '../../config/forms';
 import { web3FormsAdapter } from './adapters/web3forms';
-import { netlifyAdapter } from './adapters/netlify';
 import { apiAdapter } from './adapters/api';
 import { formspreeAdapter } from './adapters/formspree';
 import { formsparkAdapter } from './adapters/formspark';
@@ -36,7 +35,6 @@ import type { FormAdapter } from '../../types/forms';
  *
  * Supported backends:
  * - web3forms (implemented)
- * - netlify (stub — throws NotImplementedError)
  * - api (stub — throws NotImplementedError)
  * - formspree (stub — throws NotImplementedError)
  * - formspark (stub — throws NotImplementedError)
@@ -74,8 +72,6 @@ function getAdapter(backend: string): FormAdapter {
   switch (backend) {
     case 'web3forms':
       return web3FormsAdapter;
-    case 'netlify':
-      return netlifyAdapter;
     case 'api':
       return apiAdapter;
     case 'formspree':
@@ -85,7 +81,7 @@ function getAdapter(backend: string): FormAdapter {
     default:
       throw new Error(
         `Unknown form backend: "${backend}". ` +
-          'Supported backends: web3forms, netlify, api, formspree, formspark. ' +
+          'Supported backends: web3forms, api, formspree, formspark. ' +
           'See ARCHITECTURE.md#form-adapters for more info.'
       );
   }

@@ -16,8 +16,8 @@
 | Analytics | Google Tag Manager (may load GA4 or any tag) | ✅ Implemented |
 | Form backend | Web3Forms (default), per-component override, custom API | ✅ Implemented |
 | Content authoring | MDX/Markdown in-repo (Astro 5 Content Layer API) | ✅ Implemented |
-| Live demo host | Cloudflare Pages (canonical) | ✅ Implemented |
-| Deployment compatibility | Netlify, Vercel (documented, community-maintained) | ✅ Implemented |
+| Live demo host | See DEPLOYMENT.md for canonical platform | ✅ Implemented |
+| Deployment compatibility | Fork-ready; see DEPLOYMENT.md for supported platforms | ✅ Implemented |
 
 ---
 
@@ -52,7 +52,7 @@
 - Be fully navigable by AI coding agents — all architecture decisions are documented and the codebase is structured predictably
 - Include a demo site that serves as living documentation, architecture reference, and test surface
 - Ship with sensible defaults for SEO, accessibility, performance, and analytics so forked projects start from a strong baseline
-- Support multiple deployment targets (Netlify, Vercel, Cloudflare Pages) without requiring changes to core code
+- Support multiple deployment targets without requiring changes to core code (see DEPLOYMENT.md)
 
 ### Non-Goals
 
@@ -96,7 +96,7 @@ StellarBoat is designed to be modified by AI coding agents. This means:
 
 ### Principle 4: Static-First, Edge-Enhanced
 
-StellarBoat is built on `output: 'static'` as the canonical rendering mode. Every page must be buildable as a static HTML file. Edge functions (via Cloudflare Workers / Netlify Edge / Vercel Edge Middleware) are an additive enhancement layer — used for things like geo-based redirects, A/B test cookie assignment, or dynamic OG image generation — but the site must degrade gracefully to the static build if edge functions are unavailable.
+StellarBoat is built on `output: 'static'` as the canonical rendering mode. Every page must be buildable as a static HTML file. Edge functions are an additive enhancement layer — used for things like geo-based redirects, A/B test cookie assignment, or dynamic OG image generation — but the site must degrade gracefully to the static build if edge functions are unavailable. See DEPLOYMENT.md for platform-specific edge runtime details.
 
 This means:
 - No page route requires an adapter to build successfully
@@ -124,12 +124,12 @@ Core components target WCAG 2.1 AA. Lighthouse scores of 95+ across all categori
 | RSS | `@astrojs/rss` | Official integration |
 | Analytics | **Google Tag Manager** | Single script load; GA4/pixels/etc. configured in GTM dashboard, not in code |
 | Forms | Web3Forms (default) + per-component backend override | See Section 10 |
-| Edge runtime | Cloudflare Workers (canonical); Netlify/Vercel Edge compatible | See §15 |
+| Edge runtime | See DEPLOYMENT.md for platform options | See §15 |
 | Linting | ESLint + Prettier + `eslint-plugin-astro` | Consistency for contributors and agents |
 | Testing | Playwright (e2e) + Vitest (unit) | Tests run in CI against the demo site |
-| CI/CD | GitHub Actions (`ci.yml` only) + Cloudflare GitHub App | CI for pre-flight checks; Cloudflare App for deploy/preview — no workflow overlap |
+| CI/CD | GitHub Actions (`ci.yml` only) + platform GitHub App | CI for pre-flight checks; platform app for deploy/preview — no workflow overlap |
 
-**Rendering mode:** `output: 'static'` — **locked decision**. The entire site builds to flat HTML/CSS/JS files. Edge functions are deployed alongside static output using the platform's native mechanism (Cloudflare Workers, Netlify Edge Functions, Vercel Edge Middleware) and are optional enhancements — the site must function fully without them. SSR/hybrid output is explicitly out of scope for core StellarBoat.
+**Rendering mode:** `output: 'static'` — **locked decision**. The entire site builds to flat HTML/CSS/JS files. Edge functions are deployed alongside static output using the platform's native mechanism and are optional enhancements — the site must function fully without them. SSR/hybrid output is explicitly out of scope for core StellarBoat. See DEPLOYMENT.md for specific platform instructions.
 
 **Astro 5 note:** The Content Layer API changes how collections are *defined*, not how they are *queried*. `getCollection()` and `getEntry()` are unchanged. What changes is that `defineCollection()` now requires a `loader` property — the `glob()` loader replaces the implicit file-system scanning from Astro 4. This means CMS adapters can be added as alternative loaders without changing any component props or page queries. Astro 4's collection definitions (without `loader`) are not forward-compatible; this project requires Astro 5.
 
@@ -262,7 +262,7 @@ stellarboat/
 ├── TASKS.md
 ├── CONTRIBUTING.md
 ├── CHANGELOG.md
-└── DEPLOYMENT.md               # one-time Cloudflare GitHub App setup + Netlify/Vercel guide
+└── DEPLOYMENT.md               # one-time Cloudflare GitHub App setup + Vercel guide
 ```
 
 > **Fork configuration pattern:** Edit `src/config/site.example.ts` directly (recommended for simple forks), or copy it to `src/config/site.local.ts`, include it in `.gitignore`, and update `src/config/site.ts` to import from `site.local.ts` instead. All values in `site.example.ts` are safe to commit — API keys and secrets belong in `.env.local`.
@@ -706,7 +706,7 @@ The following are configured entirely in the GTM dashboard — StellarBoat has n
 - **Email notifications built-in** — submissions arrive in your inbox immediately
 - **Swap-friendly** — the adapter pattern means changing `forms.defaultBackend` in config migrates all forms to a new provider
 
-**Post-v1: Additional adapters (Netlify, Formspree, Formspark, custom API) are welcome community contributions.** The adapter interface is simple and well-documented (see §10 "Modularity Contract" below).
+**Post-v1: Additional adapters (Formspree, Formspark, custom API) are welcome community contributions.** The adapter interface is simple and well-documented (see §10 "Modularity Contract" below).
 
 ### Form Components
 
@@ -747,7 +747,7 @@ export const forms: FormsConfig = {
 };
 ```
 
-**Post-v1 community contributions:** Adapters for Netlify Forms, Formspree, Formspark, and custom API endpoints are welcome additions. See"Modularity Contract" below for the adapter interface.
+**Post-v1 community contributions:** Adapters for Formspree, Formspark, and custom API endpoints are welcome additions. See "Modularity Contract" below for the adapter interface.
 
 ### Modularity Contract
 
@@ -919,11 +919,9 @@ The `src/demo/` directory (with `DESIGN.md` and edge worker examples) is separat
 
 ### Deployment Model
 
-**All deployment and preview publishing is handled by the Cloudflare Pages GitHub App** — no deploy workflow file is needed or used. The GitHub App is configured in the Cloudflare dashboard, monitors the connected repository, and triggers builds on push to `main` (production) and on every PR branch (preview). This is identical to how Netlify and Vercel GitHub integrations work.
+**Deployment and preview publishing are handled by the deployment platform's GitHub App** — no deploy workflow file is needed or used. The GitHub App is configured in the platform dashboard, monitors the connected repository, and triggers builds on push to `main` (production) and on every PR branch (preview). See DEPLOYMENT.md for platform-specific setup.
 
-The only GitHub Actions workflow in the core repo is `ci.yml`, which runs pre-flight quality checks on every pull request. Its job is to catch problems fast and cheaply — before Cloudflare's build picks them up. CI and deployment are fully independent: CI failing does not block Cloudflare's build, but a branch protection rule on `main` can enforce that CI passes before merging.
-
-**Netlify and Vercel** are supported for forks via the same dashboard-connect GitHub App model. No workflow files are needed on those platforms either.
+The only GitHub Actions workflow in the core repo is `ci.yml`, which runs pre-flight quality checks on every pull request. Its job is to catch problems fast and cheaply — before the deployment platform's build picks them up. CI and deployment are fully independent: CI failing does not block the platform build, but a branch protection rule on `main` can enforce that CI passes before merging.
 
 ```
 .github/workflows/
@@ -937,30 +935,30 @@ Cloudflare dashboard (configured once):
 
 ### Astro Config — Adapter Setup
 
-The default `astro.config.mjs` ships with the Cloudflare adapter active (since that's where the demo runs) and Netlify/Vercel adapters commented out with instructions:
+The default `astro.config.mjs` ships with the adapter for the canonical demo platform active and alternative adapters commented out with instructions. See DEPLOYMENT.md for specific platform setup and adapter selection.
 
 ```javascript
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
-import cloudflare from '@astrojs/cloudflare';
-// import netlify from '@astrojs/netlify';
+// Uncomment the appropriate adapter for your platform (see DEPLOYMENT.md):
+// import cloudflare from '@astrojs/cloudflare';
 // import vercel from '@astrojs/vercel/static';
 
 export default defineConfig({
   output: 'static',
-  adapter: cloudflare(),   // swap to netlify() or vercel() for those platforms
+  adapter: cloudflare(),   // swap adapter based on target platform
   site: import.meta.env.PUBLIC_SITE_URL,
 });
 ```
 
 ### Platform Configuration Files
 
-All three config files are committed to the root. They don't conflict — each platform only reads its own file.
+Platform-specific configuration files are committed to the root. Each platform only reads its own file. Refer to DEPLOYMENT.md for details.
 
 ```
-wrangler.toml         # Cloudflare Pages: project name, build config, KV/D1 bindings
-netlify.toml          # Netlify: build command, publish dir, redirect rules, headers
-vercel.json           # Vercel: framework preset, headers, redirect rules
+Platform config files (see DEPLOYMENT.md for your target):
+  - Canonical demo platform config
+  - Alternative platform configs
 ```
 
 ### Environment Variables
@@ -999,7 +997,7 @@ Lighthouse thresholds (hard fail):
 
 **Branch protection:** Set `main` to require `ci.yml` passing before merge. Cloudflare's build then runs automatically once the PR lands — it's the authoritative deploy, not a duplicate of CI.
 
-**No deploy step in `ci.yml`.** Wrangler, CF API tokens, and deploy logic have no place here. If a developer wants to test a Pages build locally they can run `npx wrangler pages dev dist/`.
+**No deploy step in `ci.yml`.** Platform-specific CLI tools and deploy logic have no place here. See DEPLOYMENT.md for local testing instructions.
 
 ### Rendering Architecture at Deploy Time
 
@@ -1013,15 +1011,7 @@ The static build is always complete and functional on its own. Workers are an op
 
 ### Platform Feature Reference
 
-| Feature | Cloudflare Pages | Netlify | Vercel |
-|---|---|---|---|
-| Static hosting | ✅ | ✅ | ✅ |
-| Edge runtime | Workers (V8 isolates) | Edge Functions (Deno) | Edge Middleware |
-| Native forms | ❌ | ✅ Netlify Forms | ❌ |
-| Free bandwidth | Unlimited | 100 GB/mo | 100 GB/mo |
-| Deploy trigger | GitHub App (dashboard) | GitHub App (dashboard) | GitHub App (dashboard) |
-| Preview deploys | ✅ automatic per PR | ✅ automatic per PR | ✅ automatic per PR |
-| Live demo hosted here | ✅ | ❌ | ❌ |
+See DEPLOYMENT.md for a detailed comparison of supported deployment platforms, including static hosting, edge runtime, deployment triggers, preview functionality, and feature parity.
 
 ### Edge Function Use Cases (Optional)
 

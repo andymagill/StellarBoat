@@ -4,10 +4,8 @@ import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 import tailwindPlugin from '@tailwindcss/vite';
 
-// Uncomment to use Netlify instead of Cloudflare:
-// import netlify from '@astrojs/netlify';
-
-// Uncomment to use Vercel instead of Cloudflare:
+// Uncomment the appropriate adapter for your deployment platform.
+// See DEPLOYMENT.md for setup instructions.
 // import vercel from '@astrojs/vercel';
 
 export default defineConfig({

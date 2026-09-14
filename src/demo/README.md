@@ -31,7 +31,7 @@ Visit `http://localhost:4321` in your browser. The demo pages are immediately vi
   - Accessibility standards (WCAG 2.1 AA)
   - Dark mode strategy (`@media prefers-color-scheme`)
 
-- **`edge/`** — Example edge middleware for Cloudflare Pages:
+- **`edge/`** — Example edge middleware (platform-specific examples):
   - `resend-worker.ts` — Reference Cloudflare Worker for serverless email via Resend
   - Additional examples for redirects, OG image generation, A/B testing (documented in DESIGN.md)
   - These are optional enhancements; the site works fully without edge functions
@@ -143,7 +143,7 @@ Before deleting the demo, ensure all tests pass. After deletion, remove the corr
 5. ✅ Delete demo content files and disable `features.demo: false`
 6. ✅ Run `npm run build` and verify the production build succeeds
 7. ✅ Run `npm run test` to ensure all tests pass
-8. ✅ Deploy via `DEPLOYMENT.md` to Cloudflare Pages (or Netlify/Vercel)
+8. ✅ Deploy via `DEPLOYMENT.md` to Cloudflare Pages (or Vercel)
 
 ---
 

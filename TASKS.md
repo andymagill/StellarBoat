@@ -25,7 +25,7 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 > Get a valid, buildable repo committed before writing any real code.
 
 - [ ] `[ci]` Initialize repo from `npm create astro@latest` — select **Astro 5.x**, TypeScript strict mode, no framework
-- [ ] `[ci]` Set `output: 'static'` and Cloudflare adapter active in `astro.config.mjs`; Netlify and Vercel adapters commented out with swap instructions (SPEC §15)
+- [ ] `[ci]` Set `output: 'static'` and Cloudflare adapter active in `astro.config.mjs`; Vercel adapter commented out with swap instructions (SPEC §15)
 - [ ] `[ci]` Install **Tailwind CSS v4** (`@tailwindcss/vite`) — note: v4 uses the Vite plugin, not `@astrojs/tailwind`
 - [ ] `[ci]` Install `eslint-plugin-astro`, `prettier-plugin-astro`; commit `.eslintrc.cjs` and `.prettierrc`
 - [ ] `[ci]` Install `@astrojs/sitemap`, `@astrojs/rss`, `astro-icon`
@@ -113,7 +113,6 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 - [x] `[core]` Create `src/types/forms.ts` — export `ResolvedFormConfig` and `FormAdapter` interface; `FormsConfig` remains in `src/types/config.ts` (SPEC §10)
 - [x] `[core]` Create `src/components/forms/FormField.astro` — accessible field wrapper: `<label>`, `<input>`/`<textarea>`/`<select>`, error message container with `role="alert"` and `aria-live="polite"` (SPEC §10)
 - [x] `[core]` Create `src/utils/forms/adapters/web3forms.ts` — implements `FormAdapter`; POST to Web3Forms API; return `{ ok, error }` (SPEC §10)
-- [x] `[core]` Create `src/utils/forms/adapters/netlify.ts` — adds hidden fields; POST to `/?no-cache=1`; logs build warning if not on Netlify (SPEC §10)
 - [x] `[core]` Create `src/utils/forms/adapters/api.ts` — POST to `config.actionUrl`; return `{ ok, error }` (SPEC §10)
 - [x] `[core]` Create community adapter stubs: `formspree.ts`, `formspark.ts` — marked community-maintained in JSDoc
 - [x] `[core]` Create `src/utils/forms/index.ts` — `submitForm(data, overrides?)` dispatcher; merges global config with `overrides`; selects and calls correct adapter (SPEC §10)

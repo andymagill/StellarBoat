@@ -30,7 +30,7 @@ This document describes the system architecture, data flow, core modules, and ke
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS v4 with `@theme` block
 - **Content**: Astro Content Collections (MDX + JSON)
-- **Deployment**: Cloudflare Workers (configured; alternatives available)
+- **Deployment**: See DEPLOYMENT.md for supported platforms (configured; alternatives available)
 - **Testing**: Vitest (unit) + Playwright (e2e)
 - **Icons**: Iconify (Heroicons via astro-icon)
 - **Fonts**: @fontsource (Inter, JetBrains Mono subsets)
@@ -93,7 +93,6 @@ This document describes the system architecture, data flow, core modules, and ke
 │  │ ├─ index.ts: submitForm() → resolves config + adapter   │   │
 │  │ └─ adapters/                                            │   │
 │  │    ├─ web3forms.ts (implemented)                        │   │
-│  │    ├─ netlify.ts (stub)                                 │   │
 │  │    ├─ api.ts (stub)                                     │   │
 │  │    ├─ formspree.ts (stub)                               │   │
 │  │    └─ formspark.ts (stub)                               │   │
@@ -608,20 +607,9 @@ interface FormAdapter {
 - Handles: name, email, message, phone, etc.
 - Error handling: network errors return `{ ok: false, error: "..." }`
 
-#### **netlify.ts**, **api.ts**, **formspree.ts**, **formspark.ts** (Stubs)
+#### **api.ts**, **formspree.ts**, **formspark.ts** (Stubs)
 
 Each throws `NotImplementedError` with clear documentation:
-
-```typescript
-export const netlifyAdapter: FormAdapter = {
-  async submit() {
-    throw new Error(
-      'Netlify Forms adapter is not yet implemented. ' +
-        'See docs/forms.md for alternatives.'
-    );
-  },
-};
-```
 
 ---
 

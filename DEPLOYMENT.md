@@ -1,6 +1,6 @@
 # StellarBoat Deployment Guide
 
-This document covers deployment for both the canonical StellarBoat demo (Cloudflare Pages) and community forks (Netlify, Vercel, or custom hosts).
+This document covers deployment for both the canonical StellarBoat demo (Cloudflare Pages) and community forks (Vercel or custom hosts).
 
 ---
 
@@ -64,40 +64,6 @@ To prevent merging pull requests that fail CI checks:
 7. Click "Create"
 
 Now, any PR that fails lint, type-check, build, tests, or Lighthouse will be blocked from merging.
-
----
-
-## Forks — Netlify
-
-If you choose to deploy to **Netlify** instead:
-
-### Initial Setup
-
-1. **Sign in to Netlify** — https://app.netlify.com
-2. **New site from Git** → Select GitHub → Select your repo
-3. **Build settings**
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-4. **Environment variables** — Add any `PUBLIC_*` or private keys via Netlify dashboard
-5. **Deploy** — Netlify automatically deploys on push to main
-
-### Using netlify.toml (Optional)
-
-If you need fine-grained control, create `netlify.toml` in the repo root:
-
-```toml
-[build]
-command = "npm run build"
-publish = "dist"
-
-[build.environment]
-NODE_VERSION = "20"
-
-[[redirects]]
-from = "/api/*"
-to = "/.netlify/functions/:splat"
-status = 200
-```
 
 ---
 

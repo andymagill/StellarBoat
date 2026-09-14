@@ -127,7 +127,7 @@ export interface FormsConfig {
   /**
    * Default form backend.
    */
-  defaultBackend: 'web3forms' | 'api' | 'formspree' | 'formspark' | 'netlify';
+  defaultBackend: 'web3forms' | 'api' | 'formspree' | 'formspark';
 
   /** Web3Forms access key (required for form submissions) */
   web3formsKey?: string;

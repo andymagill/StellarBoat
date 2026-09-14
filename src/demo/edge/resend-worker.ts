@@ -1,8 +1,9 @@
 /**
- * Cloudflare Worker: Form Submission Handler with Resend Email
+ * Example Edge Function: Form Submission Handler with Resend Email
  *
- * This is a reference implementation showing how to use the 'api' backend in StellarBoat forms.
- * Deploy this as a Cloudflare Worker and configure forms to POST to its URL.
+ * This is a Cloudflare Worker reference implementation showing how to use the 'api'
+ * backend in StellarBoat forms. Users on other platforms should adapt this pattern
+ * for their platform's edge/serverless runtime.
  *
  * @see https://developers.cloudflare.com/workers/
  * @see https://resend.com/
