@@ -43,3 +43,4 @@ coverage/
 # Local development
 .wrangler/
 .windows/
+.dev.vars

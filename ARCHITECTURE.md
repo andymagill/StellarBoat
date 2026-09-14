@@ -936,25 +936,21 @@ npm run format
 
 ## Deployment
 
-The site is configured for **Cloudflare Workers** (in `astro.config.mjs`). To deploy:
+The canonical demo is deployed to **Cloudflare Workers with Static Assets**, configured via `wrangler.jsonc` in the repo root (`assets.directory: "./dist"`). The site itself is a plain static build — `output: 'static'` in `astro.config.mjs`, no adapter — so `wrangler.jsonc` is assets-only today; there's no Worker script to run until an SSR route is added (see DEPLOYMENT.md's "Adding Your First API Route" section).
+
+Deployment is dashboard-driven, not CLI-driven: the repo is connected to Cloudflare's "Workers Builds" Git integration, which builds and deploys automatically on every push to `main`, with preview URLs per PR — the same low-effort flow Cloudflare Pages provided. See DEPLOYMENT.md for setup steps.
+
+For occasional local sanity checks (not required day to day):
 
 ```bash
-# Install Wrangler (Cloudflare CLI)
-npm install -g wrangler
-
-# Authenticate
-wrangler auth login
-
-# Deploy
 npm run build
-wrangler deploy
+npx wrangler dev
 ```
 
 **Alternative Hosts**:
 
-- Vercel: Uncomment Vercel adapter in `astro.config.mjs`
-- Netlify: Uncomment Netlify adapter in `astro.config.mjs`
-- Any static host (GitHub Pages, Netlify, Surge, AWS S3, etc.): Deploy `dist/` directory
+- Vercel: Uncomment the Vercel adapter in `astro.config.mjs` — also deploys via dashboard Git integration, see DEPLOYMENT.md
+- Any static host (GitHub Pages, Surge, AWS S3, etc.): Deploy the `dist/` directory
 
 ---
 

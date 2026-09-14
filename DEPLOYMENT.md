@@ -1,46 +1,63 @@
 # StellarBoat Deployment Guide
 
-This document covers deployment for both the canonical StellarBoat demo (Cloudflare Pages) and community forks (Vercel or custom hosts).
+This document covers deployment for both the canonical StellarBoat demo (Cloudflare Workers with Static Assets) and community forks (Vercel or custom hosts).
 
 ---
 
-## Canonical Demo — Cloudflare Pages
+## Canonical Demo — Cloudflare Workers (Static Assets)
 
-The official StellarBoat demo is deployed to **Cloudflare Pages**. This is the reference deployment.
+The official StellarBoat demo is deployed to **Cloudflare Workers**, using Workers' native static assets support (the modern replacement for Cloudflare Pages). A `wrangler.jsonc` file in the repo root tells Cloudflare's build system to serve `dist/` as static assets — everything else is handled by Cloudflare's dashboard Git integration, the same low-effort flow Pages used to provide.
 
 ### Initial Setup (One Time)
 
 1. **Sign in to Cloudflare Dashboard** — https://dash.cloudflare.com
-2. **Navigate to Pages** — Left sidebar → "Pages"
+2. **Navigate to Workers & Pages** — Left sidebar → "Workers & Pages" → "Create" → "Workers" → "Import a repository" (this is "Workers Builds," the Git-integration successor to Pages)
 3. **Connect Git**
-   - Click "Connect a Git account"
    - Authorize GitHub
    - Grant access to your repository
 4. **Create a project**
-   - Name: `stellarboat` (or your project name)
    - Repository: select your StellarBoat fork
    - Production branch: `main`
-   - Framework preset: `Astro`
+   - Cloudflare reads `wrangler.jsonc` from the repo to know the build output is static assets in `./dist` — no manual build-output configuration needed
 5. **Build settings**
    - Build command: `npm run build`
-   - Build output directory: `dist`
-   - Root directory: `/`
    - Leave all other settings as auto-detected
 6. **Environment variables** (if using secrets)
    - Add `PUBLIC_GTM_ID`, `PUBLIC_SITE_URL`, etc. as needed
    - See `.env.example` for all variables
-7. **Deploy** — Save settings; Cloudflare Pages automatically builds and deploys
+7. **Deploy** — Save settings; Cloudflare builds and deploys automatically from here on
 
 ### Deployments
 
-- **Production:** every push to `main` deploys to your main Pages URL
+- **Production:** every push to `main` deploys to your main Workers URL
 - **Previews:** every PR creates an automatic preview deployment (URL shown in PR)
-- **No CI/build files needed** — Cloudflare Pages handles Git integration directly
+- **No local CLI deploy step needed** — Cloudflare's dashboard Git integration handles build and deploy directly, same as Pages did
+
+### Adding Your First API Route (SSR)
+
+Today the site is fully static (`output: 'static'` in `astro.config.mjs`, no adapter) — `wrangler.jsonc` is configured as assets-only. When you add a server-rendered route (e.g. a contact/newsletter form submission endpoint under `src/pages/api/`):
+
+1. Mark the route `export const prerender = false;`
+2. Install and wire the adapter in `astro.config.mjs`:
+   ```js
+   import cloudflare from '@astrojs/cloudflare';
+   // ...
+   export default defineConfig({
+     // ...
+     adapter: cloudflare(),
+   });
+   ```
+   (`@astrojs/cloudflare` is already listed in `devDependencies`.)
+3. Add a `main` entry to `wrangler.jsonc` pointing at the generated Worker:
+   ```jsonc
+   "main": "./dist/_worker.js/index.js"
+   ```
+4. Push — Cloudflare's dashboard build picks up the new config automatically.
 
 ### Custom Domain (Optional)
 
-1. Go to your Pages project settings
-2. **Custom domains** → Add your domain
+1. Go to your Worker's settings
+2. **Domains & Routes** → Add your domain
 3. Follow Cloudflare's DNS setup instructions
 
 ### Branch Protection (Recommended)
@@ -80,7 +97,7 @@ If you choose to deploy to **Vercel** instead:
    - Build command: `npm run build`
    - Output directory: `dist`
 5. **Environment variables** — Add via Vercel project settings
-6. **Deploy** — Vercel automatically deploys on push to production branch
+6. **Deploy** — Vercel automatically deploys on push to production branch, with preview URLs per PR — same dashboard-driven flow as the Cloudflare setup above
 
 ### Using vercel.json (Optional)
 
@@ -120,6 +137,13 @@ npm run lint
 npm run check
 ```
 
+For an occasional sanity check of the exact Workers static-assets config (not required day to day — the dashboard's PR preview URL covers this):
+
+```bash
+npm run build
+npx wrangler dev
+```
+
 ---
 
 ## Environment Variables
@@ -141,10 +165,9 @@ All environment variables are documented in `.env.example`. Here's a quick refer
 
 ## Preview Deployments
 
-All platforms support automatic preview deployments on pull requests:
+Both platforms support automatic preview deployments on pull requests:
 
-- **Cloudflare Pages** — Creates a preview URL automatically
-- **Netlify** — Creates preview deploy URL
+- **Cloudflare Workers** — Creates a preview URL automatically via Workers Builds
 - **Vercel** — Creates preview URL
 
 No additional configuration needed — push a PR and the platform's GitHub App automatically builds and deploys.
@@ -161,6 +184,7 @@ Check:
 2. All required environment variables are set in platform dashboard
 3. Node version is 20+ (check platform's Node version setting)
 4. No Git LFS files (StellarBoat doesn't use any, but custom additions might)
+5. `wrangler.jsonc` is present and valid (Cloudflare only) — validate locally with `npx wrangler deploy --dry-run`
 
 ### Preview Deployment Missing
 
@@ -168,12 +192,11 @@ Ensure:
 
 1. GitHub App is authorized to access your repo
 2. Branch protection rules don't block CI status checks
-3. Check platform logs (Cloudflare → Pages → Deployments, Netlify → Deploys, Vercel → Deployments)
+3. Check platform logs (Cloudflare → Workers & Pages → your project → Deployments, Vercel → Deployments)
 
 ### Domain Configuration Issues
 
-- **Cloudflare:** Use Cloudflare's DNS or point CNAME to Cloudflare Pages
-- **Netlify:** Follow DNS setup in Netlify dashboard
+- **Cloudflare:** Use Cloudflare's DNS or point CNAME to your Worker's default domain
 - **Vercel:** Use Vercel's nameservers or point CNAME to `cname.vercel.com`
 
 ---
