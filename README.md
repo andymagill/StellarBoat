@@ -29,7 +29,7 @@ StellarBoat is an open-source Astro.js template for marketing mini-sites — pro
 - **Astro 5 + MDX blog** — Content Layer API, full-featured blog with tags, authors, reading time, RSS, and draft post support
 - **SEO out of the box** — meta tags, Open Graph, Twitter cards, canonical URLs, sitemap, robots.txt, JSON-LD structured data — automatic per page type
 - **Google Tag Manager** — one GTM snippet load; GA4, pixels, and other tags configured in GTM dashboard, not in code; optional consent mode v2 hooks
-- **Web3Forms by default** — free, host-agnostic form submissions with email notifications; per-component backend override allows different services on the same site (e.g., Web3Forms for contact, custom API for newsletter)
+- **Forms that own their data** — submissions are gated by a Cloudflare Worker (honeypot, rate limiting, Turnstile) and written straight to a Google Sheet via Apps Script, with an email notification; no third-party form service in the loop
 - **Tailwind CSS v4 + design tokens** — CSS-native `@theme` replaces `tailwind.config.js`; rebrand by editing one CSS file
 - **Multi-platform ready** — Deploy to your choice of platform (see DEPLOYMENT.md); canonical demo hosted on a modern static hosting platform; Vercel fork setup documented
 - **Fully typed** — TypeScript strict mode throughout, including content collection Zod schemas

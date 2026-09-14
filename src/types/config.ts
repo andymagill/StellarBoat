@@ -43,7 +43,7 @@ export interface SiteConfig {
   /** Analytics configuration (GTM, consent mode, etc.) */
   analytics: AnalyticsConfig;
 
-  /** Forms configuration (default backend, Web3Forms key, etc.) */
+  /** Forms configuration (submission endpoint, Turnstile site key) */
   forms: FormsConfig;
 
   /** Feature flags for conditional rendering */
@@ -121,31 +121,28 @@ export interface AnalyticsConfig {
 }
 
 /**
- * Forms configuration (default backend, Web3Forms, etc.)
+ * Forms configuration.
+ *
+ * All forms POST as JSON to a single Worker endpoint, which gates the
+ * submission (honeypot, rate limit, Turnstile) and forwards it to a
+ * Google Apps Script web app that appends a row to a Google Sheet.
+ * See ARCHITECTURE.md#form-submission-flow.
  */
 export interface FormsConfig {
   /**
-   * Default form backend.
+   * The form submission endpoint. Defaults to '/api/forms', handled by
+   * the Worker in `worker/`. Can be overridden per-component (e.g. to
+   * point at a different deployment) via the `endpoint` prop.
    */
-  defaultBackend: 'web3forms' | 'api' | 'formspree' | 'formspark';
+  endpoint: string;
 
-  /** Web3Forms access key (required for form submissions) */
-  web3formsKey?: string;
-
-  /** Custom API endpoint URL for the 'api' backend */
-  apiUrl?: string;
-
-  /** Formspree form endpoint URL for the 'formspree' backend */
-  formspreeEndpoint?: string;
-
-  /** Formspark project ID for the 'formspark' backend */
-  formsparProjectId?: string;
-
-  /** Enable reCAPTCHA v3 integration (optional) */
-  recaptchaEnabled?: boolean;
-
-  /** reCAPTCHA v3 site key (required if recaptchaEnabled is true) */
-  recaptchaSiteKey?: string;
+  /**
+   * Cloudflare Turnstile site key (public). Required for the client to
+   * render the verification widget; submissions without a valid token
+   * are rejected by the Worker.
+   * Get from: https://dash.cloudflare.com → Turnstile → your site.
+   */
+  turnstileSiteKey?: string;
 }
 
 /**

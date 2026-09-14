@@ -5,7 +5,10 @@ import Button from '../components/ui/Button.astro';
 /**
  * Thank You page — fork-editable confirmation
  *
- * This page is displayed after a form submission.
+ * Reached after a native (no-JS) form POST succeeds — the Worker 303s
+ * here. JS-enabled visitors never navigate away; they see an inline
+ * success message on the form itself (see src/utils/forms/client.ts).
+ *
  * Customize the headline, message, and redirect URL to match your brand.
  *
  * To add an auto-redirect with countdown, see the commented example below.
@@ -13,9 +16,9 @@ import Button from '../components/ui/Button.astro';
 
 // ── Configuration (edit these for your fork) ──────────────────────────────
 const headline = 'Thank You!';
-const message = '(Demo) This is not a real submission — no message was sent.';
+const message = 'Your submission has been received.';
 const subMessage =
-  'To discuss StellarBoat or request features, please create an issue on GitHub.';
+  'On the canonical demo, submissions are stored in a Google Sheet — this is a real pipeline, not a mock. To discuss StellarBoat or request features, please create an issue on GitHub.';
 // To enable redirect, set redirectDelay to milliseconds (e.g. 10000 for 10 seconds)
 // and add the script section at the bottom of the page template
 // ──────────────────────────────────────────────────────────────────────────

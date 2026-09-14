@@ -61,7 +61,7 @@ This document describes the system architecture, data flow, core modules, and ke
 │  │ src/config/site.ts (fork-editable)                       │   │
 │  │ ├─ Site metadata (name, url, author, contactEmail)      │   │
 │  │ ├─ Analytics config (GTM ID, consent mode)              │   │
-│  │ ├─ Forms config (Web3Forms key, backends)              │   │
+│  │ ├─ Forms config (submission endpoint, Turnstile key)   │   │
 │  │ └─ Feature flags (blog, rss, demo, pricing, ...)        │   │
 │  └──────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
@@ -90,12 +90,18 @@ This document describes the system architecture, data flow, core modules, and ke
 │  │ └─ getPrevNextPosts() (navigation)                      │   │
 │  │                                                          │   │
 │  │ src/utils/forms/                                        │   │
-│  │ ├─ index.ts: submitForm() → resolves config + adapter   │   │
-│  │ └─ adapters/                                            │   │
-│  │    ├─ web3forms.ts (implemented)                        │   │
-│  │    ├─ api.ts (stub)                                     │   │
-│  │    ├─ formspree.ts (stub)                               │   │
-│  │    └─ formspark.ts (stub)                               │   │
+│  │ ├─ schema.ts: validateSubmission() (shared w/ Worker)   │   │
+│  │ └─ client.ts: enhanceForms() → JSON POST + Turnstile    │   │
+│  └──────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│              FORM WORKER (worker/) — /api/* only                │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ index.ts → forms/handler.ts                              │   │
+│  │ honeypot → rate limit → schema → Turnstile → sign         │   │
+│  │      ↓                                                    │   │
+│  │ Google Apps Script (apps-script/) → Sheet + email         │   │
 │  └──────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
@@ -168,13 +174,13 @@ Each layout is **composable**: you only include the features you need.
 
 ### 2. Progressive Enhancement
 
-All forms work as **native HTML POST submissions** (no JavaScript required). When JavaScript loads, they upgrade to **AJAX with client-side validation** for better UX.
+Every form renders a **native HTML `<form>`** that POSTs to the same Worker endpoint with or without JavaScript. When JavaScript loads, it upgrades to **JSON submission with client-side validation** for better UX.
 
 This means:
 
-- If JS fails to load, forms still work (server-side error handling by Web3Forms)
-- Users with JavaScript disabled are not blocked
-- Validation errors appear inline (if JS loaded)
+- Spam verification (Cloudflare Turnstile) requires JavaScript to run, so a no-JS submission is redirected to a "please enable JavaScript" page rather than silently accepted or silently dropped — see "Non-Obvious Edge Cases" below
+- Users with JavaScript disabled see a clear, actionable message instead of a form that appears to work but never delivers
+- Validation errors appear inline (when JS loaded); the Worker re-validates every field server-side regardless
 
 ### 3. Zero Runtime JavaScript by Default
 
@@ -221,13 +227,13 @@ const { gtmId } = siteConfig.analytics;
 
 ### Configuration Files
 
-| File                        | Purpose                            | Edit to Customise                              |
-| --------------------------- | ---------------------------------- | ---------------------------------------------- |
-| `src/config/site.ts` (fork) | Site identity, analytics, features | Name, URL, analytics ID, feature flags         |
-| `src/config/nav.ts`         | Header navigation                  | Menu items, links, demo flag                   |
-| `src/config/footer.ts`      | Footer content                     | Copyright year, nav columns, social links      |
-| `src/config/analytics.ts`   | Google Tag Manager + consent       | GTM ID, consent mode, custom attributes        |
-| `src/config/forms.ts`       | Form backends                      | Web3Forms key, alternative backends, reCAPTCHA |
+| File                        | Purpose                            | Edit to Customise                         |
+| --------------------------- | ---------------------------------- | ----------------------------------------- |
+| `src/config/site.ts` (fork) | Site identity, analytics, features | Name, URL, analytics ID, feature flags    |
+| `src/config/nav.ts`         | Header navigation                  | Menu items, links, demo flag              |
+| `src/config/footer.ts`      | Footer content                     | Copyright year, nav columns, social links |
+| `src/config/analytics.ts`   | Google Tag Manager + consent       | GTM ID, consent mode, custom attributes   |
+| `src/config/forms.ts`       | Form submission                    | Endpoint URL, Turnstile site key          |
 
 ### Type Definitions
 
@@ -262,7 +268,7 @@ TypeScript will error at build time if you provide an invalid config value.
 ```
 siteConfig (src/config/site.ts)
     ↓
-used by utilities (src/utils/analytics.ts, src/utils/blog.ts, src/utils/forms/index.ts)
+used by utilities (src/utils/analytics.ts, src/utils/blog.ts, src/utils/forms/client.ts)
     ↓
 components receive data (postCard.astro receives post + author)
     ↓
@@ -439,19 +445,20 @@ All queries are **static** — they run at build time, not on every page load.
 
 ### Form Components
 
-| Component           | Props                                                           | Purpose                                         |
-| ------------------- | --------------------------------------------------------------- | ----------------------------------------------- |
-| **FormField**       | id, label, type, required, placeholder, error, aria-describedby | Reusable input/textarea/select wrapper          |
-| **ContactForm**     | submitButtonText, onSuccess, web3formsKey                       | 3-field contact form (name, email, message)     |
-| **LeadCaptureForm** | submitButtonText, onSuccess                                     | 4-field lead form (name, email, company, phone) |
-| **NewsletterForm**  | submitButtonText, onSuccess, inline                             | Email-only newsletter signup                    |
+| Component           | Props                                                                            | Purpose                                                      |
+| ------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| **FormField**       | id, name?, label, type, required?, placeholder?, autocomplete?, pattern?, class? | Reusable input/textarea/select wrapper (name defaults to id) |
+| **ContactForm**     | endpoint?, turnstileSiteKey?, idPrefix?, class?                                  | 3-field contact form (name, email, message)                  |
+| **LeadCaptureForm** | endpoint?, turnstileSiteKey?, idPrefix?, class?                                  | 4-field lead form (name, email, company, phone)              |
+| **NewsletterForm**  | endpoint?, turnstileSiteKey?, idPrefix?, class?, compact?                        | Email-only newsletter signup                                 |
 
-All forms include:
+All three form components share `src/utils/forms/client.ts`'s `enhanceForms()` for their behavior:
 
-- **HTML5 validation** (required, email, tel attributes)
-- **Client-side JS validation** (min/max length, email regex, phone format)
-- **Error display** via FormField error containers
-- **Progressive enhancement** (forms work without JS)
+- **HTML5 validation** (required, email, tel attributes) plus a shared TypeScript schema (`src/utils/forms/schema.ts`) re-run before every submit
+- **Cloudflare Turnstile** verification, lazy-loaded on first interaction with the form
+- **Error display** via FormField error containers, matched to the server's field-level errors
+- **Progressive enhancement** — the native `<form>` POSTs to the same endpoint either way; see "Progressive Enhancement" above for the no-JS behavior
+- **`idPrefix`** (defaults to the form type, e.g. `"contact"`) keeps field ids collision-free when two form instances share a page
 
 ### Blog Components
 
@@ -551,65 +558,42 @@ export async function getAuthor(authorId: string): Promise<Author | null> {
 }
 ```
 
-### Form Submission Utility
+### Form Submission Schema (shared client/Worker)
 
-**File**: `src/utils/forms/index.ts`
-
-```typescript
-export async function submitForm(
-  data: Record<string, any>,
-  overrides?: Partial<ResolvedFormConfig>
-): Promise<{ ok: boolean; message?: string; error?: string }> {
-  const config = resolveFormConfig(overrides);
-  const adapter = getAdapter(config.backend);
-
-  try {
-    return await adapter.submit(data, config);
-  } catch (error) {
-    return {
-      ok: false,
-      error: `Form submission failed: ${error.message}`,
-    };
-  }
-}
-```
-
-**Flow**:
-
-1. Receive form data from component
-2. Merge with config (Web3Forms key, backend type, etc.)
-3. Select adapter based on `config.backend`
-4. Call adapter's `submit()` method
-5. Return `{ ok: boolean, message?, error? }`
-
-### Form Adapters
-
-**File**: `src/utils/forms/adapters/`
-
-Each adapter implements the `FormAdapter` interface:
+**File**: `src/utils/forms/schema.ts` — pure TypeScript, no Astro/DOM/Worker imports, so it can be imported by both the browser bundle and `worker/forms/handler.ts` without either side pulling in the other's runtime.
 
 ```typescript
-interface FormAdapter {
-  submit(
-    data: Record<string, any>,
-    config: ResolvedFormConfig
-  ): Promise<{
-    ok: boolean;
-    message?: string;
-  }>;
-}
+export type FormType = 'contact' | 'lead' | 'newsletter';
+
+export function validateSubmission(
+  formType: unknown,
+  raw: Record<string, unknown>
+):
+  | { ok: true; data: Record<string, string> }
+  | { ok: false; fieldErrors: Record<string, string> };
 ```
 
-#### **web3forms.ts** (Implemented)
+`FORM_SCHEMAS` defines required/optional fields, min/max lengths, and per-kind checks (email, phone) for each `FormType`. Client and Worker call the exact same function, so they can never disagree about what's valid.
 
-- Posts to `https://api.web3forms.com/submit`
-- Requires `web3formsKey` in config
-- Handles: name, email, message, phone, etc.
-- Error handling: network errors return `{ ok: false, error: "..." }`
+### Client Enhancement
 
-#### **api.ts**, **formspree.ts**, **formspark.ts** (Stubs)
+**File**: `src/utils/forms/client.ts`
 
-Each throws `NotImplementedError` with clear documentation:
+```typescript
+export function enhanceForms(): void;
+```
+
+Each form component's own `<script>` block calls `enhanceForms()`, which finds every `form[data-stellar-form]` on the page and wires each independently (a `data-stellar-enhanced` flag makes repeated calls — one per form component instance on a page like `/forms` — a no-op past the first). Per form, it:
+
+1. Lazily loads the Cloudflare Turnstile script on first `focusin` (keeps it off the critical render path)
+2. Runs `validateSubmission()` on submit; renders field-level errors inline if it fails
+3. Requests a Turnstile token (`execution: 'execute'`, triggered manually — not auto-run)
+4. POSTs `{ formType, fields, turnstileToken }` as JSON to the form's `action` with `Accept: application/json`
+5. Renders the JSON response's success/error state into the form's `[data-form-messages]` container
+
+### Form Worker
+
+**File**: `worker/forms/handler.ts` — see the "Form Submission Flow" section below for the full request pipeline and status codes. In brief: honeypot → rate limit → `validateSubmission()` (same schema as above) → Turnstile `siteverify` → HMAC-sign an envelope → POST it to the Apps Script web app in `apps-script/`.
 
 ---
 
@@ -696,44 +680,71 @@ GTM respects user consent:
 
 ### End-to-End: Contact Form
 
-**HTML** (`src/components/forms/ContactForm.astro`):
+**HTML** (`src/components/forms/ContactForm.astro`), simplified:
 
 ```astro
-<form id="contact-form" method="POST" action="/thank-you">
-  <FormField id="name" label="Full Name" type="text" required />
-  <FormField id="email" label="Email" type="email" required />
-  <FormField id="message" label="Message" type="textarea" required />
+<form
+  method="POST"
+  action="/api/forms"
+  data-stellar-form="contact"
+  data-turnstile-sitekey={turnstileSiteKey}
+>
+  <input type="hidden" name="formType" value="contact" />
+  <div aria-hidden="true"><input name="website" tabindex="-1" /></div>
+  <!-- honeypot -->
+  <FormField id="contact-name" name="name" label="Name" required />
+  <FormField
+    id="contact-email"
+    name="email"
+    label="Email"
+    type="email"
+    required
+  />
+  <FormField
+    id="contact-message"
+    name="message"
+    label="Message"
+    type="textarea"
+    required
+  />
+  <div data-turnstile></div>
+  <div data-form-messages class="hidden"></div>
   <button type="submit">Send</button>
 </form>
+<script>
+  import { enhanceForms } from '../../utils/forms/client';
+  enhanceForms();
+</script>
 ```
 
-**Progressive Enhancement** (`<script>` in ContactForm.astro`):
+**Client** (`enhanceForms()` in `src/utils/forms/client.ts`):
 
-1. On page load, attach event listener to form
-2. On submit:
-   - Validate client-side (name length, email regex, message length)
-   - If invalid: show error message inline; prevent submission
-   - If valid: call `submitForm()` via AJAX
-3. On success:
-   - Show success message
-   - Clear form fields
-   - Redirect to `/thank-you` (optional)
-4. On error:
-   - Display error message from API response
-   - Allow user to retry
+1. On submit, prevent the native POST and run `validateSubmission()` (`src/utils/forms/schema.ts`)
+   - Invalid → render field errors inline via each `FormField`'s error container; stop
+2. Request a Turnstile token (loading the widget on first interaction if it hasn't already); on timeout, show an error and stop
+3. `fetch('/api/forms', { method: 'POST', headers: { Accept: 'application/json' }, body: JSON.stringify({ formType, fields, turnstileToken }) })`
+4. On `{ ok: true }` — show a success message, reset the form
+5. On `{ ok: false, fieldErrors }` — render the server's field errors (same rendering path as step 1)
+6. On `{ ok: false, error }` — show the error message; the form remains filled in so the user can retry
 
-**Server-Side** (Web3Forms):
+**Worker** (`worker/forms/handler.ts`):
 
-1. Web3Forms receives FormData POST
-2. Validates & sends email to configured address
-3. Returns `{ success: true }` or `{ success: false, message: "..." }`
+1. Honeypot filled → respond success immediately, nothing written anywhere
+2. `env.FORM_RATE_LIMITER.limit({ key: 'forms:' + ip })` → 429 if exceeded
+3. `validateSubmission()` — the same function and schema the client just ran, re-checked server-side → 400 + `fieldErrors` if invalid
+4. No Turnstile token → 400 (JSON) / 303 to `/form-error?reason=js` (native POST)
+5. `verifyTurnstileToken()` — calls Cloudflare's `siteverify`, checks the response hostname matches the request → 403 if either fails
+6. `buildEnvelope()` + `submitToAppsScript()` — HMAC-signs `{ formType, fields, meta }` and POSTs it to the Apps Script `/exec` URL → 502 if the script is unreachable or reports failure
+7. Success → `{ ok: true, id }` (JSON) or a `303` to `/thank-you?form=<type>` (native POST)
 
-**Fallback** (No JavaScript):
-If JavaScript fails to load:
+**Apps Script** (`apps-script/Code.gs`, `doPost`):
 
-1. Form submits as native HTML POST to Web3Forms
-2. Web3Forms redirects to `/thank-you` (or error page)
-3. User sees native browser validation only (HTML5)
+1. Recomputes the HMAC signature and rejects a mismatch or an envelope older than 300s
+2. Checks `CacheService` for the envelope's `id` — a duplicate (retried) request returns `{ ok: true, duplicate: true }` without writing a second row
+3. Appends a row to the sheet tab for that form type (created with a header row on first use), guarded by `LockService`
+4. Emails `NOTIFY_EMAIL` (best-effort — a failure here never fails the submission, since the row is already written)
+
+**No-JS fallback:** the same `<form>` still POSTs natively to `/api/forms` with no JavaScript at all. Since Turnstile can't produce a token without a browser running it, this always hits step 4 above and redirects to `/form-error?reason=js`, which explains that JavaScript is required rather than pretending the submission worked.
 
 ---
 
@@ -781,28 +792,21 @@ const posts = await getPublishedPosts((includeDrafts = !import.meta.env.PROD));
 // Prod: [post1, post2]
 ```
 
-### 5. Missing Web3Forms Key
+### 5. Turnstile Hostname Mismatch
 
-If `config.forms.web3formsKey` is not set:
-
-```typescript
-const result = await submitForm(data);
-// Returns: { ok: false, error: "Web3Forms key not configured" }
-```
-
-The form component displays the error message to the user.
-
-### 6. Network Failure on Form Submit
-
-The adapter's try/catch returns:
+`verifyTurnstileToken()` (`worker/forms/turnstile.ts`) checks `siteverify`'s response `hostname` against the request's own hostname, rejecting with 403 if they differ:
 
 ```typescript
-catch (error) {
-  return { ok: false, error: `Network error: ${error.message}` };
+if (result.hostname && result.hostname !== expectedHostname) {
+  return { ok: false, errorCode: 'hostname-mismatch' };
 }
 ```
 
-User sees the error message and can retry.
+This is a deliberate defense (a token solved on one site can't be replayed against another), but it means **every hostname the form is actually served from** — production, `*.workers.dev`, PR preview URLs — must be added to the Turnstile widget's allowed hostnames in the Cloudflare dashboard, or genuine submissions from that hostname will be rejected. See DEPLOYMENT.md#form-worker.
+
+### 6. Apps Script Unreachable or Misconfigured
+
+`submitToAppsScript()` (`worker/forms/apps-script.ts`) catches both a network failure and a non-2xx / malformed-JSON response, returning `{ ok: false, error }` either way — the Worker turns this into a `502` (JSON) or a `303` to `/form-error?reason=server` (native POST). The submission is **not** written anywhere in this case; the user sees an error and can retry. Common causes: `APPS_SCRIPT_URL` is wrong, the deployment isn't "Execute as: Me / Access: Anyone", or `APPS_SCRIPT_HMAC_SECRET` doesn't match the script's Script Property (`Code.gs` would then return `{ ok: false, error: 'bad-signature' }` with an HTTP 200 — Apps Script always answers 200, errors live in the body).
 
 ### 7. SSR Context (No `window`)
 
@@ -870,7 +874,11 @@ cp .env.example .env.local
 # Edit .env.local with your config:
 # PUBLIC_SITE_URL=https://your-domain.com
 # PUBLIC_GTM_ID=GTM-XXXXXX
-# PUBLIC_WEB3FORMS_KEY=your-web3forms-key
+# PUBLIC_TURNSTILE_SITE_KEY=your-turnstile-site-key
+
+# Set up Worker secrets for the form endpoint (optional — only needed to
+# test form submission locally; see DEPLOYMENT.md#form-worker)
+cp .dev.vars.example .dev.vars
 ```
 
 ### Development Server
@@ -936,9 +944,9 @@ npm run format
 
 ## Deployment
 
-The canonical demo is deployed to **Cloudflare Workers with Static Assets**, configured via `wrangler.jsonc` in the repo root (`assets.directory: "./dist"`). The site itself is a plain static build — `output: 'static'` in `astro.config.mjs`, no adapter — so `wrangler.jsonc` is assets-only today; there's no Worker script to run until an SSR route is added (see DEPLOYMENT.md's "Adding Your First API Route" section).
+The canonical demo is deployed to **Cloudflare Workers with Static Assets**, configured via `wrangler.jsonc` in the repo root. The site itself is a plain static build — `output: 'static'` in `astro.config.mjs`, no Astro adapter — but `wrangler.jsonc` is no longer assets-only: `main` points at the hand-written `worker/index.ts`, which handles `POST /api/forms` (see "Form Submission Flow" above) and falls through to `env.ASSETS.fetch()` for everything else. `assets.run_worker_first: ["/api/*"]` means only form requests actually invoke the Worker — every static page and asset is served without it running.
 
-Deployment is dashboard-driven, not CLI-driven: the repo is connected to Cloudflare's "Workers Builds" Git integration, which builds and deploys automatically on every push to `main`, with preview URLs per PR — the same low-effort flow Cloudflare Pages provided. See DEPLOYMENT.md for setup steps.
+Deployment is dashboard-driven, not CLI-driven: the repo is connected to Cloudflare's "Workers Builds" Git integration, which builds and deploys automatically on every push to `main`, with preview URLs per PR — the same low-effort flow Cloudflare Pages provided. Worker secrets (`TURNSTILE_SECRET_KEY`, `APPS_SCRIPT_URL`, `APPS_SCRIPT_HMAC_SECRET`) are set separately via `wrangler secret put` or the Dashboard, not through the Git-integration build. See DEPLOYMENT.md#form-worker for setup steps.
 
 For occasional local sanity checks (not required day to day):
 
@@ -947,10 +955,12 @@ npm run build
 npx wrangler dev
 ```
 
+For active local development of the form endpoint, run `npm run dev` and `npm run dev:worker` together — see DEPLOYMENT.md#form-worker.
+
 **Alternative Hosts**:
 
-- Vercel: Uncomment the Vercel adapter in `astro.config.mjs` — also deploys via dashboard Git integration, see DEPLOYMENT.md
-- Any static host (GitHub Pages, Surge, AWS S3, etc.): Deploy the `dist/` directory
+- Vercel: the static site deploys the same way (see DEPLOYMENT.md); the form endpoint needs a Vercel Function ported from `worker/forms/handler.ts` — see DEPLOYMENT.md's "Porting the Form Worker"
+- Any static host (GitHub Pages, Surge, AWS S3, etc.): deploy the `dist/` directory; forms need `/api/forms` reachable some other way, or point `forms.endpoint` elsewhere
 
 ---
 
@@ -1001,14 +1011,12 @@ features: {
 }
 ```
 
-### Q: How do I add a new form backend?
+### Q: How do I send form submissions somewhere other than Google Sheets?
 
-**A**:
+**A**: There's no per-component backend to swap — every form POSTs to one endpoint. Two options:
 
-1. Create `src/utils/forms/adapters/my-backend.ts`
-2. Implement the `FormAdapter` interface
-3. Wire it into `src/utils/forms/index.ts` switch statement
-4. Add the backend to `src/config/forms.ts`
+1. **Change what the Worker forwards to.** Edit `worker/forms/handler.ts` (or add a new module alongside `apps-script.ts`) to call a different destination after the honeypot/rate-limit/Turnstile gates run. This keeps the spam protection and stays a single code path for every form.
+2. **Point at a different endpoint entirely.** Set `forms.endpoint` in `src/config/forms.ts` (or override per-component with the `endpoint` prop) to any URL that accepts `POST { formType, fields, turnstileToken }` and returns `{ ok: boolean, error?, fieldErrors? }`. You lose this repo's Worker-side gating unless your replacement implements its own.
 
 ### Q: How do I add custom fonts?
 

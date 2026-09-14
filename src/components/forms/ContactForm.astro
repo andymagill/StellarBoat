@@ -3,18 +3,20 @@
  * Contact form component.
  *
  * A three-field contact form (name, email, message) with:
- * - Native HTML5 form that works without JavaScript
- * - Progressive enhancement: AJAX submission when JS is available
+ * - Native HTML5 form that works without JavaScript (posts to the same
+ *   Worker endpoint, which redirects to a friendly "enable JavaScript"
+ *   page — Turnstile verification requires a browser to run)
+ * - Progressive enhancement: JSON/AJAX submission when JS is available
  * - Loading, success, and error states with accessible messaging
- * - Backend override support (can switch from Web3Forms to API, etc.)
+ * - Cloudflare Turnstile spam gate, honeypot field, and shared validation
  *
  * @example
  * ```astro
- * <!-- Uses global Web3Forms backend -->
+ * <!-- Uses the global endpoint from src/config/forms.ts -->
  * <ContactForm />
  *
- * <!-- Override to a different backend -->
- * <ContactForm backend="api" apiUrl="https://api.mysite.com/submit" />
+ * <!-- Override to a different Worker deployment -->
+ * <ContactForm endpoint="https://forms.example.com/api/forms" />
  * ```
  */
 
@@ -23,26 +25,52 @@ import FormField from './FormField.astro';
 import Button from '../ui/Button.astro';
 
 export interface Props {
-  /** Web3Forms key override */
-  web3formsKey?: string;
+  /** Submission endpoint override */
+  endpoint?: string;
+
+  /** Turnstile site key override */
+  turnstileSiteKey?: string;
+
+  /** Prefix for field ids, to avoid collisions with other forms on the page */
+  idPrefix?: string;
 
   /** Additional CSS classes */
   class?: string;
 }
 
-const { web3formsKey = forms.web3formsKey, class: className = '' } =
-  Astro.props;
-
-// Form action URL for native HTML POST fallback
-const formAction = 'https://api.web3forms.com/submit';
+const {
+  endpoint = forms.endpoint,
+  turnstileSiteKey = forms.turnstileSiteKey,
+  idPrefix = 'contact',
+  class: className = '',
+} = Astro.props;
 ---
 
-<form method="POST" action={formAction} class={`space-y-6 ${className}`}>
-  {/* Web3Forms access key */}
-  <input type="hidden" name="access_key" value={web3formsKey} />
+<form
+  method="POST"
+  action={endpoint}
+  data-stellar-form="contact"
+  data-id-prefix={idPrefix}
+  data-turnstile-sitekey={turnstileSiteKey}
+  class={`space-y-6 ${className}`}
+>
+  <input type="hidden" name="formType" value="contact" />
+
+  {/* Honeypot — hidden from sighted and keyboard users, bots fill it in */}
+  <div class="absolute -left-[9999px]" aria-hidden="true">
+    <label for={`${idPrefix}-website`}>Website</label>
+    <input
+      type="text"
+      id={`${idPrefix}-website`}
+      name="website"
+      tabindex="-1"
+      autocomplete="off"
+    />
+  </div>
 
   <FormField
-    id="name"
+    id={`${idPrefix}-name`}
+    name="name"
     label="Name"
     type="text"
     required
@@ -50,7 +78,8 @@ const formAction = 'https://api.web3forms.com/submit';
   />
 
   <FormField
-    id="email"
+    id={`${idPrefix}-email`}
+    name="email"
     label="Email"
     type="email"
     required
@@ -59,150 +88,32 @@ const formAction = 'https://api.web3forms.com/submit';
   />
 
   <FormField
-    id="message"
+    id={`${idPrefix}-message`}
+    name="message"
     label="Message"
     type="textarea"
     required
     placeholder="Your message here..."
   />
 
-  {/* Success/error alerts (hidden by default) */}
-  <div id="contact-form-messages" class="hidden"></div>
+  {
+    /* Cloudflare Turnstile renders here once the visitor interacts with the form */
+  }
+  <div data-turnstile></div>
 
-  {/* Submit button - JS will add data attributes for state management */}
+  <noscript>
+    <p class="text-sm text-error">
+      JavaScript is required to submit this form (for spam verification).
+    </p>
+  </noscript>
+
+  {/* Success/error alerts (hidden by default) */}
+  <div data-form-messages class="hidden"></div>
+
   <Button type="submit" variant="primary" size="md">Send Message</Button>
 </form>
 
-<script
-  define:vars={{
-    web3formsKey,
-  }}
->
-  /**
-   * Progressive form enhancement.
-   * When JS is available, intercept submit, use AJAX, show accessible state changes.
-   */
-  const form = document.querySelector('form');
-  const messagesContainer = document.getElementById('contact-form-messages');
-  const submitButton = form?.querySelector('button[type="submit"]');
-
-  if (!form || !submitButton) {
-    console.warn('[ContactForm] Form or submit button not found');
-  }
-
-  // Validation helper functions
-  function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
-  function validateForm(formElement) {
-    const nameInput = formElement.querySelector('#name');
-    const emailInput = formElement.querySelector('#email');
-    const messageInput = formElement.querySelector('#message');
-
-    if (!nameInput?.value?.trim()) return 'Name is required.';
-    if (nameInput.value.trim().length < 2)
-      return 'Name must be at least 2 characters.';
-
-    if (!emailInput?.value?.trim()) return 'Email is required.';
-    if (!isValidEmail(emailInput.value))
-      return 'Please enter a valid email address.';
-
-    if (!messageInput?.value?.trim()) return 'Message is required.';
-    if (messageInput.value.trim().length < 10)
-      return 'Message must be at least 10 characters.';
-
-    return null;
-  }
-
-  form?.addEventListener('submit', async (e) => {
-    // Prevent native form submission
-    e.preventDefault();
-
-    // Client-side validation
-    const validationError = validateForm(form);
-    if (validationError) {
-      messagesContainer.innerHTML = '';
-      const errorAlert = document.createElement('div');
-      errorAlert.className =
-        'p-4 bg-error/10 border border-error text-error rounded-md';
-      errorAlert.setAttribute('role', 'alert');
-      errorAlert.textContent = validationError;
-      messagesContainer.appendChild(errorAlert);
-      messagesContainer.classList.remove('hidden');
-      return;
-    }
-
-    // Collect form data
-    const formData = new FormData(form);
-    const data = {};
-    formData.forEach((value, key) => {
-      // Skip hidden fields specific to backends
-      if (
-        !key.startsWith('_') &&
-        key !== 'access_key' &&
-        key !== 'form-name' &&
-        key !== 'projectId'
-      ) {
-        data[key] = String(value);
-      }
-    });
-
-    // Set loading state
-    submitButton.disabled = true;
-    submitButton.setAttribute('aria-busy', 'true');
-
-    try {
-      // Dynamically import submitForm (client-side only)
-      const { submitForm } = await import('../../utils/forms');
-
-      const result = await submitForm(data, {
-        web3formsKey,
-      });
-
-      // Clear previous messages
-      messagesContainer.innerHTML = '';
-
-      if (result.ok) {
-        // Show success
-        const successAlert = document.createElement('div');
-        successAlert.className =
-          'p-4 bg-success/10 border border-success text-success rounded-md';
-        successAlert.setAttribute('role', 'status');
-        successAlert.textContent = 'Thank you! Your message has been sent.';
-        messagesContainer.appendChild(successAlert);
-        messagesContainer.classList.remove('hidden');
-
-        // Reset form
-        form.reset();
-      } else {
-        // Show error
-        const errorAlert = document.createElement('div');
-        errorAlert.className =
-          'p-4 bg-error/10 border border-error text-error rounded-md';
-        errorAlert.setAttribute('role', 'alert');
-        errorAlert.textContent =
-          result.error || 'Something went wrong. Please try again.';
-        messagesContainer.appendChild(errorAlert);
-        messagesContainer.classList.remove('hidden');
-      }
-    } catch (error) {
-      // Network or other error
-      messagesContainer.innerHTML = '';
-      const errorAlert = document.createElement('div');
-      errorAlert.className =
-        'p-4 bg-error/10 border border-error text-error rounded-md';
-      errorAlert.setAttribute('role', 'alert');
-      errorAlert.textContent =
-        error instanceof Error
-          ? error.message
-          : 'An unexpected error occurred.';
-      messagesContainer.appendChild(errorAlert);
-      messagesContainer.classList.remove('hidden');
-    } finally {
-      // Clear loading state
-      submitButton.disabled = false;
-      submitButton.removeAttribute('aria-busy');
-    }
-  });
+<script>
+  import { enhanceForms } from '../../utils/forms/client';
+  enhanceForms();
 </script>

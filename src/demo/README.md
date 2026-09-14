@@ -31,10 +31,7 @@ Visit `http://localhost:4321` in your browser. The demo pages are immediately vi
   - Accessibility standards (WCAG 2.1 AA)
   - Dark mode strategy (`@media prefers-color-scheme`)
 
-- **`edge/`** — Example edge middleware (platform-specific examples):
-  - `resend-worker.ts` — Reference Cloudflare Worker for serverless email via Resend
-  - Additional examples for redirects, OG image generation, A/B testing (documented in DESIGN.md)
-  - These are optional enhancements; the site works fully without edge functions
+The real form submission Worker lives at `worker/` (not in this directory) and is a core, non-demo piece — see ARCHITECTURE.md#form-submission-flow and DEPLOYMENT.md#form-worker. SPEC.md §15 sketches further Worker route ideas (geo redirects, OG image generation, A/B testing) as extension points; none are shipped code today.
 
 ---
 
@@ -123,7 +120,7 @@ npm run test:e2e
 Playwright tests navigate the demo routes to verify:
 
 - SEO (meta tags, canonical URLs, OG images generated correctly)
-- Form submission (Web3Forms integration works)
+- Form rendering (unique field ids, honeypot present, no console errors — see `tests/e2e/smoke.spec.ts`; actual submission is covered by `worker/forms/handler.test.ts`, not e2e)
 - Navigation and page routing
 - Accessibility (WCAG 2.1 AA compliance via axe)
 - Performance (Lighthouse scores)
@@ -143,7 +140,7 @@ Before deleting the demo, ensure all tests pass. After deletion, remove the corr
 5. ✅ Delete demo content files and disable `features.demo: false`
 6. ✅ Run `npm run build` and verify the production build succeeds
 7. ✅ Run `npm run test` to ensure all tests pass
-8. ✅ Deploy via `DEPLOYMENT.md` to Cloudflare Pages (or Vercel)
+8. ✅ Deploy via `DEPLOYMENT.md` to Cloudflare Workers (or Vercel)
 
 ---
 

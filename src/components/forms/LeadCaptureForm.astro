@@ -5,16 +5,15 @@
  * A four-field lead generation form (name, email, company, phone) with:
  * - Required fields: name, email
  * - Optional fields: company, phone
- * - Same progressive enhancement as ContactForm
- * - Backend override support
+ * - Same progressive enhancement, spam gating, and validation as ContactForm
  *
  * @example
  * ```astro
- * <!-- Uses global Web3Forms backend -->
+ * <!-- Uses the global endpoint from src/config/forms.ts -->
  * <LeadCaptureForm />
  *
- * <!-- Override backend -->
- * <LeadCaptureForm backend="api" apiUrl="https://api.mysite.com/leads" />
+ * <!-- Override to a different Worker deployment -->
+ * <LeadCaptureForm endpoint="https://forms.example.com/api/forms" />
  * ```
  */
 
@@ -23,21 +22,45 @@ import FormField from './FormField.astro';
 import Button from '../ui/Button.astro';
 
 export interface Props {
-  web3formsKey?: string;
+  endpoint?: string;
+  turnstileSiteKey?: string;
+  idPrefix?: string;
   class?: string;
 }
 
-const { web3formsKey = forms.web3formsKey, class: className = '' } =
-  Astro.props;
-
-const formAction = 'https://api.web3forms.com/submit';
+const {
+  endpoint = forms.endpoint,
+  turnstileSiteKey = forms.turnstileSiteKey,
+  idPrefix = 'lead',
+  class: className = '',
+} = Astro.props;
 ---
 
-<form method="POST" action={formAction} class={`space-y-6 ${className}`}>
-  <input type="hidden" name="access_key" value={web3formsKey} />
+<form
+  method="POST"
+  action={endpoint}
+  data-stellar-form="lead"
+  data-id-prefix={idPrefix}
+  data-turnstile-sitekey={turnstileSiteKey}
+  class={`space-y-6 ${className}`}
+>
+  <input type="hidden" name="formType" value="lead" />
+
+  {/* Honeypot — hidden from sighted and keyboard users, bots fill it in */}
+  <div class="absolute -left-[9999px]" aria-hidden="true">
+    <label for={`${idPrefix}-website`}>Website</label>
+    <input
+      type="text"
+      id={`${idPrefix}-website`}
+      name="website"
+      tabindex="-1"
+      autocomplete="off"
+    />
+  </div>
 
   <FormField
-    id="name"
+    id={`${idPrefix}-name`}
+    name="name"
     label="Full Name"
     type="text"
     required
@@ -45,7 +68,8 @@ const formAction = 'https://api.web3forms.com/submit';
   />
 
   <FormField
-    id="email"
+    id={`${idPrefix}-email`}
+    name="email"
     label="Email Address"
     type="email"
     required
@@ -54,7 +78,8 @@ const formAction = 'https://api.web3forms.com/submit';
   />
 
   <FormField
-    id="company"
+    id={`${idPrefix}-company`}
+    name="company"
     label="Company"
     type="text"
     placeholder="Your Company"
@@ -62,138 +87,28 @@ const formAction = 'https://api.web3forms.com/submit';
   />
 
   <FormField
-    id="phone"
+    id={`${idPrefix}-phone`}
+    name="phone"
     label="Phone"
     type="tel"
     placeholder="+1 (555) 000-0000"
     autocomplete="tel"
   />
 
-  <div id="lead-capture-form-messages" class="hidden"></div>
+  <div data-turnstile></div>
+
+  <noscript>
+    <p class="text-sm text-error">
+      JavaScript is required to submit this form (for spam verification).
+    </p>
+  </noscript>
+
+  <div data-form-messages class="hidden"></div>
 
   <Button type="submit" variant="primary" size="md">Get Started</Button>
 </form>
 
-<script
-  define:vars={{
-    web3formsKey,
-  }}
->
-  const form = document.querySelector('form');
-  const messagesContainer = document.getElementById(
-    'lead-capture-form-messages'
-  );
-  const submitButton = form?.querySelector('button[type="submit"]');
-
-  // Validation helper functions
-  function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
-  function isValidPhone(phone) {
-    // Allow: digits, spaces, dashes, plus sign, parentheses
-    return (
-      /^[\d\s\-+()]{0,20}$/.test(phone) && phone.replace(/\D/g, '').length >= 7
-    );
-  }
-
-  function validateForm(formElement) {
-    const nameInput = formElement.querySelector('#name');
-    const emailInput = formElement.querySelector('#email');
-    const phoneInput = formElement.querySelector('#phone');
-
-    if (!nameInput?.value?.trim()) return 'Full Name is required.';
-    if (nameInput.value.trim().length < 2)
-      return 'Full Name must be at least 2 characters.';
-
-    if (!emailInput?.value?.trim()) return 'Email Address is required.';
-    if (!isValidEmail(emailInput.value))
-      return 'Please enter a valid email address.';
-
-    // Phone is optional, but validate if provided
-    if (phoneInput?.value?.trim() && !isValidPhone(phoneInput.value)) {
-      return 'Please enter a valid phone number.';
-    }
-
-    return null;
-  }
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // Client-side validation
-    const validationError = validateForm(form);
-    if (validationError) {
-      messagesContainer.innerHTML = '';
-      const errorAlert = document.createElement('div');
-      errorAlert.className =
-        'p-4 bg-error/10 border border-error text-error rounded-md';
-      errorAlert.setAttribute('role', 'alert');
-      errorAlert.textContent = validationError;
-      messagesContainer.appendChild(errorAlert);
-      messagesContainer.classList.remove('hidden');
-      return;
-    }
-
-    const formData = new FormData(form);
-    const data = {};
-    formData.forEach((value, key) => {
-      if (
-        !key.startsWith('_') &&
-        key !== 'access_key' &&
-        key !== 'form-name' &&
-        key !== 'projectId'
-      ) {
-        data[key] = String(value);
-      }
-    });
-
-    submitButton.disabled = true;
-    submitButton.setAttribute('aria-busy', 'true');
-
-    try {
-      const { submitForm } = await import('../../utils/forms');
-
-      const result = await submitForm(data, {
-        web3formsKey,
-      });
-
-      messagesContainer.innerHTML = '';
-
-      if (result.ok) {
-        const successAlert = document.createElement('div');
-        successAlert.className =
-          'p-4 bg-success/10 border border-success text-success rounded-md';
-        successAlert.setAttribute('role', 'status');
-        successAlert.textContent = "Thank you! We'll be in touch shortly.";
-        messagesContainer.appendChild(successAlert);
-        messagesContainer.classList.remove('hidden');
-        form.reset();
-      } else {
-        const errorAlert = document.createElement('div');
-        errorAlert.className =
-          'p-4 bg-error/10 border border-error text-error rounded-md';
-        errorAlert.setAttribute('role', 'alert');
-        errorAlert.textContent =
-          result.error || 'Something went wrong. Please try again.';
-        messagesContainer.appendChild(errorAlert);
-        messagesContainer.classList.remove('hidden');
-      }
-    } catch (error) {
-      messagesContainer.innerHTML = '';
-      const errorAlert = document.createElement('div');
-      errorAlert.className =
-        'p-4 bg-error/10 border border-error text-error rounded-md';
-      errorAlert.setAttribute('role', 'alert');
-      errorAlert.textContent =
-        error instanceof Error
-          ? error.message
-          : 'An unexpected error occurred.';
-      messagesContainer.appendChild(errorAlert);
-      messagesContainer.classList.remove('hidden');
-    } finally {
-      submitButton.disabled = false;
-      submitButton.removeAttribute('aria-busy');
-    }
-  });
+<script>
+  import { enhanceForms } from '../../utils/forms/client';
+  enhanceForms();
 </script>

@@ -1,0 +1,84 @@
+---
+/**
+ * Form submission error page.
+ *
+ * Displayed when a form submission fails and the browser doesn't support
+ * JSON (i.e., no JavaScript — native form POST). The error reason is
+ * passed as a query parameter (?reason=js|invalid|rate|verify|server).
+ *
+ * This page is noindex because it's a transactional page, not content.
+ */
+
+import Page from '../layouts/Page.astro';
+import Button from '../components/ui/Button.astro';
+
+const reasons: Record<string, { title: string; message: string }> = {
+  js: {
+    title: 'JavaScript Required',
+    message:
+      'This form requires JavaScript to submit (for spam verification). Please enable JavaScript and try again.',
+  },
+  invalid: {
+    title: 'Invalid Submission',
+    message: 'Please check your input and try again.',
+  },
+  rate: {
+    title: 'Too Many Submissions',
+    message:
+      'You have submitted too many times in a short period. Please wait a minute and try again.',
+  },
+  verify: {
+    title: 'Verification Failed',
+    message: 'Spam verification failed. Please refresh the page and try again.',
+  },
+  server: {
+    title: 'Server Error',
+    message:
+      'We encountered an error processing your submission. Please try again in a moment.',
+  },
+};
+
+const reason =
+  (Astro.url.searchParams.get('reason') as keyof typeof reasons) || 'server';
+const { title, message } = reasons[reason] || reasons.server;
+---
+
+<Page title="Submission Error" description="Form submission error" noIndex>
+  <div class="min-h-screen flex items-center justify-center px-6 py-12">
+    <div class="max-w-2xl w-full text-center">
+      {/* Error Icon */}
+      <div class="mb-8 flex justify-center">
+        <div
+          class="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center"
+        >
+          <svg
+            class="w-8 h-8 text-error"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clip-rule="evenodd"></path>
+          </svg>
+        </div>
+      </div>
+
+      {/* Headline */}
+      <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">
+        {title}
+      </h1>
+
+      {/* Message */}
+      <p class="text-lg text-text-muted mb-8">
+        {message}
+      </p>
+
+      {/* Action Buttons */}
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button href="/" variant="primary" size="lg">Back to Home</Button>
+        <Button href="/contact" variant="secondary" size="lg">Try Again</Button>
+      </div>
+    </div>
+  </div>
+</Page>

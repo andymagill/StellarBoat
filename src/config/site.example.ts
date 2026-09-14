@@ -117,55 +117,27 @@ export const siteConfig: SiteConfig = {
   // ============================================================================
 
   /**
-   * Forms configuration (default backend, Web3Forms key, etc.)
+   * Forms configuration.
+   *
+   * Forms POST as JSON to a Cloudflare Worker endpoint (`worker/`), which
+   * gates submissions (honeypot, rate limit, Turnstile) and forwards
+   * valid ones to a Google Apps Script web app that appends a row to a
+   * Google Sheet and emails a notification. See DEPLOYMENT.md#form-worker.
    */
   forms: {
     /**
-     * Default form backend.
-     * Options:
-     * - 'web3forms' — free, no backend required (sign up at https://web3forms.com)
-     * - 'api' — custom API endpoint (set apiUrl below)
-     * - 'formspree' — community adapter (set formspreeEndpoint below)
-     * - 'formspark' — community adapter (set formsparProjectId below)
-     *
-     * Individual form components can override this with a `backend` prop.
+     * Form submission endpoint. '/api/forms' is handled by the Worker
+     * in this repo; individual form components can override this with
+     * an `endpoint` prop.
      */
-    defaultBackend: 'web3forms',
+    endpoint: '/api/forms',
 
     /**
-     * Web3Forms access key (required if defaultBackend is 'web3forms').
-     * Get from: https://web3forms.com → dashboard → API key
-     * [OPTIONAL if using different backend]
+     * Cloudflare Turnstile site key (public — safe to commit).
+     * Get from: https://dash.cloudflare.com → Turnstile → your site.
+     * [OPTIONAL in local dev — falls back to Turnstile's test sitekey]
      */
-    web3formsKey: undefined, // Change to your API key
-
-    /**
-     * API endpoint for 'api' backend.
-     * [OPTIONAL if using different backend]
-     * Example: 'https://your-api.com/forms/submit'
-     */
-    apiUrl: undefined,
-
-    /**
-     * Formspree endpoint URL for 'formspree' backend.
-     * [OPTIONAL if using different backend]
-     * Get from: https://formspree.io → new form
-     */
-    formspreeEndpoint: undefined,
-
-    /**
-     * Formspark project ID for 'formspark' backend.
-     * [OPTIONAL if using different backend]
-     * Get from: https://formspark.io → project settings
-     */
-    formsparProjectId: undefined,
-
-    /**
-     * [OPTIONAL] Enable reCAPTCHA spam protection on forms
-     * Requires reCAPTCHA v3 site key from https://www.google.com/recaptcha/admin
-     */
-    recaptchaEnabled: false,
-    recaptchaSiteKey: undefined,
+    turnstileSiteKey: undefined, // Change to your Turnstile site key
   },
 
   // ============================================================================

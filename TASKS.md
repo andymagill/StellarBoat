@@ -226,7 +226,31 @@ Tasks are grouped into **milestones**. Within each milestone, order matters — 
 - [x] `[docs]` Add inline JSDoc to all config types in `src/types/config.ts` — every field documented
 - [x] `[docs]` Add a `CHANGELOG.md` with v1.0.0 entry
 - [x] Review: walk through the fork setup steps in `SPEC.md §16` on a clean clone; document any gaps found
-- [ ] Tag `v1.0.0`
+- [x] Tag `v1.0.0`
+
+---
+
+## Milestone 13 — Replace Web3Forms with a Worker-Gated Google Sheets Pipeline
+
+> Removes the third-party Web3Forms dependency. Forms now POST to a Cloudflare Worker
+> (`worker/`), which gates submissions (honeypot, rate limit, Turnstile) and forwards
+> valid ones to a Google Apps Script web app (`apps-script/`) that appends a row to a
+> Sheet and emails a notification. Also fixes two latent bugs from Milestone 5: forms
+> sharing DOM ids on the same page, and an inline-script `import()` that never resolved.
+> See SPEC.md §10, ARCHITECTURE.md#form-submission-flow, CHANGELOG.md `[Unreleased]`.
+
+- [x] `[core]` Create `src/utils/forms/schema.ts` — `FormType`, `FORM_SCHEMAS`, `validateSubmission()`; no Astro/DOM/Workers imports so it's shared by client and Worker (SPEC §10)
+- [x] `[core]` Create `src/utils/forms/client.ts` — `enhanceForms()`: per-form wiring via `data-stellar-form`, lazy Turnstile load, JSON submission, field/summary error rendering
+- [x] `[core]` Rewrite `ContactForm.astro`, `LeadCaptureForm.astro`, `NewsletterForm.astro` — `idPrefix`-scoped field ids, honeypot field, Turnstile container, `<noscript>` notice, bundled `<script>` (no more `define:vars` + broken dynamic `import()`)
+- [x] `[config]` Rewrite `FormsConfig` (`src/types/config.ts`) to `{ endpoint, turnstileSiteKey }`; update `src/config/forms.ts` and `site.example.ts`
+- [x] `[core]` Create `worker/index.ts` + `worker/forms/{handler,turnstile,sign,apps-script,respond,types}.ts` — the full gate pipeline; separate `worker/tsconfig.json` (Workers runtime types, not DOM) and `worker/vitest.config.ts`
+- [x] `[ci]` Wire `worker/index.ts` as `main` in `wrangler.jsonc`; add `FORM_RATE_LIMITER` rate-limit binding and `run_worker_first: ["/api/*"]`; add `npm run dev:worker`, `check:worker`, `test:worker`, `cf-typegen` scripts; wire into `ci.yml`
+- [x] `[core]` Create `apps-script/Code.gs` + `appsscript.json` — HMAC verification, replay window + dedup, per-form-type sheet tabs, formula-injection guard, `MailApp` notification, `selfTest()`
+- [x] `[core]` Create `src/pages/form-error.astro` — no-JS submissions redirect here with a reason code instead of silently failing
+- [x] `[core]` Update `thank-you.astro`, `contact.astro`, `forms.astro` — drop "no message sent" demo copy (the canonical demo now writes real rows), rewrite usage examples around `endpoint`
+- [x] `[core]` Delete `src/utils/forms/index.ts`, `src/utils/forms/adapters/`, `src/types/forms.ts`, `src/demo/edge/resend-worker.ts` — collapsed into the single Worker endpoint
+- [x] `[docs]` Update `SPEC.md` §10 and §15, `ARCHITECTURE.md`, `DEPLOYMENT.md` (new "Form Worker" section), `CONTRIBUTING.md`, `README.md`, `CHANGELOG.md`, `about.mdx`, `src/demo/README.md`
+- [x] Verify: `npm run lint`, `check`, `check:worker`, `test:unit`, `test:worker`, `build`, and `npx wrangler deploy --dry-run` all pass; manual `wrangler dev` pass through honeypot, rate limit, missing-token, invalid-hostname, and full-success paths
 
 ---
 

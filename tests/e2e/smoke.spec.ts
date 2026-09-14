@@ -184,4 +184,92 @@ test.describe('StellarBoat Smoke Tests', () => {
     const form = page.locator('form').first();
     await expect(form).toBeVisible();
   });
+
+  test('contact page renders two forms with unique data-stellar-form and no duplicate field ids', async ({
+    page,
+  }) => {
+    await page.goto('/contact');
+
+    const forms = page.locator('form[data-stellar-form]');
+    await expect(forms).toHaveCount(2);
+
+    const formTypes = await forms.evaluateAll((els) =>
+      els.map((el) => el.getAttribute('data-stellar-form'))
+    );
+    expect(new Set(formTypes).size).toBe(formTypes.length);
+
+    // No two elements on the page should share an id — this is exactly the
+    // bug fixed by scoping field ids with idPrefix (see CHANGELOG).
+    const allIds = await page
+      .locator('[id]')
+      .evaluateAll((els) => els.map((el) => el.id));
+    expect(new Set(allIds).size).toBe(allIds.length);
+  });
+
+  test('forms page renders three forms with unique data-stellar-form and no duplicate field ids', async ({
+    page,
+  }) => {
+    await page.goto('/forms');
+
+    const forms = page.locator('form[data-stellar-form]');
+    await expect(forms).toHaveCount(3);
+
+    const formTypes = await forms.evaluateAll((els) =>
+      els.map((el) => el.getAttribute('data-stellar-form'))
+    );
+    expect(new Set(['contact', 'lead', 'newsletter'])).toEqual(
+      new Set(formTypes)
+    );
+
+    const allIds = await page
+      .locator('[id]')
+      .evaluateAll((els) => els.map((el) => el.id));
+    expect(new Set(allIds).size).toBe(allIds.length);
+  });
+
+  test('each form has a hidden honeypot field', async ({ page }) => {
+    await page.goto('/forms');
+
+    const honeypots = page.locator('input[name="website"]');
+    await expect(honeypots).toHaveCount(3);
+
+    // Hidden from sighted users and removed from the tab order, but still
+    // present in the DOM (a display:none/hidden input would be excluded
+    // from FormData in some browsers; this one relies on positioning).
+    const count = await honeypots.count();
+    for (let i = 0; i < count; i++) {
+      const input = honeypots.nth(i);
+      await expect(input).toHaveAttribute('tabindex', '-1');
+      await expect(input).toHaveAttribute('autocomplete', 'off');
+    }
+  });
+
+  test('contact and forms pages have no console errors', async ({ page }) => {
+    for (const path of ['/contact', '/forms']) {
+      const errors: string[] = [];
+      page.on('console', (msg) => {
+        if (msg.type() === 'error') errors.push(msg.text());
+      });
+
+      await page.goto(path);
+
+      const criticalErrors = errors.filter(
+        (e) => !e.includes('favicon') && !e.includes('404')
+      );
+      expect(criticalErrors, `console errors on ${path}`).toEqual([]);
+    }
+  });
+
+  test('form-error page loads with 200 status', async ({ page }) => {
+    const response = await page.goto('/form-error?reason=js');
+    expect(response?.status()).toBe(200);
+
+    const heading = page.locator('h1');
+    await expect(heading).toBeVisible();
+  });
+
+  test('thank-you page loads with 200 status', async ({ page }) => {
+    const response = await page.goto('/thank-you');
+    expect(response?.status()).toBe(200);
+  });
 });
