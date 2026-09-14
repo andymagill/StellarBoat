@@ -124,7 +124,6 @@ export const siteConfig: SiteConfig = {
      * Default form backend.
      * Options:
      * - 'web3forms' — free, no backend required (sign up at https://web3forms.com)
-     * - 'netlify' — Netlify form handling (deployed on netlify.com)
      * - 'api' — custom API endpoint (set apiUrl below)
      * - 'formspree' — community adapter (set formspreeEndpoint below)
      * - 'formspark' — community adapter (set formsparProjectId below)

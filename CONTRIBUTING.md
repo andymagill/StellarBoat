@@ -127,7 +127,7 @@ The only code-level analytics contribution that makes sense is improving `Analyt
 
 ## Adding a Form Backend Adapter
 
-**Note:** v1.0.0 ships with only the Web3Forms adapter. Additional adapters (Netlify, Formspree, Formspark, custom API) are welcome post-v1 contributions.
+**Note:** v1.0.0 ships with only the Web3Forms adapter. Additional adapters (Formspree, Formspark, custom API) are welcome post-v1 contributions.
 
 To add a new form backend adapter:
 
@@ -137,7 +137,7 @@ To add a new form backend adapter:
 4. Add a demo example in `src/pages/demo/forms.astro` (if demo pages still exist)
 5. Update the adapter section in `SPEC.md` §10 with documentation for the new backend
 
-**Constraint:** All form adapters must work from the browser via HTTP POST — no server-side Node.js code. StellarBoat is a static site; SSR API routes (`src/pages/api/`) are out of scope for core. If a backend requires server-side processing, the recommended pattern is a separate Cloudflare Worker or Netlify/Vercel Function that the adapter POSTs to — document this with an example in `src/demo/edge/`.
+**Constraint:** All form adapters must work from the browser via HTTP POST — no server-side Node.js code. StellarBoat is a static site; SSR API routes (`src/pages/api/`) are out of scope for core. If a backend requires server-side processing, the recommended pattern is a separate platform-specific edge or serverless function that the adapter POSTs to — document this with an example in `src/demo/edge/`.
 
 ---
 

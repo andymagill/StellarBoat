@@ -24,14 +24,14 @@ StellarBoat is an open-source Astro.js template for marketing mini-sites — pro
 
 ## Key Features
 
-- **Static-first, edge-enhanced** — `output: 'static'` always; Cloudflare Workers for optional edge enhancements (geo redirects, A/B cookies, dynamic OG images)
+- **Static-first, edge-enhanced** — `output: 'static'` always; optional edge function enhancements for dynamic features (see DEPLOYMENT.md for platform options)
 - **Content-first architecture** — all site content lives in `src/content/` and `src/config/`; zero content in core components, zero merge conflicts in forks
 - **Astro 5 + MDX blog** — Content Layer API, full-featured blog with tags, authors, reading time, RSS, and draft post support
 - **SEO out of the box** — meta tags, Open Graph, Twitter cards, canonical URLs, sitemap, robots.txt, JSON-LD structured data — automatic per page type
 - **Google Tag Manager** — one GTM snippet load; GA4, pixels, and other tags configured in GTM dashboard, not in code; optional consent mode v2 hooks
 - **Web3Forms by default** — free, host-agnostic form submissions with email notifications; per-component backend override allows different services on the same site (e.g., Web3Forms for contact, custom API for newsletter)
 - **Tailwind CSS v4 + design tokens** — CSS-native `@theme` replaces `tailwind.config.js`; rebrand by editing one CSS file
-- **Cloudflare Pages live demo** — canonical demo deployed to Cloudflare Pages; Netlify and Vercel compatibility documented for forks
+- **Multi-platform ready** — Deploy to your choice of platform (see DEPLOYMENT.md); canonical demo hosted on a modern static hosting platform; Vercel fork setup documented
 - **Fully typed** — TypeScript strict mode throughout, including content collection Zod schemas
 - **Demo site included** — `src/demo/` exercises every feature; doubles as architecture reference and Playwright test surface
 

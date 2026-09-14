@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 #### Core Framework
 
-- **Astro 5 foundation** — Static-first (`output: 'static'`) with optional edge function enhancements on Cloudflare Pages, Netlify, and Vercel
+- **Astro 5 foundation** — Static-first (`output: 'static'`) with optional edge function enhancements on Cloudflare Pages and Vercel
 - **TypeScript strict mode** — Full type safety across the codebase; Astro type checking via `astro check`
 - **Tailwind CSS v4** — CSS-native `@theme` block replaces JavaScript configuration; unified design tokens in `src/styles/tokens.css`
 
@@ -82,7 +82,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - **Multi-platform support** — Documented setup for:
   - **Canonical:** Cloudflare Pages (static build + optional edge functions)
-  - **Alternatives:** Netlify and Vercel with detailed fork setup instructions
+  - **Alternatives:** Vercel with detailed fork setup instructions
 - **Preview deployments** — PR previews via platform native GitHub Apps
 - **Environment variables** — `.env.example` with all expected variables documented
 
@@ -90,13 +90,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - **Full architecture specification** — `SPEC.md` with 17 sections covering all decisions, patterns, and trade-offs
 - **Contribution guide** — `CONTRIBUTING.md` with local setup, Git hooks, code standards, and adapter contract
-- **Deployment guide** — `DEPLOYMENT.md` covering Cloudflare Pages setup and fork instructions for Netlify/Vercel
+- **Deployment guide** — `DEPLOYMENT.md` covering Cloudflare Pages setup and fork instructions for Vercel
 - **Task list** — `TASKS.md` with 12 implementation milestones tracking progress through v1
 - **Demo guide** — `src/demo/README.md` comprehensive walkthrough of how to run, use, and customize the demo
 
 ### Implementation Notes
 
-- **v1 scope locked:** Landing.astro layout, additional form adapters (Netlify, Formspree, Formspark), multiple CMS integrations, and dark mode toggle are explicitly deferred to post-v1
+- **v1 scope locked:** Landing.astro layout, additional form adapters (Formspree, Formspark), multiple CMS integrations, and dark mode toggle are explicitly deferred to post-v1
 - **Simplifications from spec:** Features flag is part of `SiteConfig` rather than a separate file; only Web3Forms adapter shipped (others are contribution targets)
 - **Public API:** All type exports have JSDoc comments; no `any` types; strictly typed component props
 

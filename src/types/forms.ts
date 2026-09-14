@@ -1,7 +1,7 @@
 /**
  * Forms type definitions and adapters.
  *
- * Defines the contract for form submission adapters (Web3Forms, Netlify, custom API, etc.)
+ * Defines the contract for form submission adapters (Web3Forms, custom API, etc.)
  * and the resolved form configuration that results from merging global config + per-component overrides.
  */
 
@@ -9,7 +9,7 @@ import type { FormsConfig } from './config';
 
 /**
  * Form submission adapter interface.
- * Every backend (web3forms, netlify, api, formspree, formspark) implements this contract.
+ * Every backend (web3forms, api, formspree, formspark) implements this contract.
  */
 export interface FormAdapter {
   /**
