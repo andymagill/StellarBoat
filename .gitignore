@@ -37,6 +37,9 @@ yarn-error.log*
 coverage/
 .nyc_output/
 
+# Lighthouse CI
+.lighthouseci/
+
 # Local development
 .wrangler/
 .windows/
