@@ -6,7 +6,7 @@
 [![Built with Astro](https://img.shields.io/badge/Built%20with-Astro-FF5D01)](https://astro.build)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-**[Live Demo](https://stellarboat.magill.dev)** — See StellarBoat in action on Cloudflare Pages
+**[Live Demo](https://stellarboat.magill.dev)** — See StellarBoat in action on Cloudflare Workers
 
 ---
 
@@ -89,13 +89,13 @@ stellarboat/
 
 ## Documentation
 
-| Document                                 | Description                                               |
-| ---------------------------------------- | --------------------------------------------------------- |
-| [SPEC.md](SPEC.md)                       | Full architecture specification and design decisions      |
-| [TASKS.md](TASKS.md)                     | Ordered implementation task list (milestones 0–12)        |
-| [CONTRIBUTING.md](CONTRIBUTING.md)       | How to contribute to StellarBoat core                     |
-| [DEPLOYMENT.md](DEPLOYMENT.md)           | Cloudflare Pages setup + Netlify/Vercel fork instructions |
-| [src/demo/README.md](src/demo/README.md) | Guide to the included demo site                           |
+| Document                                 | Description                                          |
+| ---------------------------------------- | ---------------------------------------------------- |
+| [SPEC.md](SPEC.md)                       | Full architecture specification and design decisions |
+| [TASKS.md](TASKS.md)                     | Ordered implementation task list (milestones 0–12)   |
+| [CONTRIBUTING.md](CONTRIBUTING.md)       | How to contribute to StellarBoat core                |
+| [DEPLOYMENT.md](DEPLOYMENT.md)           | Cloudflare Workers setup + Vercel fork instructions  |
+| [src/demo/README.md](src/demo/README.md) | Guide to the included demo site                      |
 
 ---
 

@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "stellarboat",
+  "compatibility_date": "2026-09-14",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+  // Once an API route sets `export const prerender = false` (e.g. a contact/newsletter
+  // form endpoint), add the @astrojs/cloudflare adapter to astro.config.mjs and a
+  // "main": "./dist/_worker.js/index.js" entry here so Wrangler picks up the generated
+  // Worker. See DEPLOYMENT.md.
+}

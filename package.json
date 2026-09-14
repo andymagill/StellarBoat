@@ -46,7 +46,8 @@
     "serve": "latest",
     "tailwindcss": "latest",
     "typescript": "latest",
-    "vitest": "latest"
+    "vitest": "latest",
+    "wrangler": "latest"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",

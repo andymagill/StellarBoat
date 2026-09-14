@@ -4,6 +4,13 @@ All notable changes to StellarBoat are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **Canonical demo migrated from Cloudflare Pages to Cloudflare Workers with Static Assets** — added `wrangler.jsonc` (assets-only, pointing at `./dist`); deployment remains dashboard-driven via Cloudflare's "Workers Builds" Git integration (no CLI deploy step required), matching the previous Pages workflow. `astro.config.mjs` is unchanged (`output: 'static'`, no adapter) since no SSR routes exist yet — see `DEPLOYMENT.md` for the steps to add the `@astrojs/cloudflare` adapter and a Worker entrypoint once one is needed.
+- Removed stray `'netlify'` backend literal from `ResolvedFormConfig` (leftover from the earlier Netlify-support removal) and updated remaining Cloudflare Pages/Netlify references in docs and the showcase FAQ.
+
 ## [1.0.0] - 2026-03-10
 
 ### Added
