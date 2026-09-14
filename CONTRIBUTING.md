@@ -1,6 +1,6 @@
 # Contributing to StellarBoat
 
-Thanks for your interest in contributing! StellarBoat is a community project and we welcome improvements to the core framework — bug fixes, new features, documentation, and new analytics or form backend adapters.
+Thanks for your interest in contributing! StellarBoat is a community project and we welcome improvements to the core framework — bug fixes, new features, documentation, and improvements to the analytics or form submission pipeline.
 
 ---
 
@@ -9,7 +9,7 @@ Thanks for your interest in contributing! StellarBoat is a community project and
 **Welcome contributions:**
 
 - Bug fixes in core components, layouts, and utilities
-- New form backend adapters (`src/utils/forms/adapters/` + documentation)
+- Improvements to the form pipeline (`src/utils/forms/`, `worker/forms/`, `apps-script/`)
 - New marketing section component variants
 - Accessibility improvements
 - Performance improvements
@@ -96,12 +96,13 @@ git commit --no-verify -m "your message"
 3. Make your changes
 4. When you commit (`git commit`), linting and formatting will run automatically (see [Git Hooks & Code Quality](#git-hooks--code-quality) above)
 5. Run `npm run check` — `astro check` (TypeScript + Astro type errors) must pass
-6. Run `npm run build` — production build must succeed
-7. Run `npm run test` — all unit tests must pass
-8. Run `npm run test:e2e` — all Playwright e2e tests must pass
-9. Add or update tests if your change affects behavior
-10. Update `SPEC.md` if your change affects the architecture
-11. Open a pull request against `main`
+6. If you touched `worker/`, run `npm run check:worker` — the Worker has its own tsconfig (Workers runtime types, not DOM)
+7. Run `npm run build` — production build must succeed
+8. Run `npm run test` — all unit tests must pass; run `npm run test:worker` too if you touched `worker/`
+9. Run `npm run test:e2e` — all Playwright e2e tests must pass
+10. Add or update tests if your change affects behavior
+11. Update `SPEC.md` if your change affects the architecture
+12. Open a pull request against `main`
 
 ---
 
@@ -125,19 +126,19 @@ The only code-level analytics contribution that makes sense is improving `Analyt
 
 ---
 
-## Adding a Form Backend Adapter
+## Contributing to the Form Pipeline
 
-**Note:** v1.0.0 ships with only the Web3Forms adapter. Additional adapters (Formspree, Formspark, custom API) are welcome post-v1 contributions.
+Forms don't have a swappable per-component backend — every form component POSTs JSON to one endpoint (`forms.endpoint` in `src/config/forms.ts`, default `/api/forms`), handled by the Cloudflare Worker in `worker/`. See SPEC.md §10 and ARCHITECTURE.md#form-submission-flow for the full pipeline before contributing here.
 
-To add a new form backend adapter:
+**Where a change belongs:**
 
-1. Create `src/utils/forms/adapters/yourbackend.ts` — implement the `FormAdapter` interface from `src/types/forms.ts`: a single `submit(data, config)` method that returns `Promise<{ ok: boolean; error?: string }>`
-2. Register the new adapter in the dispatcher in `src/utils/forms/index.ts`
-3. Add the new backend key and any backend-specific config fields to `FormsConfig` in `src/types/config.ts`
-4. Add a demo example in `src/pages/demo/forms.astro` (if demo pages still exist)
-5. Update the adapter section in `SPEC.md` §10 with documentation for the new backend
+- **Shared validation** (field rules, lengths, formats) → `src/utils/forms/schema.ts`. This module is imported by both `src/utils/forms/client.ts` (browser) and `worker/forms/handler.ts` (Worker) — it must stay free of Astro, DOM, and Workers-runtime imports so it works in both.
+- **Client-side behavior** (Turnstile loading, submit handling, error rendering) → `src/utils/forms/client.ts`.
+- **A new gate or destination** (e.g. forwarding to a second service after Apps Script, or replacing Apps Script entirely) → `worker/forms/handler.ts` and its neighboring modules (`turnstile.ts`, `sign.ts`, `apps-script.ts`).
+- **Sheet-side logic** (columns, notification format) → `apps-script/Code.gs`. If you change the envelope shape, keep `worker/forms/sign.ts`'s test vector and `Code.gs`'s `selfTest()` in agreement — see `worker/forms/sign.test.ts`.
+- **A new form type** (beyond contact/lead/newsletter) → add it to `FORM_SCHEMAS` in `schema.ts`, `FORM_COLUMNS` in `Code.gs`, and a new Astro component following the pattern in `ContactForm.astro`.
 
-**Constraint:** All form adapters must work from the browser via HTTP POST — no server-side Node.js code. StellarBoat is a static site; SSR API routes (`src/pages/api/`) are out of scope for core. If a backend requires server-side processing, the recommended pattern is a separate platform-specific edge or serverless function that the adapter POSTs to — document this with an example in `src/demo/edge/`.
+**Testing:** the Worker has its own Vitest suite and tsconfig, separate from the app's — see `worker/vitest.config.ts` and run `npm run test:worker` / `npm run check:worker`. Mock `fetch` and the `FORM_RATE_LIMITER` binding rather than hitting real Turnstile/Apps Script endpoints in tests (see `worker/forms/handler.test.ts` for the pattern).
 
 ---
 

@@ -2,64 +2,27 @@ import type { FormsConfig } from '../types/config';
 
 /**
  * Global forms configuration.
- * This config controls Web3Forms API keys and reCAPTCHA settings.
  *
- * All form components use Web3Forms as the backend.
- * Get your API key from: https://web3forms.com → Dashboard → Copy your Access Key
+ * Forms POST as JSON to `endpoint`, a Cloudflare Worker route (see
+ * `worker/forms/`) that gates submissions (honeypot, rate limit,
+ * Turnstile) and forwards valid ones to a Google Apps Script web app,
+ * which appends a row to a Google Sheet and emails a notification.
+ *
+ * See DEPLOYMENT.md#form-worker for setup and required secrets.
  */
 export const forms: FormsConfig = {
   /**
-   * Default form backend for all forms on the site.
-   * Can be overridden per-form instance via the `backend` prop.
+   * Form submission endpoint. The default `/api/forms` is handled by
+   * the Worker in this repo; per-component `endpoint` prop overrides
+   * this for a single form instance.
    */
-  defaultBackend: 'web3forms',
+  endpoint: '/api/forms',
 
   /**
-   * Web3Forms API access key.
-   * Only used when `defaultBackend` is 'web3forms' or a form overrides to backend='web3forms'.
-   * Get from: https://web3forms.com → Dashboard → Copy your Access Key
-   * Leave undefined if not using Web3Forms.
+   * Cloudflare Turnstile site key (public — safe to commit).
+   * Get from: https://dash.cloudflare.com → Turnstile → your site → Site Key.
+   * Leave undefined in local dev to fall back to Turnstile's test sitekey
+   * documented in `.dev.vars.example`.
    */
-  web3formsKey: undefined,
-
-  /**
-   * Custom API endpoint URL for the 'api' backend.
-   * Only used when `defaultBackend` is 'api' or a form overrides to backend='api'.
-   * The API should accept a POST request with JSON body:
-   * { name, email, message, ... } and return { ok: true } or { ok: false, error: string }
-   * Leave undefined if not using the api backend.
-   */
-  apiUrl: undefined,
-
-  /**
-   * Formspree form endpoint URL.
-   * Only used when `defaultBackend` is 'formspree' or a form overrides to backend='formspree'.
-   * Get from: https://formspree.io → Create New Form → Copy endpoint
-   * Example: https://formspree.io/f/xyzabc123
-   * Community-maintained. Leave undefined if not using Formspree.
-   */
-  formspreeEndpoint: undefined,
-
-  /**
-   * Formspark project ID.
-   * Only used when `defaultBackend` is 'formspark' or a form overrides to backend='formspark'.
-   * Get from: https://formspark.io → Project Settings → Copy Project ID
-   * Community-maintained. Leave undefined if not using Formspark.
-   */
-  formsparProjectId: undefined,
-
-  /**
-   * Enable reCAPTCHA v3 spam protection.
-   * Adds an invisible reCAPTCHA token to form submissions.
-   * Requires `recaptchaSiteKey` (v3).
-   * Get reCAPTCHA credentials from: https://www.google.com/recaptcha/admin
-   */
-  recaptchaEnabled: false,
-
-  /**
-   * reCAPTCHA site key (v3, public).
-   * Only used when `recaptchaEnabled` is true.
-   * Get from: https://www.google.com/recaptcha/admin → your site → copy Site Key
-   */
-  recaptchaSiteKey: undefined,
+  turnstileSiteKey: import.meta.env.PUBLIC_TURNSTILE_SITE_KEY,
 };

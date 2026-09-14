@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    // worker-configuration.d.ts is a self-contained ambient declaration of
+    // the Workers runtime globals (Request, Response, crypto, ...). Disable
+    // automatic @types/* inclusion so a transitively-installed @types/node
+    // can't shadow those with Node's incompatible global types.
+    "types": []
+  },
+  "include": ["**/*.ts", "../src/utils/forms/schema.ts"]
+}

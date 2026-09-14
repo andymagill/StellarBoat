@@ -6,10 +6,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### ⚠ Breaking
+
+- **Removed Web3Forms** in favor of a Worker-gated pipeline to Google Sheets. `FormsConfig` no longer has `defaultBackend`, `web3formsKey`, `apiUrl`, `formspreeEndpoint`, `formsparProjectId`, `recaptchaEnabled`, or `recaptchaSiteKey` — it's now just `{ endpoint, turnstileSiteKey }`. Form components' `backend` and `web3formsKey` props are gone; use `endpoint` instead. Forks on the previous forms system need to: set up a Turnstile widget, deploy `apps-script/` to a Google Sheet, and set three Worker secrets — see `DEPLOYMENT.md#form-worker` and `apps-script/README.md`.
+
+### Added
+
+- **Worker-gated form pipeline** — `worker/index.ts` (new, `main` in `wrangler.jsonc`) handles `POST /api/forms`: a honeypot field, a Cloudflare Workers `FORM_RATE_LIMITER` rate-limit binding, and Cloudflare Turnstile verification all run before a submission is forwarded anywhere.
+- **Google Apps Script bridge** (`apps-script/`) — receives an HMAC-signed, replay-protected envelope from the Worker and appends a row to a per-form-type Google Sheet tab, with a best-effort email notification. See `apps-script/README.md` for setup.
+- **Shared validation schema** (`src/utils/forms/schema.ts`) — the same `validateSubmission()` runs client-side (`src/utils/forms/client.ts`) and Worker-side (`worker/forms/handler.ts`), so the two can never disagree about what's a valid submission.
+- **`/form-error` page** — no-JS submissions (Turnstile requires a browser) are redirected here with a reason code, rather than silently failing or silently succeeding.
+- Separate Worker type-checking (`npm run check:worker`, `worker/tsconfig.json`) and test suite (`npm run test:worker`, `worker/vitest.config.ts`) — the Worker targets the Workers runtime, not Node/DOM, so it's checked and tested independently of the app.
+
+### Fixed
+
+- Form components previously shared DOM ids (`#name`, `#email`, ...) and a `document.querySelector('form')` that always grabbed the _first_ form on the page — broken whenever two form components rendered on the same page (e.g. `/contact`, `/forms`). Each form now scopes its fields with an `idPrefix` and is wired independently via `data-stellar-form`.
+- Form components' inline `<script define:vars>` blocks called `import('../../utils/forms')`, which cannot resolve from an inline (non-module-bundled) script and silently failed at runtime. Submission logic now lives in a proper bundled module (`src/utils/forms/client.ts`).
+
 ### Changed
 
-- **Canonical demo migrated from Cloudflare Pages to Cloudflare Workers with Static Assets** — added `wrangler.jsonc` (assets-only, pointing at `./dist`); deployment remains dashboard-driven via Cloudflare's "Workers Builds" Git integration (no CLI deploy step required), matching the previous Pages workflow. `astro.config.mjs` is unchanged (`output: 'static'`, no adapter) since no SSR routes exist yet — see `DEPLOYMENT.md` for the steps to add the `@astrojs/cloudflare` adapter and a Worker entrypoint once one is needed.
+- **Canonical demo migrated from Cloudflare Pages to Cloudflare Workers with Static Assets** — added `wrangler.jsonc` (assets-only, pointing at `./dist`); deployment remains dashboard-driven via Cloudflare's "Workers Builds" Git integration (no CLI deploy step required), matching the previous Pages workflow. `astro.config.mjs` stayed unchanged (`output: 'static'`, no adapter) at the time, since no server-side routes existed yet — see the form pipeline above for the Worker entrypoint that now uses this `wrangler.jsonc`.
 - Removed stray `'netlify'` backend literal from `ResolvedFormConfig` (leftover from the earlier Netlify-support removal) and updated remaining Cloudflare Pages/Netlify references in docs and the showcase FAQ.
+
+### Removed
+
+- `src/utils/forms/index.ts` and `src/utils/forms/adapters/` (`web3forms.ts`, `api.ts`, `formspree.ts`, `formspark.ts`) — collapsed into the single Worker endpoint above.
+- `src/types/forms.ts` (`FormAdapter`, `ResolvedFormConfig`) — superseded by `FormType`/`FieldErrors` in `src/utils/forms/schema.ts`.
+- `src/demo/edge/resend-worker.ts` — the `api`-backend example adapter it documented no longer exists; extra destinations are now added server-side in `worker/forms/handler.ts`.
 
 ## [1.0.0] - 2026-03-10
 

@@ -1,0 +1,27 @@
+# Worker secrets for local development (`wrangler dev` / `npm run dev:worker`).
+#
+# Copy this file to `.dev.vars` (already gitignored) and fill in real values
+# for a full local test, or use Cloudflare's published Turnstile test keys
+# below to exercise the pipeline without a real Turnstile site.
+# See DEPLOYMENT.md#form-worker.
+
+# Turnstile secret key.
+# Cloudflare publishes fixed test keys that always pass or always fail
+# server-side verification — pair with the matching test sitekey in
+# PUBLIC_TURNSTILE_SITE_KEY (.env.example) on the client:
+#   always passes:  1x0000000000000000000000000000000AA
+#   always fails:   2x0000000000000000000000000000000AA
+# https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+
+# Apps Script web app /exec URL (see apps-script/README.md to deploy one).
+APPS_SCRIPT_URL=https://script.google.com/macros/s/REPLACE_ME/exec
+
+# Shared secret — must exactly match the Apps Script's HMAC_SECRET
+# Script Property. Generate one with: openssl rand -hex 32
+APPS_SCRIPT_HMAC_SECRET=replace-with-a-long-random-secret
+
+# Set to 'true' to skip the Apps Script call and return success immediately
+# (every other gate still runs). Useful for testing the Worker pipeline
+# without a live Apps Script deployment. Leave unset otherwise.
+# FORMS_DRY_RUN=true

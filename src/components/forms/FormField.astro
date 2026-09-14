@@ -18,8 +18,16 @@
  */
 
 export interface Props {
-  /** Unique field identifier (used in name, id, for attributes) */
+  /** Unique element id (also used for the `for`/`aria-describedby` wiring) */
   id: string;
+
+  /**
+   * Form field name submitted with the request. Defaults to `id`.
+   * Set this explicitly when `id` is prefixed to avoid collisions between
+   * multiple form instances on the same page (e.g. id="contact-email",
+   * name="email").
+   */
+  name?: string;
 
   /** Human-readable field label */
   label: string;
@@ -54,6 +62,7 @@ export interface Props {
 
 const {
   id,
+  name = id,
   label,
   type = 'text',
   required = false,
@@ -95,7 +104,7 @@ const inputClasses = `
     type === 'textarea' ? (
       <textarea
         id={id}
-        name={id}
+        name={name}
         class={inputClasses}
         required={required}
         placeholder={placeholder}
@@ -106,7 +115,7 @@ const inputClasses = `
     ) : type === 'select' ? (
       <select
         id={id}
-        name={id}
+        name={name}
         class={inputClasses}
         required={required}
         aria-required={required}
@@ -121,7 +130,7 @@ const inputClasses = `
       <input
         type={type}
         id={id}
-        name={id}
+        name={name}
         class={inputClasses}
         required={required}
         placeholder={placeholder}

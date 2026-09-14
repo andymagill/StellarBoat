@@ -9,14 +9,14 @@ import Card from '../components/ui/Card.astro';
 
 <Page
   title="Form Components"
-  description="Full-featured form components with multiple backends"
+  description="Full-featured form components backed by a Worker-gated Google Sheets pipeline"
 >
   <div class="max-w-4xl mx-auto px-6 py-12">
     <h1 class="text-4xl font-bold mb-2">Form Components</h1>
     <p class="text-text-muted mb-8">
-      Production-ready form components with progressive enhancement, pluggable
-      backends, and accessibility built in. Works without JavaScript; upgrades
-      with AJAX when available.
+      Production-ready form components with progressive enhancement, spam
+      protection, and accessibility built in. Submissions on this demo are real
+      — they're written to a Google Sheet via a gated Worker endpoint.
     </p>
 
     <!-- Features Section -->
@@ -29,16 +29,17 @@ import Card from '../components/ui/Card.astro';
             ✓ Progressive Enhancement
           </h3>
           <p class="text-text-muted text-sm">
-            All forms work with native HTML POST without JavaScript. When JS is
-            available, they upgrade to AJAX with status feedback.
+            All forms work with native HTML POST without JavaScript (though spam
+            verification requires it — see below). When JS is available, they
+            upgrade to JSON submission with inline status feedback.
           </p>
         </div>
 
         <div>
-          <h3 class="font-semibold text-text mb-2">✓ Pluggable Backends</h3>
+          <h3 class="font-semibold text-text mb-2">✓ Spam Protection</h3>
           <p class="text-text-muted text-sm">
-            Switch backends per-form or globally. Supported: Web3Forms (free),
-            API, Formspree, Formspark, or custom.
+            A honeypot field, Worker-side rate limiting, and Cloudflare
+            Turnstile all run before a submission is forwarded anywhere.
           </p>
         </div>
 
@@ -76,29 +77,23 @@ import Card from '../components/ui/Card.astro';
             Global Default (src/config/forms.ts)
           </h3>
           <pre
-            class="bg-surface-2 p-4 rounded-md text-xs text-text overflow-auto"><code>{`import { forms } from '../../config/forms';
+            class="bg-surface-2 p-4 rounded-md text-xs text-text overflow-auto"><code>{`import type { FormsConfig } from '../types/config';
 
-export const forms = {
-  defaultBackend: 'web3forms',
-  web3formsKey: 'your-key-here',
-  apiUrl: undefined,
-  formspreeEndpoint: undefined,
-  formsparProjectId: undefined,
+export const forms: FormsConfig = {
+  endpoint: '/api/forms',
+  turnstileSiteKey: import.meta.env.PUBLIC_TURNSTILE_SITE_KEY,
 };`}</code></pre>
         </div>
 
         <div>
           <h3 class="font-semibold text-text mb-2">Per-Component Override</h3>
           <pre
-            class="bg-surface-2 p-4 rounded-md text-xs text-text overflow-auto"><code>{`<!-- Switch backend for one form instance -->
-<ContactForm 
-  backend="api" 
-  apiUrl="https://api.example.com/contact" 
-/>
+            class="bg-surface-2 p-4 rounded-md text-xs text-text overflow-auto"><code>{`<!-- Route one form instance to a different Worker deployment -->
+<ContactForm endpoint="https://staging.example.com/api/forms" />
 
-<!-- Multiple forms, different backends -->
-<ContactForm backend="web3forms" />
-<NewsletterForm backend="api" apiUrl="https://api.example.com/newsletter" />`}</code></pre>
+<!-- Prefix field ids to avoid collisions if you render two of the
+     same form type on one page -->
+<ContactForm idPrefix="footer-contact" />`}</code></pre>
         </div>
       </Card>
     </section>
@@ -114,7 +109,7 @@ export const forms = {
         <div>
           <h3 class="text-sm font-medium text-text-muted mb-3">Live Example</h3>
           <p class="text-sm text-text-muted mb-4">
-            Uses the default backend from your forms config.
+            Uses the default endpoint from your forms config.
           </p>
           <Card variant="default" class="p-8">
             <ContactForm />
@@ -124,16 +119,14 @@ export const forms = {
         <!-- Code Sample -->
         <div>
           <h3 class="text-sm font-medium text-text-muted mb-3">
-            Override to API Backend
+            Override the Endpoint
           </h3>
           <p class="text-sm text-text-muted mb-4">
-            Route to a custom API endpoint (platform-specific edge functions,
-            serverless functions, etc).
+            Route a single instance to a different Worker deployment:
           </p>
           <pre
             class="bg-surface-2 p-4 rounded-md text-xs text-text overflow-auto"><code>{`<ContactForm
-  backend="api"
-  apiUrl="https://api.example.com/contact"
+  endpoint="https://staging.example.com/api/forms"
 />`}</code></pre>
         </div>
       </div>
@@ -146,14 +139,15 @@ export const forms = {
       <h2 class="text-2xl font-semibold mb-6">Lead Capture Form</h2>
 
       <div class="space-y-8">
-        <!-- Lead Capture Form / Web3Forms -->
+        <!-- Lead Capture Form -->
         <div>
           <h3 class="text-sm font-medium text-text-muted mb-3">
             Lead Capture Form
           </h3>
           <p class="text-sm text-text-muted mb-4">
             Four-field form for lead generation: name, email, company
-            (optional), phone (optional). Submits to global default backend.
+            (optional), phone (optional). Submits to the global default
+            endpoint.
           </p>
           <Card variant="default" class="p-8">
             <LeadCaptureForm />
@@ -195,12 +189,11 @@ export const forms = {
 
           <div>
             <h3 class="text-sm font-medium text-text-muted mb-2">
-              Override to API Backend
+              Override the Endpoint
             </h3>
             <pre
               class="bg-surface-2 p-4 rounded-md text-xs text-text overflow-auto"><code>{`<NewsletterForm
-  backend="api"
-  apiUrl="https://api.example.com/newsletter"
+  endpoint="https://staging.example.com/api/forms"
 />`}</code></pre>
           </div>
         </div>

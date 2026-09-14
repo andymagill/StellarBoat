@@ -4,16 +4,15 @@
  *
  * A single-field email form for newsletter/list signup with:
  * - Compact, inline-friendly layout
- * - Same progressive enhancement as other forms
- * - Backend override support
+ * - Same progressive enhancement, spam gating, and validation as ContactForm
  *
  * @example
  * ```astro
- * <!-- Uses global Web3Forms backend -->
+ * <!-- Uses the global endpoint from src/config/forms.ts -->
  * <NewsletterForm />
  *
- * <!-- Override backend for a different endpoint -->
- * <NewsletterForm backend="api" apiUrl="https://api.mysite.com/newsletter" />
+ * <!-- Compact inline layout (e.g. footer) -->
+ * <NewsletterForm compact />
  * ```
  */
 
@@ -22,32 +21,50 @@ import FormField from './FormField.astro';
 import Button from '../ui/Button.astro';
 
 export interface Props {
-  web3formsKey?: string;
+  endpoint?: string;
+  turnstileSiteKey?: string;
+  idPrefix?: string;
   class?: string;
-  /** Show success/error messages inline or in modal (for footer usage) */
+  /** Show a compact, inline-friendly layout (for footer usage) */
   compact?: boolean;
 }
 
 const {
-  web3formsKey = forms.web3formsKey,
+  endpoint = forms.endpoint,
+  turnstileSiteKey = forms.turnstileSiteKey,
+  idPrefix = 'newsletter',
   class: className = '',
   compact = false,
 } = Astro.props;
-
-const formAction = 'https://api.web3forms.com/submit';
 ---
 
 <form
   method="POST"
-  action={formAction}
+  action={endpoint}
+  data-stellar-form="newsletter"
+  data-id-prefix={idPrefix}
+  data-turnstile-sitekey={turnstileSiteKey}
   class={`${compact ? 'flex gap-2' : 'space-y-4'} ${className}`}
 >
-  <input type="hidden" name="access_key" value={web3formsKey} />
+  <input type="hidden" name="formType" value="newsletter" />
+
+  {/* Honeypot — hidden from sighted and keyboard users, bots fill it in */}
+  <div class="absolute -left-[9999px]" aria-hidden="true">
+    <label for={`${idPrefix}-website`}>Website</label>
+    <input
+      type="text"
+      id={`${idPrefix}-website`}
+      name="website"
+      tabindex="-1"
+      autocomplete="off"
+    />
+  </div>
 
   {
     !compact ? (
       <FormField
-        id="email"
+        id={`${idPrefix}-email`}
+        name="email"
         label="Email Address"
         type="email"
         required
@@ -57,7 +74,7 @@ const formAction = 'https://api.web3forms.com/submit';
     ) : (
       <input
         type="email"
-        id="email"
+        id={`${idPrefix}-email`}
         name="email"
         required
         placeholder="your@email.com"
@@ -66,114 +83,22 @@ const formAction = 'https://api.web3forms.com/submit';
     )
   }
 
-  <div id="newsletter-form-messages" class="hidden"></div>
+  <div data-turnstile></div>
+
+  <noscript>
+    <p class="text-sm text-error">
+      JavaScript is required to submit this form (for spam verification).
+    </p>
+  </noscript>
+
+  <div data-form-messages class="hidden"></div>
 
   <Button type="submit" variant="primary" size={compact ? 'md' : 'md'}>
     {compact ? 'Subscribe' : 'Join'}
   </Button>
 </form>
 
-<script
-  define:vars={{
-    web3formsKey,
-    compact,
-  }}
->
-  const form = document.querySelector('form');
-  const messagesContainer = document.getElementById('newsletter-form-messages');
-  const submitButton = form?.querySelector('button[type="submit"]');
-
-  // Validation helper functions
-  function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
-  function validateForm(formElement) {
-    const emailInput = formElement.querySelector('#email');
-
-    if (!emailInput?.value?.trim()) return 'Email Address is required.';
-    if (!isValidEmail(emailInput.value))
-      return 'Please enter a valid email address.';
-
-    return null;
-  }
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // Client-side validation
-    const validationError = validateForm(form);
-    if (validationError) {
-      messagesContainer.innerHTML = '';
-      const errorAlert = document.createElement('div');
-      errorAlert.className =
-        'p-3 bg-error/10 border border-error text-error rounded-md text-sm';
-      errorAlert.setAttribute('role', 'alert');
-      errorAlert.textContent = validationError;
-      messagesContainer.appendChild(errorAlert);
-      messagesContainer.classList.remove('hidden');
-      return;
-    }
-
-    const formData = new FormData(form);
-    const data = {};
-    formData.forEach((value, key) => {
-      if (
-        !key.startsWith('_') &&
-        key !== 'access_key' &&
-        key !== 'form-name' &&
-        key !== 'projectId'
-      ) {
-        data[key] = String(value);
-      }
-    });
-
-    submitButton.disabled = true;
-    submitButton.setAttribute('aria-busy', 'true');
-
-    try {
-      const { submitForm } = await import('../../utils/forms');
-
-      const result = await submitForm(data, {
-        web3formsKey,
-      });
-
-      messagesContainer.innerHTML = '';
-
-      if (result.ok) {
-        const successAlert = document.createElement('div');
-        successAlert.className =
-          'p-3 bg-success/10 border border-success text-success rounded-md text-sm';
-        successAlert.setAttribute('role', 'status');
-        successAlert.textContent = 'Thanks for signing up!';
-        messagesContainer.appendChild(successAlert);
-        messagesContainer.classList.remove('hidden');
-        form.reset();
-      } else {
-        const errorAlert = document.createElement('div');
-        errorAlert.className =
-          'p-3 bg-error/10 border border-error text-error rounded-md text-sm';
-        errorAlert.setAttribute('role', 'alert');
-        errorAlert.textContent =
-          result.error || 'Something went wrong. Try again.';
-        messagesContainer.appendChild(errorAlert);
-        messagesContainer.classList.remove('hidden');
-      }
-    } catch (error) {
-      messagesContainer.innerHTML = '';
-      const errorAlert = document.createElement('div');
-      errorAlert.className =
-        'p-3 bg-error/10 border border-error text-error rounded-md text-sm';
-      errorAlert.setAttribute('role', 'alert');
-      errorAlert.textContent =
-        error instanceof Error
-          ? error.message
-          : 'An unexpected error occurred.';
-      messagesContainer.appendChild(errorAlert);
-      messagesContainer.classList.remove('hidden');
-    } finally {
-      submitButton.disabled = false;
-      submitButton.removeAttribute('aria-busy');
-    }
-  });
+<script>
+  import { enhanceForms } from '../../utils/forms/client';
+  enhanceForms();
 </script>

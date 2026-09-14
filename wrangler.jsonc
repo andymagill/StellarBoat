@@ -4,12 +4,36 @@
   "compatibility_date": "2026-09-14",
   "workers_dev": true,
   "preview_urls": true,
+  "main": "./worker/index.ts",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
-  }
-  // Once an API route sets `export const prerender = false` (e.g. a contact/newsletter
-  // form endpoint), add the @astrojs/cloudflare adapter to astro.config.mjs and a
-  // "main": "./dist/_worker.js/index.js" entry here so Wrangler picks up the generated
-  // Worker. See DEPLOYMENT.md.
+    "not_found_handling": "404-page",
+    "binding": "ASSETS",
+    // Only requests under /api/* run the Worker; everything else is served
+    // directly from static assets without ever invoking worker/index.ts.
+    "run_worker_first": ["/api/*"],
+  },
+  "ratelimits": [
+    {
+      "name": "FORM_RATE_LIMITER",
+      "namespace_id": "1001",
+      // 5 submissions per IP per 60s across all forms. Approximate: counters
+      // are local to each Cloudflare data center, not globally synchronized.
+      "simple": {
+        "limit": 5,
+        "period": 60,
+      },
+    },
+  ],
+  "observability": {
+    "enabled": true,
+  },
+  // Secrets (never committed) — set with `wrangler secret put <NAME>`, or in
+  // the Dashboard under Worker → Settings → Variables & Secrets:
+  //   TURNSTILE_SECRET_KEY    — from Cloudflare dashboard → Turnstile → your site
+  //   APPS_SCRIPT_URL         — the Apps Script web app's /exec URL
+  //   APPS_SCRIPT_HMAC_SECRET — shared secret; must match the Apps Script's
+  //                             HMAC_SECRET Script Property (see apps-script/README.md)
+  // For local dev, copy .dev.vars.example to .dev.vars and fill these in.
+  // See DEPLOYMENT.md#form-worker.
 }

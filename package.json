@@ -5,14 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "dev:worker": "wrangler dev --port 8787",
     "build": "astro build",
     "preview": "astro preview",
     "lint": "eslint .",
     "check": "astro check",
+    "check:worker": "tsc -p worker",
     "test": "vitest run",
     "test:unit": "vitest run",
+    "test:worker": "vitest run -c worker/vitest.config.ts",
     "test:e2e": "playwright test",
     "format": "prettier --write .",
+    "cf-typegen": "wrangler types worker/worker-configuration.d.ts",
     "prepare": "husky",
     "postinstall": "astro sync"
   },
@@ -25,7 +29,6 @@
   },
   "devDependencies": {
     "@astrojs/check": "latest",
-    "@astrojs/cloudflare": "latest",
     "@astrojs/rss": "latest",
     "@astrojs/sitemap": "latest",
     "@eslint/js": "latest",

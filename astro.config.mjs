@@ -26,6 +26,8 @@ export default defineConfig({
       filter: (page) =>
         !page.endsWith('/thank-you') &&
         !page.endsWith('/thank-you/') &&
+        !page.endsWith('/form-error') &&
+        !page.endsWith('/form-error/') &&
         // Exclude /demo index and all /demo/* sub-routes
         // (root-level showcase/ui/forms are intentionally indexed)
         !page.endsWith('/demo') &&
@@ -37,5 +39,12 @@ export default defineConfig({
     // Tailwind v4: tokens.css is the entry point containing @import "tailwindcss"
     // and the @theme block. The plugin auto-discovers it; no explicit path needed.
     plugins: [tailwindPlugin()],
+    server: {
+      // Forward /api/* from `astro dev` to `wrangler dev` (see `npm run
+      // dev:worker`) so the form endpoint works during local development.
+      proxy: {
+        '/api': 'http://localhost:8787',
+      },
+    },
   },
 });
