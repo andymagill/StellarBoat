@@ -41,7 +41,7 @@ const featuresData = [
   },
 ];
 
-// Testimonials data
+// Testimonials data (local avatars to avoid external image loads and improve performance)
 const testimonialsData = [
   {
     quote:
@@ -49,7 +49,7 @@ const testimonialsData = [
     author: 'Alice Chen',
     role: 'Founder, TechStartup Inc',
     avatar:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop',
+      'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22%3E%3Ccircle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2360a5fa%22/%3E%3C/svg%3E',
     avatarAlt: 'Alice Chen, Founder of TechStartup Inc',
   },
   {
@@ -58,7 +58,7 @@ const testimonialsData = [
     author: 'Bob Martinez',
     role: 'Lead Developer, BuildCo',
     avatar:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop',
+      'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22%3E%3Ccircle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%233b82f6%22/%3E%3C/svg%3E',
     avatarAlt: 'Bob Martinez, Lead Developer at BuildCo',
   },
   {
@@ -67,7 +67,7 @@ const testimonialsData = [
     author: 'Carol Thompson',
     role: 'Product Manager, InnovateLabs',
     avatar:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop',
+      'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22%3E%3Ccircle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%222563eb%22/%3E%3C/svg%3E',
     avatarAlt: 'Carol Thompson, Product Manager at InnovateLabs',
   },
 ];

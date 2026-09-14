@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 /**
  * Hero Component
  *
@@ -118,11 +120,14 @@ import Button from '../ui/Button.astro';
               </div>
               {image && (
                 <div class="hidden md:flex md:w-1/2 items-center justify-center h-full">
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    class="max-h-[500px] w-auto object-contain drop-shadow-2xl"
-                  />
+                  <picture>
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      class="max-h-[500px] w-auto object-contain drop-shadow-2xl"
+                      loading="lazy"
+                    />
+                  </picture>
                 </div>
               )}
             </div>
