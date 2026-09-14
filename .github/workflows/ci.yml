@@ -77,5 +77,4 @@ jobs:
         with:
           name: dist
           path: dist/
-      - run: npm install -g @lhci/cli@latest
       - run: npx lhci autorun
